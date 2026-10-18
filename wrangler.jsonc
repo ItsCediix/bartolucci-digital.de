@@ -1,0 +1,8 @@
+{
+  // Statische Website ohne eigenen Server-Code
+  "name": "bartolucci-digital-de",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./public"
+  }
+}
