@@ -50,7 +50,7 @@
   --surface: #ffffff;
   --ink: #0f172a;
   --ink-2: #334155;
-  --ink-3: #64748b;
+  --ink-3: #566274; /* 5.9:1 on --bg, 4.5:1 needed */
   --line: rgba(15, 23, 42, 0.12);
   --accent: #0b7fbf;
   --accent-ink: #ffffff;
@@ -190,6 +190,8 @@ html[data-theme='dark'] .theme-toggle .ico-moon { display: block; }
 .offer-compact .offer-care { grid-column: 1 / -1; }
 .offer-compact .offer-fine { grid-column: 1 / -1; }
 .offer-compact .btn { justify-self: end; grid-row: 1 / span 2; }
+.offer-note { margin-top: 18px; }
+.section { scroll-margin-top: var(--header-h); }
 
 /* ---------- contact ---------- */
 .contact { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 80px); align-items: center; }
