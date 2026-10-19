@@ -7,6 +7,7 @@
   "scripts": {
     "frames": "node scripts/frames.mjs",
     "vendor": "node scripts/vendor.mjs",
+    "build": "node scripts/build-data.mjs && node scripts/build-headers.mjs",
     "serve": "serve public -l 4173",
     "check:sizes": "node scripts/check-sizes.mjs",
     "qa:shots": "node scripts/qa-shots.mjs",

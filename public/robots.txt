@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /frames/
+Disallow: /data/
+
+Sitemap: https://bartolucci-digital.de/sitemap.xml

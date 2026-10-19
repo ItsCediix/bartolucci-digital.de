@@ -1,0 +1,2 @@
+/* Mobile body – filled in after the desktop page is complete (see mobile.js). */
+html[data-mode='desktop'] .m-film, html[data-mode='desktop'] .m-cta { display: none; }
