@@ -1,0 +1,7 @@
+node_modules/
+.frames-tmp/
+review/
+analysis/
+*.log
+.DS_Store
+Thumbs.db
