@@ -341,14 +341,13 @@
   function splitWords(el) {
     var text = el.textContent;
     el.textContent = '';
-    el.setAttribute('aria-label', text);
     var frag = d.createDocumentFragment();
+    // plain inline spans: screen readers and crawlers still read one continuous sentence
     text.split(/\s+/).forEach(function (w, i) {
       if (!w) return;
       if (i) frag.appendChild(d.createTextNode(' '));
       var s = d.createElement('span');
       s.className = 'w';
-      s.setAttribute('aria-hidden', 'true');
       s.textContent = w;
       frag.appendChild(s);
     });
