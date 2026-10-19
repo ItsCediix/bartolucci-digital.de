@@ -14,10 +14,12 @@ const DESKTOP = opt('desktop', path.join(process.env.USERPROFILE || process.env.
 const reviewTo = opt('review-to', null);
 
 const items = ['public', 'scripts', 'package.json', 'package-lock.json', 'README.md', 'wrangler.jsonc', '.gitignore', '.htmlvalidate.json'].filter((f) => fs.existsSync(path.join(ROOT, f)));
+// Windows ships bsdtar (zip via -a); Git Bash's GNU tar would misread "C:" as a host name
+const TAR = process.platform === 'win32' ? path.join(process.env.SystemRoot || 'C:\\Windows', 'System32', 'tar.exe') : 'tar';
 const zip = (name, excludes) => {
   const out = path.join(DESKTOP, name);
   const a = ['-a', '-cf', out, ...excludes.map((e) => `--exclude=${e}`), '-C', ROOT, ...items];
-  const r = spawnSync('tar', a, {stdio: 'inherit'});
+  const r = spawnSync(TAR, a, {stdio: 'inherit'});
   if (r.status !== 0) throw new Error(`tar failed for ${name}`);
   console.log(`${name}: ${(fs.statSync(out).size / 1024 / 1024).toFixed(2)} MB`);
 };
