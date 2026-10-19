@@ -13,6 +13,8 @@ const opt = (n, def) => { const i = args.indexOf(`--${n}`); return i >= 0 ? args
 const BASE = opt('base', 'http://localhost:4173');
 const OUT = path.resolve(ROOT, opt('out', 'review'));
 fs.mkdirSync(OUT, {recursive: true});
+// html-validate config for the rendered DOM dumps (serialised boolean attributes, GSAP inline styles)
+fs.writeFileSync(path.join(OUT, '.htmlvalidate.json'), JSON.stringify({extends: ['html-validate:recommended'], rules: {'no-multiple-main': 'off', 'unique-landmark': 'off', 'no-inline-style': 'off', 'attribute-boolean-style': 'off', 'attribute-empty-style': 'off'}}, null, 2));
 
 const positions = [0, 15, 35, 55, 75, 100];
 const report = {base: BASE, requests: [], foreign: [], consoleErrors: [], pageErrors: [], shots: []};
@@ -27,8 +29,10 @@ async function session(name, viewport, url, extra = {}) {
   });
   page.on('console', (m) => { if (m.type() === 'error') report.consoleErrors.push({who: name, text: m.text()}); });
   page.on('pageerror', (e) => report.pageErrors.push({who: name, text: String(e)}));
-  await page.goto(url, {waitUntil: 'networkidle'});
-  await page.waitForTimeout(2500);
+  await page.goto(url, {waitUntil: 'load'});
+  await page.waitForTimeout(3000);
+  // rendered DOM for validation (only one body variant exists after boot)
+  fs.writeFileSync(path.join(OUT, `dom-${name}.html`), await page.content());
   const total = await page.evaluate(() => document.documentElement.scrollHeight - innerHeight);
   for (const p of positions) {
     const y = Math.round((total * p) / 100);

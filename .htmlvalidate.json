@@ -1,0 +1,8 @@
+{
+  "extends": ["html-validate:recommended"],
+  "rules": {
+    "no-multiple-main": "off",
+    "unique-landmark": "off",
+    "no-inline-style": "off"
+  }
+}

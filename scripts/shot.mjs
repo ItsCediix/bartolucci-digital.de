@@ -8,8 +8,8 @@ const page = await ctx.newPage();
 const errs = [];
 page.on('console', (m) => { if (m.type() === 'error') errs.push(m.text()); });
 page.on('pageerror', (e) => errs.push(String(e)));
-await page.goto(url, {waitUntil: 'networkidle'});
-await page.waitForTimeout(1500);
+await page.goto(url, {waitUntil: 'load'});
+await page.waitForTimeout(2500);
 if (pos.startsWith('#')) {
   await page.evaluate((s) => { const el = document.querySelector(s); window.scrollTo(0, el.getBoundingClientRect().top + scrollY); }, pos);
 } else {
