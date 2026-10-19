@@ -1,0 +1,58 @@
+{
+  "fps": 12,
+  "width": 540,
+  "quality": 80,
+  "duration": 97.933333,
+  "generated": "2026-10-19T17:51:09.818Z",
+  "chapters": {
+    "hook": {
+      "count": 80,
+      "start": 0,
+      "end": 6.6,
+      "firstTime": 0,
+      "lastTime": 6.583333333333333,
+      "bytes": 915344
+    },
+    "website": {
+      "count": 291,
+      "start": 6.6,
+      "end": 30.9,
+      "firstTime": 6.666666666666667,
+      "lastTime": 30.833333333333332,
+      "bytes": 5366358
+    },
+    "assistent": {
+      "count": 274,
+      "start": 30.9,
+      "end": 53.7,
+      "firstTime": 30.916666666666668,
+      "lastTime": 53.666666666666664,
+      "bytes": 5256730
+    },
+    "automatisierung": {
+      "count": 234,
+      "start": 53.7,
+      "end": 73.2,
+      "firstTime": 53.75,
+      "lastTime": 73.16666666666667,
+      "bytes": 4858324
+    },
+    "postfach": {
+      "count": 153,
+      "start": 73.2,
+      "end": 86,
+      "firstTime": 73.25,
+      "lastTime": 85.91666666666667,
+      "bytes": 3995542
+    },
+    "hamburg": {
+      "count": 143,
+      "start": 86,
+      "end": 97.933,
+      "firstTime": 86,
+      "lastTime": 97.83333333333333,
+      "bytes": 3272734
+    }
+  },
+  "totalBytes": 23665032
+}
