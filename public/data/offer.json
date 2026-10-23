@@ -3,5 +3,17 @@
   "regularPrice": 1990,
   "slotsTotal": 3,
   "slotsLeft": 2,
-  "carePrice": 49
+  "carePrice": 49,
+  "roundPrice": 79,
+  "text": {
+    "tag": "Einführungspreis",
+    "regularLabel": "regulär ab dem 4. Kunden",
+    "launchLine": "Gilt für die ersten drei Kunden. Danach {regular}.",
+    "slots": "noch {slotsLeft} von {slotsTotal} Plätzen",
+    "regularOnly": "Festpreis, alles drin.",
+    "included": "Zwei Korrekturrunden inklusive, ab der dritten {round}.",
+    "care": "Technische Betreuung {care} im Monat (Hosting, Domain, Updates, kleine Änderungen).",
+    "button": "Platz anfragen",
+    "fine": "Alle Preise sind Endpreise. Gemäß § 19 UStG wird keine Umsatzsteuer ausgewiesen."
+  }
 }
