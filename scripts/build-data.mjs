@@ -23,7 +23,7 @@ for (const c of chapters.chapters) {
 }
 
 const data = {
-  chapters: chapters.chapters.map(({id, index, label, vh, beats}) => ({id, index, label, vh, beats: beats.map((b) => b.at)})),
+  chapters: chapters.chapters.map(({id, index, label, vh, beats}) => ({id, index, label, vh: Math.max(100, vh || 100), beats: beats.length})),
   offer,
   built: new Date().toISOString().slice(0, 10),
 };

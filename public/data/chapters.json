@@ -1,60 +1,47 @@
 {
-  "video": {
-    "source": "Bartolucci_demo_v9.mp4",
-    "duration": 97.933,
-    "fps": 30,
-    "width": 1080,
-    "height": 1920
-  },
+  "note": "v10: no video. Each chapter is one scroll section on desktop (vh = min-height) and one DOM scene in the phone (public/assets/scenes.js). beats = what happens on the right, in order; the left copy marks its elements with data-beat=\"n\".",
   "chapters": [
     {
       "id": "hook",
       "index": 1,
       "label": "Start",
-      "start": 0.0,
-      "end": 6.6,
-      "scrubStart": 5.2,
-      "note": "Vier Chat-Blasen, Swipe auf den Laptop (Drehbuch b0–14). Desktop-Scrub beginnt bei 5,2 s (alle vier Blasen stehen), davor übernimmt die Live-DOM-Version der Blasen; Fallback/Mobile spielen 0–6,6 s."
+      "vh": 130,
+      "beats": ["Blase 1 von links", "Blase 2 von rechts", "Blase 3 von links", "Antwort „Machen wir.“ von rechts"]
     },
     {
       "id": "website",
       "index": 2,
       "label": "Websites",
-      "start": 6.6,
-      "end": 30.9,
-      "note": "Laptop, Morph ins Handy, Preise/Zeiten, Formular, Danke (Drehbuch b14–66)"
+      "vh": 300,
+      "beats": ["Blasen wischen nach oben, Laptop + Handy steigen auf, Seitenblöcke setzen sich zusammen", "Öffnungszeiten springen auf den heutigen Tag", "Anfrage-Karte landet mit Haken"]
     },
     {
       "id": "assistent",
       "index": 3,
       "label": "Assistent",
-      "start": 30.9,
-      "end": 53.7,
-      "note": "Display zurück ins Handy, Push, Briefing, Sprachnotiz, Einstellungen (Drehbuch b66–114,5; Lücke 53,3–53,7 dem Kapitel zugeschlagen)"
+      "vh": 290,
+      "beats": ["Briefing-Karten gleiten ein (Wetter, Termine, Mails)", "Sprachnotiz erscheint, Wellenform läuft einmal", "Einstellungen fahren hoch, ein Schalter kippt"]
     },
     {
       "id": "automatisierung",
       "index": 4,
       "label": "Automatisierung",
-      "start": 53.7,
-      "end": 73.2,
-      "note": "Swipe, Canvas, Tauchfahrt, Schalter bündelt Postfächer (Drehbuch b114,5–156,25; Lücke 72,7–73,2 dem Kapitel zugeschlagen)"
+      "vh": 300,
+      "beats": ["Vier Kästchen und Linien zeichnen sich", "Kamera zoomt in ein Kästchen, sechs Schritte leuchten nacheinander", "Schalter „Alle Postfächer“ kippt, Kästchen pulsiert"]
     },
     {
       "id": "postfach",
       "index": 5,
       "label": "Postfach",
-      "start": 73.2,
-      "end": 86.0,
-      "note": "Swipe zur Mail-App, Posteingang, Zusammenfassung, Karussell (Drehbuch b156,25–183,5; Ende auf den dritten Swipe gelegt statt 89,8, damit die Kapitel nicht überlappen)"
+      "vh": 270,
+      "beats": ["Posteingang mit drei Mails", "Oberste Mail öffnet sich, Zusammenfassung füllt sich", "Hervorhebung „keine neue App“"]
     },
     {
       "id": "hamburg",
       "index": 6,
       "label": "Über uns",
-      "start": 86.0,
-      "end": 97.933,
-      "note": "Dritter Swipe, Endkarte, Wortmarke, URL tippt sich, Blende auf Weiß (Drehbuch b183,5–209)"
+      "vh": 280,
+      "beats": ["Skyline steigt auf, Containerschiff fährt los", "Wortmarke erscheint", "URL tippt sich in die Adresszeile, danach tritt das Handy zurück"]
     }
   ]
 }
