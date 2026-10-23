@@ -1,45 +1,39 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Impressum – Bartolucci Digital</title>
 <meta name="robots" content="noindex">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231f2a3c'/%3E%3Ctext x='32' y='42' font-family='Arial' font-weight='700' font-size='26' fill='white' text-anchor='middle'%3EBD%3C/text%3E%3C/svg%3E">
-<style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{
-    min-height:100vh;padding:clamp(16px,5vh,56px) 16px;
-    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-    background:linear-gradient(180deg,#6fb6e6 0%,#9fd2f1 55%,#4a83b3 100%) fixed;
-    color:#e8edf3;line-height:1.6;
-  }
-  .card{
-    max-width:720px;margin:0 auto;padding:clamp(22px,4vw,40px);
-    border-radius:22px;background:rgba(28,38,56,.9);
-    box-shadow:0 18px 50px rgba(15,30,55,.35);
-  }
-  .back{display:inline-block;margin-bottom:18px;color:#9fd2f1;text-decoration:none;font-size:.92rem}
-  .back:hover{text-decoration:underline}
-  h1{font-size:clamp(1.7rem,4.5vw,2.2rem);font-weight:800;letter-spacing:-.02em;color:#fff;line-height:1.15}
-  h2{margin-top:28px;font-size:1.08rem;color:#fff}
-  p{margin-top:8px}
-  a{color:#9fd2f1}
-  mark.ph{background:#f0b13a;color:#1c2638;padding:0 4px;border-radius:4px;font-weight:600}
-  .foot{margin-top:32px;padding-top:16px;border-top:1px solid rgba(255,255,255,.15);font-size:.8rem;color:rgba(255,255,255,.55)}
-  .foot a{color:inherit}
-</style>
+<link rel="canonical" href="https://bartolucci-digital.de/impressum.html">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/fonts/inter-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/base.css">
+<script src="/assets/legal.js"></script>
+<script src="/assets/shared.js" defer></script>
 </head>
 <body>
-<main class="card">
-  <a class="back" href="index.html">← Zur Startseite</a>
+<header class="site-header" data-header>
+  <a class="brand" href="/"><img class="logo-light" src="/assets/logo.svg" alt="bartolucci digital" width="128" height="36"><img class="logo-dark" src="/assets/logo-dark.svg" alt="bartolucci digital" width="128" height="36"></a>
+  <div class="header-right">
+    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Dunkles Design einschalten" aria-pressed="false">
+      <svg class="ico-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <svg class="ico-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+    <a class="btn btn-primary" href="/#kontakt">Kontakt</a>
+  </div>
+</header>
+<main class="legal">
+  <a class="back" href="/">← Zur Startseite</a>
   <h1>Impressum</h1>
 
   <h2>Angaben gemäß § 5 DDG</h2>
   <p>
     Bartolucci Digital GbR<br>
     Gardinger Weg 16<br>
-    22609, Hamburg
+    22609 Hamburg
   </p>
 
   <h2>Vertreten durch die Gesellschafter</h2>
@@ -50,7 +44,7 @@
 
   <h2>Kontakt</h2>
   <p>
-    Telefon: 0170 7240 195
+    Telefon: 0170 7240 195<br>
     E-Mail: cedericlangpaap@gmail.com
   </p>
 
@@ -59,7 +53,7 @@
   <p>Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: DE…</p>
   -->
 
-  <p class="foot">© 2026 Bartolucci Digital · <a href="datenschutz.html">Datenschutz</a></p>
+  <p class="foot">© 2026 Bartolucci Digital · <a href="/datenschutz.html">Datenschutz</a></p>
 </main>
 </body>
 </html>
