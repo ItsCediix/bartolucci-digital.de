@@ -1,9 +1,9 @@
-/* Desktop body: two-column scroll stage (text left, sticky phone panel right with the six DOM scenes), rail,
-   chapter reveals, end hand-over, mouse effects. Only applied when <html data-mode="desktop">. */
+/* Desktop body: two-column scroll area (text left, sticky frameless stage right with the three DOM scenes),
+   rail, chapter reveals, end hand-over, mouse effects. Only applied when <html data-mode="desktop">. */
 html[data-mode='desktop'] body { overflow-x: clip; }
 html[data-mode='mobile'] .story, html[data-mode='mobile'] .rail { display: none; }
 
-/* ---------- stage ---------- */
+/* ---------- scroll area ---------- */
 .story {
   position: relative;
   display: grid;
@@ -23,26 +23,15 @@ html[data-mode='mobile'] .story, html[data-mode='mobile'] .rail { display: none;
   padding: 40px clamp(16px, 4vw, 64px) 48px 0;
 }
 .copy { max-width: 620px; }
-.copy .eyebrow { margin-bottom: 16px; }
 .copy .h-chapter { font-size: clamp(30px, 3.3vw, 48px); }
 .copy .body { margin-top: 20px; color: var(--ink-2); font-size: clamp(16.5px, 1.15vw, 18px); }
 .copy .body p + p, .copy .body .clip + .clip { margin-top: 12px; }
-.copy .key { margin: 26px 0 0; }
-.copy .key + .body { margin-top: 12px; }
-.copy .facts { margin-top: 24px; display: grid; gap: 10px; }
-.copy .facts li { position: relative; padding-left: 26px; font-weight: 600; font-size: 16px; }
-.copy .facts li::before { content: ''; position: absolute; left: 0; top: 0.5em; width: 14px; height: 14px; border-radius: 50%; background: var(--accent-soft); box-shadow: inset 0 0 0 4px var(--accent); }
-.copy .demo-note { margin-top: 20px; padding: 12px 16px; border-left: 3px solid var(--demo-orange); background: var(--bg-2); border-radius: 0 12px 12px 0; font-size: 14.5px; color: var(--ink-2); }
+.copy .facts { margin-top: 24px; max-width: 560px; }
+.copy .demo-note { margin-top: 20px; font-size: 14.5px; color: var(--ink-3); }
+.copy .more-link { margin-top: 14px; font-size: 15px; font-weight: 600; }
+.copy .more-link a { color: var(--accent); text-underline-offset: 3px; }
 .copy .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
 .chapter[data-chapter='hook'] .lead { margin-top: 22px; max-width: 560px; }
-.chapter[data-chapter='website'] .offer { max-width: 520px; margin-top: 20px; padding: 18px 22px 16px; }
-.chapter[data-chapter='website'] .offer .offer-price { font-size: clamp(26px, 2.3vw, 34px); }
-.chapter[data-chapter='website'] .offer .offer-sub { margin-top: 6px; font-size: 15px; }
-.chapter[data-chapter='website'] .offer .offer-why { margin-top: 10px; font-size: 15px; }
-.chapter[data-chapter='website'] .offer .offer-care { margin-top: 12px; padding-top: 12px; font-size: 15px; }
-.chapter[data-chapter='website'] .offer .offer-fine { margin-top: 8px; font-size: 12.5px; }
-.chapter[data-chapter='website'] .facts { margin-top: 18px; gap: 7px; }
-.chapter[data-chapter='website'] .demo-note { margin-top: 16px; padding: 9px 14px; }
 
 /* hero spotlight: faint grid revealed around the cursor */
 .chapter[data-chapter='hook'] .chapter-inner::before {
@@ -61,9 +50,8 @@ html[data-mode='mobile'] .story, html[data-mode='mobile'] .rail { display: none;
 .copy .clip { overflow: hidden; }
 .copy .clip > .line { display: block; will-change: transform; }
 
-/* ---------- rail ---------- */
-.rail { position: relative; }
-.rail ol { position: sticky; top: 50%; transform: translateY(-50%); display: grid; gap: 14px; justify-items: center; padding: 0; margin: 0; }
+/* ---------- rail: fixed at the right edge, so it also reaches the sections after the scroll area ---------- */
+.rail ol { position: fixed; right: 14px; top: 50%; transform: translateY(-50%); z-index: 30; display: grid; gap: 10px; justify-items: center; padding: 0; margin: 0; }
 .rail a { position: relative; display: block; width: 28px; height: 28px; border-radius: 50%; text-decoration: none; }
 .rail .dot { position: absolute; inset: 9px; border-radius: 50%; background: var(--ink-3); opacity: 0.45; transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s, background 0.3s; }
 .rail a:hover .dot, .rail a:focus-visible .dot { opacity: 1; transform: scale(1.25); }
@@ -77,38 +65,18 @@ html[data-mode='mobile'] .story, html[data-mode='mobile'] .rail { display: none;
 .rail a:hover .rail-label, .rail a:focus-visible .rail-label { opacity: 1; transform: translate(-2px, -50%); }
 .rail a:focus-visible { outline-offset: 0; }
 
-/* ---------- sticky phone panel (right): a plain phone frame around the 540 × 960 scene stage ---------- */
+/* ---------- sticky stage (right): no frame, no panel, the scenes stand on the page background ---------- */
 .col-panel { position: relative; }
 .panel-sticky {
   position: sticky; top: var(--header-h); height: calc(100vh - var(--header-h));
-  display: grid; place-items: center;
-  padding: 20px 0 32px;
-  perspective: 1200px;
+  padding: 24px 0 32px;
 }
-.phone {
-  position: relative; margin: 0;
-  height: 100%; max-height: calc(100vh - var(--header-h) - 52px);
-  aspect-ratio: 9 / 16;
-  transform-style: preserve-3d;
-  will-change: transform, opacity;
-}
-.phone-gloss {
-  position: absolute; inset: 0; pointer-events: none; z-index: 3; border-radius: 44px;
-  background: radial-gradient(420px 420px at var(--gx, 30%) var(--gy, 20%), rgba(255, 255, 255, 0.14), transparent 60%);
-  mix-blend-mode: screen; opacity: 0; transition: opacity 0.4s;
-}
-.phone.has-gloss .phone-gloss { opacity: 1; }
-/* ---------- end hand-over: the contact section rises out of the film ---------- */
+.panel-sticky .stage { will-change: transform, opacity; }
+
+/* ---------- contact section with the harbour skyline ---------- */
 .section-contact { position: relative; overflow: hidden; padding-top: clamp(96px, 12vw, 180px); padding-bottom: clamp(200px, 22vw, 320px); }
 .section-contact::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%); z-index: 0; }
 .section-contact .wrap { position: relative; z-index: 2; }
-.skyline { position: absolute; left: 0; right: 0; bottom: 0; height: min(38vw, 340px); z-index: 1; pointer-events: none; }
-.sky-layer { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; color: var(--end-glass); fill: currentColor; opacity: 0.18; will-change: transform; }
-.sky-layer.sky-cranes { color: var(--end-crane); opacity: 0.32; }
-.sky-layer.sky-ship { color: var(--film-navy); opacity: 0.28; }
-html[data-theme='dark'] .sky-layer { color: var(--end-sky); opacity: 0.1; }
-html[data-theme='dark'] .sky-layer.sky-cranes { opacity: 0.22; }
-html[data-theme='dark'] .sky-layer.sky-ship { opacity: 0.2; }
 
 /* magnetic buttons (desktop + fine pointer only, set up by JS) */
 .magnetic { will-change: transform; }
@@ -116,14 +84,13 @@ html[data-theme='dark'] .sky-layer.sky-ship { opacity: 0.2; }
 /* ---------- noscript ---------- */
 .noscript { padding: 24px var(--gutter); }
 
-/* ---------- narrow desktop (< 1100 px): single column, panel inline ---------- */
+/* ---------- narrow desktop (< 1100 px): single column, stage on top ---------- */
 @media (max-width: 1099px) {
   html[data-mode='desktop'] .story { grid-template-columns: 1fr; }
   html[data-mode='desktop'] .col-text, html[data-mode='desktop'] .col-panel { grid-column: 1; }
   html[data-mode='desktop'] .rail { display: none; }
   html[data-mode='desktop'] .col-panel { order: -1; position: sticky; top: var(--header-h); z-index: 5; background: var(--bg); }
-  html[data-mode='desktop'] .panel-sticky { position: static; height: auto; padding: 16px 0; }
-  html[data-mode='desktop'] .phone { height: 46vh; max-height: 46vh; margin-inline: auto; }
+  html[data-mode='desktop'] .panel-sticky { position: static; height: 46vh; padding: 16px 0; }
   html[data-mode='desktop'] .chapter { min-height: 0 !important; }
   html[data-mode='desktop'] .chapter-inner { position: static; min-height: 0; padding: 48px 0; }
 }
@@ -131,6 +98,5 @@ html[data-theme='dark'] .sky-layer.sky-ship { opacity: 0.2; }
 /* ---------- reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
   .copy .w, .copy .clip > .line { transform: none !important; opacity: 1 !important; }
-  .phone { transform: none !important; }
   .rail .dot, .btn, .contact-line { transition: none; }
 }

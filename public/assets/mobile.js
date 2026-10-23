@@ -1,5 +1,5 @@
-/* Mobile body (v10): every chapter card carries its own small phone with the chapter's DOM scene. The
-   scene plays its beats once (~2.5 s) when the card scrolls into view and then holds its end state; no
+/* Mobile body (v11): every chapter card carries its own small frameless stage with the chapter's DOM scene.
+   The scene plays its beats once (~2.5 s) when the card is half visible and then holds its end state; no
    scroll scrubbing, no video. Header state, sticky CTA, anchors. Runs only when <html data-mode="mobile">. */
 (function () {
   'use strict';
@@ -25,18 +25,19 @@
 
   /* ---------- scenes: one timeline per card, played once on entry ---------- */
   var PLAY_SECONDS = 2.5;
+  var BEATS = {website: [0, 1.5, 3.1], betreuung: [0, 1.2, 2.6]};
   d.querySelectorAll('.m-card').forEach(function (card) {
     var id = card.getAttribute('data-chapter');
-    var device = card.querySelector('.device');
+    var device = card.querySelector('.m-stage');
     if (!device) return;
-    S.fit(device);
-    var scenes = S.collect(device.querySelector('.stage'));
+    var stage = device.querySelector('.stage');
+    S.fit(stage);
+    var scenes = S.collect(stage);
     var scene = scenes[id];
-    S.show(scenes, id);
-    if (RM) { S.finalAll(scenes); return; }
+    if (RM) return; // the CSS already is the final state
     var tl = gsap.timeline({paused: true, defaults: {ease: S.ease.brand}});
     if (id === 'hook') S.introInto(tl, scene, 0);
-    else S.beats[id](tl, scene, 0);
+    else S.beats[id](tl, scene, BEATS[id]);
     tl.timeScale(tl.duration() / PLAY_SECONDS);
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {

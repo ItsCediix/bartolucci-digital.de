@@ -1,5 +1,5 @@
-/* Mobile body (v10): chapter blocks, each with a small phone (DOM scene, plays once on entry) above its
-   text card, sticky bottom CTA, then the normal sections. Only applied when <html data-mode="mobile">. */
+/* Mobile body (v11): chapter blocks, each with a small frameless stage (DOM scene, plays once on entry)
+   above its text, sticky bottom CTA, then the normal sections. Only applied when <html data-mode="mobile">. */
 html[data-mode='desktop'] .m-chapters, html[data-mode='desktop'] .m-cta { display: none; }
 
 html[data-mode='mobile'] body { overflow-x: clip; }
@@ -11,36 +11,34 @@ html[data-mode='mobile'] .m-header .theme-toggle { width: 38px; height: 38px; }
 .m-chapters { padding: 8px 0 24px; }
 .m-card { padding: 28px 16px 20px; scroll-margin-top: var(--header-h); }
 .m-card + .m-card { border-top: 1px solid var(--line); }
-.m-card .device { width: min(64vw, calc(52svh * 9 / 16), 300px); margin: 0 auto 22px; }
+.m-stage { position: relative; width: 100%; max-height: 46svh; margin: 0 auto 22px; }
+.m-stage .stage { position: absolute; inset: 0; }
 .m-card .copy { width: 100%; }
-.m-card .eyebrow { margin-bottom: 8px; }
 .m-card .h-display { font-size: clamp(30px, 8.6vw, 38px); }
 .m-card .h-chapter { font-size: clamp(26px, 7.2vw, 32px); }
 .m-card .lead { margin-top: 12px; font-size: 16.5px; }
 .m-card .body { margin-top: 12px; color: var(--ink-2); font-size: 16px; }
 .m-card .body p + p { margin-top: 8px; }
-.m-card .key { margin-top: 14px; font-size: 21px; }
-.m-card .key + .body { margin-top: 8px; }
-.m-card .facts { margin-top: 14px; display: grid; gap: 7px; }
-.m-card .facts li { position: relative; padding-left: 22px; font-weight: 600; font-size: 15px; }
-.m-card .facts li::before { content: ''; position: absolute; left: 0; top: 0.42em; width: 12px; height: 12px; border-radius: 50%; background: var(--accent-soft); box-shadow: inset 0 0 0 3px var(--accent); }
-.m-card .demo-note { margin-top: 14px; padding: 9px 12px; border-left: 3px solid var(--demo-orange); background: var(--bg-2); border-radius: 0 10px 10px 0; font-size: 14px; color: var(--ink-2); }
+.m-card .facts { margin-top: 16px; font-size: 15.5px; }
+.m-card .demo-note { margin-top: 14px; font-size: 14px; color: var(--ink-3); }
+.m-card .more-link { margin-top: 10px; font-size: 15px; font-weight: 600; }
+.m-card .more-link a { color: var(--accent); }
 .m-card .cta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
 .m-card .cta-row .btn-lg { padding: 14px 20px; font-size: 16px; }
-.m-card .offer { display: none; } /* the price block is shown once, in the "Preise" section below */
 
 /* ---------- sections after the chapters ---------- */
 html[data-mode='mobile'] .section { padding: 56px 0; }
-html[data-mode='mobile'] .section-contact { padding-top: 64px; padding-bottom: 170px; }
-html[data-mode='mobile'] #preise { padding-bottom: 96px; }
+html[data-mode='mobile'] .section-contact { position: relative; overflow: hidden; padding-top: 64px; padding-bottom: 170px; }
+html[data-mode='mobile'] .section-contact .wrap { position: relative; z-index: 2; }
 html[data-mode='mobile'] .skyline { height: 130px; }
 html[data-mode='mobile'] .sky-layer { transform: none !important; }
 html[data-mode='mobile'] .h-section { font-size: clamp(28px, 7.4vw, 34px); }
 html[data-mode='mobile'] .lead { font-size: 16.5px; }
 html[data-mode='mobile'] .contact-line { font-size: 15.5px; padding: 15px 16px; gap: 12px; }
 html[data-mode='mobile'] .contact-line .small { display: none; }
-html[data-mode='mobile'] .about-copy .key { font-size: 20px; }
-html[data-mode='mobile'] .founders { margin-top: 24px; }
+html[data-mode='mobile'] .person { padding: 18px; gap: 16px; }
+html[data-mode='mobile'] .card-photo { width: 120px; height: 120px; }
+html[data-mode='mobile'] #mehr { padding-bottom: 72px; }
 html[data-mode='mobile'] .site-footer { padding-bottom: 96px; }
 html[data-mode='mobile'] .site-footer .wrap { flex-direction: column; align-items: flex-start; }
 
