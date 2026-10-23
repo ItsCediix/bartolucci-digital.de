@@ -14,9 +14,14 @@ const read = (p) => JSON.parse(fs.readFileSync(path.join(PUB, p), 'utf8'));
 const chapters = read('data/chapters.json');
 const offer = read('data/offer.json');
 
-for (const k of ['launchPrice', 'regularPrice', 'slotsTotal', 'slotsLeft', 'carePrice']) {
+for (const k of ['launchPrice', 'regularPrice', 'slotsTotal', 'slotsLeft', 'carePrice', 'roundPrice']) {
   if (typeof offer[k] !== 'number') throw new Error(`offer.json: "${k}" must be a number`);
 }
+for (const k of ['tag', 'regularLabel', 'launchLine', 'slots', 'regularOnly', 'included', 'care', 'button', 'fine']) {
+  if (typeof offer.text?.[k] !== 'string') throw new Error(`offer.json: "text.${k}" must be a string`);
+}
+// UWG § 5: the higher price may only appear as the future regular price, never as a "was"-price
+if (/\b(statt|vorher|UVP)\b|%/i.test(Object.values(offer.text).join(' '))) throw new Error('offer.json: no "statt"/"vorher"/"UVP"/percent wording');
 if (offer.slotsLeft < 0 || offer.slotsLeft > offer.slotsTotal) throw new Error('offer.json: slotsLeft out of range');
 for (const c of chapters.chapters) {
   if (!Array.isArray(c.beats) || c.beats.length < 1) throw new Error(`chapters.json: "${c.id}" needs a beats array`);

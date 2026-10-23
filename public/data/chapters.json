@@ -1,5 +1,5 @@
 {
-  "note": "v10: no video. Each chapter is one scroll section on desktop (vh = min-height) and one DOM scene in the phone (public/assets/scenes.js). beats = what happens on the right, in order; the left copy marks its elements with data-beat=\"n\".",
+  "note": "v11: three scroll chapters. Each chapter is one scroll section on desktop (vh = min-height) and one frameless DOM scene on the stage (public/assets/scenes.js). beats = what happens on the right, in order; the left copy marks its elements with data-beat=\"n\". Beat positions as shares of the chapter's scroll are set in desktop.js (BEATS).",
   "chapters": [
     {
       "id": "hook",
@@ -11,37 +11,16 @@
     {
       "id": "website",
       "index": 2,
-      "label": "Websites",
+      "label": "Website",
       "vh": 300,
-      "beats": ["Blasen wischen nach oben, Laptop + Handy steigen auf, Seitenblöcke setzen sich zusammen", "Öffnungszeiten springen auf den heutigen Tag", "Anfrage-Karte landet mit Haken"]
+      "beats": ["Blasen ziehen nach oben in den Laptop, Laptop + Handy steigen auf, Seitenblöcke setzen sich zusammen", "Öffnungszeiten springen auf den heutigen Tag", "Anfrage-Karte landet mit Haken, Bildunterschrift links blendet ein"]
     },
     {
-      "id": "assistent",
+      "id": "betreuung",
       "index": 3,
-      "label": "Assistent",
-      "vh": 290,
-      "beats": ["Briefing-Karten gleiten ein (Wetter, Termine, Mails)", "Sprachnotiz erscheint, Wellenform läuft einmal", "Einstellungen fahren hoch, ein Schalter kippt"]
-    },
-    {
-      "id": "automatisierung",
-      "index": 4,
-      "label": "Automatisierung",
-      "vh": 300,
-      "beats": ["Vier Kästchen und Linien zeichnen sich", "Kamera zoomt in ein Kästchen, sechs Schritte leuchten nacheinander", "Schalter „Alle Postfächer“ kippt, Kästchen pulsiert"]
-    },
-    {
-      "id": "postfach",
-      "index": 5,
-      "label": "Postfach",
-      "vh": 270,
-      "beats": ["Posteingang mit drei Mails", "Oberste Mail öffnet sich, Zusammenfassung füllt sich", "Hervorhebung „keine neue App“"]
-    },
-    {
-      "id": "hamburg",
-      "index": 6,
-      "label": "Über uns",
+      "label": "Betreuung",
       "vh": 280,
-      "beats": ["Skyline steigt auf, Containerschiff fährt los", "Wortmarke erscheint", "URL tippt sich in die Adresszeile, danach tritt das Handy zurück"]
+      "beats": ["Kundenblase „Ab Montag … bis 19 Uhr“ federt ein", "18 Uhr blendet aus, 19 Uhr fällt ein, Antwort „Erledigt.“", "Statusleiste Hosting / Domain / Updates fährt hoch, Punkte füllen sich; danach tritt die Bühne ab"]
     }
   ]
 }
