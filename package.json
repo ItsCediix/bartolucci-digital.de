@@ -2,11 +2,11 @@
   "name": "bartolucci-digital.de",
   "version": "1.0.0",
   "private": true,
-  "description": "Bartolucci Digital – statische Website (Scroll-gesteuertes Demo-Video v9)",
+  "description": "Bartolucci Digital – statische Website (v10: Demo-Szenen als scroll-gesteuertes DOM, kein Video)",
   "type": "module",
   "scripts": {
-    "frames": "node scripts/frames.mjs",
     "vendor": "node scripts/vendor.mjs",
+    "brand": "node scripts/brand.mjs",
     "build": "node scripts/build-data.mjs && node scripts/build-headers.mjs",
     "serve": "serve public -l 4173",
     "check:sizes": "node scripts/check-sizes.mjs",
@@ -19,6 +19,7 @@
     "lenis": "^1.3.11",
     "lighthouse": "^12.8.2",
     "playwright": "^1.56.0",
-    "serve": "^14.2.5"
+    "serve": "^14.2.5",
+    "sharp": "^0.35.5"
   }
 }

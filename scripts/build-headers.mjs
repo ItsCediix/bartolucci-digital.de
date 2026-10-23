@@ -44,12 +44,6 @@ const headers = `/*
   Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
   Cross-Origin-Opener-Policy: same-origin
 
-/frames/*
-  Cache-Control: public, max-age=31536000, immutable
-
-/video/*
-  Cache-Control: public, max-age=31536000, immutable
-
 /fonts/*
   Cache-Control: public, max-age=31536000, immutable
 
