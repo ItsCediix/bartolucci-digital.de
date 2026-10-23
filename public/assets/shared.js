@@ -9,6 +9,8 @@
   var toggle = d.querySelector('[data-theme-toggle]');
   function applyTheme(theme, persist) {
     html.setAttribute('data-theme', theme);
+    var meta = d.querySelector('meta[data-theme-color]');
+    if (meta) meta.setAttribute('content', theme === 'dark' ? '#0b1220' : '#faf8f3');
     if (toggle) {
       toggle.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
       toggle.setAttribute('aria-label', theme === 'dark' ? 'Helles Design einschalten' : 'Dunkles Design einschalten');
