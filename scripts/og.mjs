@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Renders public/assets/og.png (1200 × 630) with Playwright from a small HTML template: the logo and the
-// line "Websites · Automatisierung · Hamburg", with the own skyline drawing low in the background.
+// line "Websites für kleine Betriebe · Hamburg", with the own skyline drawing low in the background.
 //   node scripts/og.mjs
 import fs from 'node:fs';
 import path from 'node:path';
@@ -25,7 +25,7 @@ body{position:relative;background:linear-gradient(180deg,#faf8f3 0%,#f1ede4 100%
 </style></head><body>
 <div class="sky">${sky.replace('<svg ', '<svg preserveAspectRatio="xMidYMax slice" ')}</div>
 <div class="logo">${logo}</div>
-<p class="line">Websites · Automatisierung · Hamburg</p>
+<p class="line">Websites für kleine Betriebe · Hamburg</p>
 <div class="bar"></div>
 </body></html>`;
 const tmp = path.join(ROOT, 'review', 'og-template.html');
