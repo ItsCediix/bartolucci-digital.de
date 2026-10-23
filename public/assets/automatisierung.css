@@ -1,0 +1,61 @@
+/* Sub-page /automatisierung: calm, single topic. Two illustrations (morning briefing, inbox summary) that
+   play once when they scroll into view (automatisierung.js) and then hold. The CSS is their END state.
+   Generic UI only: no app names, no third-party colours. Cards are separated by spacing, no side stripes. */
+.auto-hero { padding: clamp(40px, 6vw, 96px) 0 clamp(56px, 7vw, 110px); }
+.auto-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 96px); align-items: center; }
+.auto-row-flip .auto-copy { order: 2; }
+.auto-copy .back { display: inline-block; margin-bottom: 24px; font-size: 15px; font-weight: 600; text-decoration: none; color: var(--ink-3); }
+.auto-copy .back:hover { color: var(--ink); }
+.auto-copy .lead { margin-top: 18px; }
+.auto-copy .lead + p { margin-top: 14px; color: var(--ink-2); }
+.auto-copy .h-display { font-size: clamp(38px, 4.6vw, 64px); }
+.auto-fig { margin: 0; display: flex; justify-content: center; }
+.auto-narrow { max-width: 760px; }
+.auto-narrow .facts { margin-top: 26px; }
+.auto-price { margin: 28px 0 22px; font-weight: 600; }
+
+/* ---------- illustration 1: morning briefing, label left, value right ---------- */
+.br { width: min(100%, 460px); display: grid; gap: 12px; }
+.br-head { justify-self: start; margin-bottom: 4px; font-size: 15px; font-weight: 600; color: var(--ink-3); }
+.br-card {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+  padding: 20px 24px; border-radius: 18px; background: var(--sc-bubble); color: var(--sc-ink);
+  box-shadow: var(--sc-shadow), inset 0 0 0 1px var(--sc-edge);
+}
+.br-card span { color: var(--ink-3); font-size: 16px; }
+.br-card b { font-size: clamp(17px, 1.6vw, 21px); text-align: right; }
+
+/* ---------- illustration 2: generic inbox, the top mail opens into the summary ---------- */
+.ib { width: min(100%, 480px); border-radius: 22px; overflow: hidden; background: var(--sc-bubble); color: var(--sc-ink); box-shadow: var(--sc-shadow), inset 0 0 0 1px var(--sc-edge); }
+.ib-top { padding: 18px 22px; font-weight: 800; font-size: 21px; letter-spacing: -0.02em; border-bottom: 1px solid var(--line); }
+.ib-body { position: relative; min-height: 470px; }
+.ib-list { list-style: none; margin: 0; padding: 0; }
+.ib-mail { display: flex; align-items: center; gap: 14px; padding: 14px 22px; border-bottom: 1px solid var(--line); }
+.ib-av { display: grid; place-items: center; flex: none; width: 40px; height: 40px; border-radius: 10px; background: #5a6592; color: #fff; font-weight: 700; font-size: 16px; }
+.ib-av2 { background: #515e70; }
+.ib-av3 { background: #8a6f4d; }
+.ib-txt { flex: 1; min-width: 0; display: grid; }
+.ib-txt b { font-size: 16px; }
+.ib-txt span { font-size: 14.5px; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ib-mail:not(.is-new) b { font-weight: 600; }
+.ib-time { font-size: 13px; color: var(--ink-3); }
+.is-new .ib-time { color: var(--accent); font-weight: 700; }
+.ib-open { position: absolute; inset: 0; padding: 20px 22px 24px; background: var(--sc-bubble); clip-path: inset(0 0 0 0); }
+.ib-sub { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; }
+.ib-from { display: flex; align-items: center; gap: 12px; margin: 12px 0 16px; }
+.ib-from b { display: block; font-size: 15px; }
+.ib-from small { display: block; font-size: 13px; color: var(--ink-3); }
+.ib-blk { display: grid; gap: 2px; margin-top: 10px; padding: 14px 16px; border-radius: 14px; background: var(--bg-2); }
+.ib-blk small { font-size: 13px; font-weight: 600; color: var(--accent); }
+.ib-blk b { font-size: 17px; }
+.ib-blk span { font-size: 14px; color: var(--ink-2); }
+
+@media (max-width: 900px) {
+  .auto-row { grid-template-columns: 1fr; }
+  .auto-row-flip .auto-copy { order: 0; }
+}
+@media (max-width: 420px) {
+  .br-card { padding: 16px 18px; }
+  .ib-mail, .ib-open { padding-left: 16px; padding-right: 16px; }
+  .ib-body { min-height: 500px; }
+}
