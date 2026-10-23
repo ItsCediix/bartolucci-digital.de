@@ -9,7 +9,7 @@ import {fileURLToPath} from 'node:url';
 import sharp from 'sharp';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const DIR = path.join(ROOT, 'public', 'assets', 'team');
+const DIR = process.argv[2] ? path.resolve(process.argv[2]) : path.join(ROOT, 'public', 'assets', 'team'); // optional folder for tests
 const SIZE = 960;
 
 const files = fs.existsSync(DIR) ? fs.readdirSync(DIR).filter((f) => /\.jpe?g$/i.test(f)) : [];

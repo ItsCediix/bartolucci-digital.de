@@ -109,7 +109,7 @@
     var host = ['bartolucci-digital', 'de'].join('.');
     var mail = user + '@' + host;
     var tel = ['0170', '7240', '195'];
-    var telDisplay = tel.join(' ');
+    var telDisplay = tel.join(' '); // non-breaking: the number never wraps
     var telHref = 'tel:+49' + tel.join('').slice(1);
     var line = function (href, label, svgPath, hint) {
       var a = d.createElement('a');

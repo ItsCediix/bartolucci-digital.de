@@ -20,6 +20,8 @@ const lh = path.join(ROOT, 'node_modules', 'lighthouse', 'cli', 'index.js');
 const runs = [
   {name: 'desktop', url: `${BASE}/?mode=desktop`, extra: ['--preset=desktop']},
   {name: 'mobile', url: `${BASE}/?mode=mobile`, extra: []},
+  {name: 'auto-desktop', url: `${BASE}/automatisierung`, extra: ['--preset=desktop']},
+  {name: 'auto-mobile', url: `${BASE}/automatisierung`, extra: []},
 ];
 const summary = {};
 for (const r of runs) {

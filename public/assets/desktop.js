@@ -50,18 +50,20 @@
     });
     if (RM && scenes[id]) S.show(scenes, id);
   }
-  railLinks.forEach(function (a, i) {
-    var id = a.getAttribute('data-rail');
+  // the active item is the last one whose top has passed 55 % of the viewport. Picked from the scroll
+  // position on every update, so exact boundaries and big jumps (rail click, Home/End) never leave a gap.
+  var marks = railLinks.map(function (a) {
     var el = d.getElementById(a.getAttribute('href').slice(1));
-    if (!el) return;
-    ScrollTrigger.create({
-      trigger: el,
-      start: i === 0 ? 'top top' : 'top 55%',
-      end: i === railLinks.length - 1 ? 'bottom top' : 'bottom 55%',
-      onToggle: function (st) { if (st.isActive) setActive(id); },
-    });
-  });
-  setActive(chapters[0].id);
+    return {id: a.getAttribute('data-rail'), st: el && ScrollTrigger.create({trigger: el, start: 'top 55%'})};
+  }).filter(function (m) { return m.st; });
+  function pick(self) {
+    var y = self && self.scroll ? self.scroll() : (window.scrollY || 0);
+    var cur = marks[0];
+    marks.forEach(function (m) { if (m.st.start <= y + 1) cur = m; });
+    setActive(cur.id);
+  }
+  ScrollTrigger.create({start: 0, end: 'max', onUpdate: pick, onRefresh: pick});
+  pick();
 
   /* ------------------------------------------------------------ text helpers */
   function splitWords(el) {

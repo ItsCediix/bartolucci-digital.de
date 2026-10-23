@@ -63,7 +63,7 @@
 .demo .d-flip { position: relative; display: inline-block; height: 13px; overflow: hidden; perspective: 200px; }
 .demo .d-flip > span { display: block; line-height: 13px; backface-visibility: hidden; }
 .demo .d-flip-a { position: absolute; left: 0; top: 0; transform: rotateX(90deg); opacity: 0; }
-.demo-desk .d-sign { position: absolute; right: 20px; bottom: 26px; padding: 6px 9px; background: #e0561c; color: #1b1c1a; font-weight: 800; font-size: 13px; line-height: 0.95; transform: rotate(-5deg); }
+.demo-desk .d-sign { position: absolute; right: 20px; bottom: 26px; padding: 6px 9px; background: #e0561c; color: #000; font-weight: 800; font-size: 13px; line-height: 0.95; transform: rotate(-5deg); }
 
 .demo-mob { width: 182px; height: 396px; overflow: hidden; transform: scale(1.3736); }
 .demo-mob .d-scroll { position: absolute; left: 0; right: 0; top: 0; padding: 18px 14px; transform: translateY(-212px); }
