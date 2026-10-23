@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Lists the 10 largest files in public/ and the total; fails if any file exceeds the Cloudflare
-// Workers Static Assets limit of 25 MiB per file.
+// Workers Static Assets limit of 25 MiB per file, or if public/ as a whole exceeds the v10 budget of 3 MB.
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -35,4 +35,8 @@ if (over.length) {
   console.error(`\nFAIL: ${over.length} file(s) over 25 MiB`, over);
   process.exit(1);
 }
-console.log(`\nOK: no file over 25 MiB (largest ${mb(files[0].size)})`);
+if (total > 3 * 1024 * 1024) {
+  console.error(`\nFAIL: public/ is ${mb(total)}, budget 3 MB`);
+  process.exit(1);
+}
+console.log(`\nOK: no file over 25 MiB (largest ${mb(files[0].size)}), public/ ${mb(total)} < 3 MB`);
