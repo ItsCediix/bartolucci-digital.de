@@ -14,6 +14,16 @@
 .auto-narrow .facts { margin-top: 26px; }
 .auto-price { margin: 28px 0 22px; font-weight: 600; }
 
+/* start states from the first paint (v12, against the load flicker): gated on html.js (set by legal.js in
+   <head>), so without JS or with reduced motion the illustrations are simply visible. automatisierung.js
+   animates from exactly these values. */
+@media (prefers-reduced-motion: no-preference) {
+  html.js .br-head { opacity: 0; transform: translateY(10px); }
+  html.js .br-card { opacity: 0; transform: translateX(-40px); }
+  html.js .ib-mail { opacity: 0; transform: translateY(24px); }
+  html.js .ib-open { opacity: 0; clip-path: inset(0 0 86% 0); }
+}
+
 /* ---------- illustration 1: morning briefing, label left, value right ---------- */
 .br { width: min(100%, 460px); display: grid; gap: 12px; }
 .br-head { justify-self: start; margin-bottom: 4px; font-size: 15px; font-weight: 600; color: var(--ink-3); }

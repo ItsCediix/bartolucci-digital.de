@@ -1,7 +1,8 @@
 #!/usr/bin/env node
-// Writes public/_headers (Cloudflare) with a strict CSP. The only inline script on the site is the
-// boot script in index.html (mode + theme before first paint); its SHA-256 is whitelisted here so
-// script-src stays 'self' + that one hash. Re-run after changing the inline script: `npm run build`.
+// Writes public/_headers (Cloudflare) with a strict CSP. The only inline scripts on the site are in
+// index.html: the one-line `html.js` marker in <head> (v12, CSS start states of the reveals) and the boot
+// script (mode + theme before first paint); their SHA-256 hashes are whitelisted here so script-src stays
+// 'self' + those hashes. Re-run after changing an inline script: `npm run build`.
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';

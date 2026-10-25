@@ -8,7 +8,8 @@
   if (html.getAttribute('data-mode') !== 'mobile') return;
   var BD = window.BD;
   var S = window.BDScenes;
-  if (!BD || !S || !window.gsap || !window.ScrollTrigger) return;
+  // without the libraries nothing would ever reveal: drop html.js so the CSS start states no longer apply
+  if (!BD || !S || !window.gsap || !window.ScrollTrigger) { html.classList.remove('js'); return; }
   gsap.registerPlugin(ScrollTrigger);
 
   var RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -37,7 +38,11 @@
     if (RM) return; // the CSS already is the final state
     var tl = gsap.timeline({paused: true, defaults: {ease: S.ease.brand}});
     if (id === 'hook') S.introInto(tl, scene, 0);
-    else S.beats[id](tl, scene, BEATS[id]);
+    else {
+      // the scene layer starts hidden in CSS (scenes.css, html.js) and fades in with the first beat
+      tl.fromTo(scene.querySelector('.scene-in'), {opacity: 0}, {opacity: 1, duration: 0.4, ease: 'none', immediateRender: false}, 0);
+      S.beats[id](tl, scene, BEATS[id]);
+    }
     tl.timeScale(tl.duration() / PLAY_SECONDS);
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {

@@ -45,6 +45,18 @@ html[data-mode='mobile'] .story, html[data-mode='mobile'] .rail { display: none;
 }
 .chapter[data-chapter='hook'].has-spot .chapter-inner::before { opacity: 1; }
 
+/* reveal start states (v12): every [data-beat] element starts hidden from the first paint, so nothing flashes
+   before desktop.js has built its timelines. Gated on html.js (set synchronously in <head>): without JS the
+   class is missing and everything stays visible; with reduced motion nothing is hidden. The tweens in
+   desktop.js start from exactly these values. */
+@media (prefers-reduced-motion: no-preference) {
+  html.js[data-mode='desktop'] .chapter [data-beat]:not(ul),
+  html.js[data-mode='desktop'] .chapter ul[data-beat] > li { opacity: 0; }
+  html.js[data-mode='desktop'] .chapter li[data-beat],
+  html.js[data-mode='desktop'] .chapter ul[data-beat] > li { transform: translateX(-14px); }
+  html.js[data-mode='desktop'] #kontakt > .wrap { opacity: 0; transform: translateY(60px); }
+}
+
 /* word / line reveals (set up by JS, so without JS everything is simply visible) */
 .copy .w { display: inline-block; will-change: transform, opacity; }
 .copy .clip { overflow: hidden; }

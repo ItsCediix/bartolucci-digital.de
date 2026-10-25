@@ -12,7 +12,8 @@
   if (html.getAttribute('data-mode') !== 'desktop') return;
   var BD = window.BD;
   var S = window.BDScenes;
-  if (!BD || !S || !window.gsap || !window.ScrollTrigger) return;
+  // without the libraries nothing would ever reveal: drop html.js so the CSS start states no longer apply
+  if (!BD || !S || !window.gsap || !window.ScrollTrigger) { html.classList.remove('js'); return; }
   gsap.registerPlugin(ScrollTrigger);
 
   var RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -92,6 +93,11 @@
     line.appendChild(el);
     return line;
   }
+  // every [data-beat] element starts hidden in CSS (desktop.css, html.js), so the tweens start exactly from
+  // that state; immediateRender: false leaves the CSS state alone until the beat is reached
+  function reveal(tl, el, at) {
+    tl.fromTo(el, {opacity: 0}, {opacity: 1, duration: 0.01, ease: 'none', immediateRender: false}, at);
+  }
   // adds the reveal of every [data-beat="n"] element of a chapter at the start of beat n
   function addTextBeats(tl, c, beatTimes) {
     var els = c.el.querySelectorAll('[data-beat]');
@@ -99,16 +105,18 @@
       var n = parseInt(el.getAttribute('data-beat'), 10) || 1;
       var at = beatTimes[Math.min(n, beatTimes.length) - 1];
       if (el.matches('h1, h2')) {
-        tl.from(splitWords(el), {opacity: 0, y: 18, rotateX: -30, duration: 0.5, stagger: 0.03, ease: S.ease.brand}, at);
+        reveal(tl, el, at);
+        tl.fromTo(splitWords(el), {opacity: 0, y: 18, rotateX: -30}, {opacity: 1, y: 0, rotateX: 0, duration: 0.5, stagger: 0.03, ease: S.ease.brand}, at);
       } else if (el.matches('.demo-note')) {
         // the demo caption belongs to the inquiry card: same start, a plain fade (Cederic: it came too early)
-        tl.from(el, {opacity: 0, duration: 0.6, ease: 'none'}, at);
+        tl.fromTo(el, {opacity: 0}, {opacity: 1, duration: 0.6, ease: 'none', immediateRender: false}, at);
       } else if (el.matches('p')) {
-        tl.from(wrapLine(el), {yPercent: 110, duration: 0.55, ease: S.ease.brand}, at + 0.12);
+        reveal(tl, el, at + 0.12);
+        tl.fromTo(wrapLine(el), {yPercent: 110}, {yPercent: 0, duration: 0.55, ease: S.ease.brand}, at + 0.12);
       } else if (el.matches('ul')) {
-        tl.from(el.children, {opacity: 0, x: -14, duration: 0.4, stagger: 0.08, ease: S.ease.brand}, at + 0.2);
+        tl.fromTo(el.children, {opacity: 0, x: -14}, {opacity: 1, x: 0, duration: 0.4, stagger: 0.08, ease: S.ease.brand, immediateRender: false}, at + 0.2);
       } else {
-        tl.from(el, {opacity: 0, x: -14, duration: 0.45, ease: S.ease.brand}, at + 0.2);
+        tl.fromTo(el, {opacity: 0, x: -14}, {opacity: 1, x: 0, duration: 0.45, ease: S.ease.brand, immediateRender: false}, at + 0.2);
       }
     });
   }
@@ -119,6 +127,7 @@
   var BEATS = {website: [0.8, 4.0, 7.3], betreuung: [0.8, 4.0, 7.0]};
   if (RM) {
     S.show(scenes, chapters[0].id);
+    stage.classList.add('is-ready'); // from here .is-hidden decides which static scene shows
   } else {
     // hook: the four bubbles spring in on load (nothing to scrub at scroll 0), the hero copy is visible at once (LCP)
     chapters[0].tl = S.intro(scenes.hook);
@@ -213,8 +222,9 @@
     });
     var contact = d.getElementById('kontakt');
     if (contact) {
-      gsap.from(contact.querySelector('.wrap'), {
-        y: 60, opacity: 0, duration: 1, ease: 'power3.out',
+      // starts from the CSS state in desktop.css (html.js #kontakt > .wrap)
+      gsap.fromTo(contact.querySelector('.wrap'), {y: 60, opacity: 0}, {
+        y: 0, opacity: 1, duration: 1, ease: 'power3.out',
         scrollTrigger: {trigger: contact, start: 'top 85%', toggleActions: 'play none none reverse'},
       });
     }
