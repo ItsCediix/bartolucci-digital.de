@@ -43,7 +43,9 @@
   var q = function (el, sel) { return el.querySelector(sel); };
   var qa = function (el, sel) { return Array.prototype.slice.call(el.querySelectorAll(sel)); };
 
-  /* ------------------------------------------------------------ fitting: each scene canvas -> stage, centred */
+  /* ------------------------------------------------------------ fitting: each scene canvas -> stage, centred.
+     The scale is capped at MAX_SCALE × the native scene pixels, so very wide stages never blur the scenes. */
+  var MAX_SCALE = 1.6;
   function fit(stage) {
     var scenes = qa(stage, '.scene');
     var apply = function () {
@@ -51,7 +53,7 @@
       if (!w || !h) return;
       scenes.forEach(function (sc) {
         var W = +sc.getAttribute('data-w'), H = +sc.getAttribute('data-h');
-        var k = Math.min(w / W, h / H);
+        var k = Math.min(w / W, h / H, MAX_SCALE);
         var box = q(sc, '.scene-fit');
         box.style.width = W + 'px';
         box.style.height = H + 'px';

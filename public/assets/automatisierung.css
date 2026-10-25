@@ -7,10 +7,11 @@
 .auto-copy .back { display: inline-block; margin-bottom: 24px; font-size: 15px; font-weight: 600; text-decoration: none; color: var(--ink-3); }
 .auto-copy .back:hover { color: var(--ink); }
 .auto-copy .lead { margin-top: 18px; }
-.auto-copy .lead + p { margin-top: 14px; color: var(--ink-2); }
-.auto-copy .h-display { font-size: clamp(38px, 4.6vw, 64px); }
+.auto-copy .lead + p { margin-top: 14px; color: var(--ink-2); max-width: var(--measure); }
+.auto-copy .h-display { font-size: clamp(38px, 4.2vw, 84px); }
 .auto-fig { margin: 0; display: flex; justify-content: center; }
-.auto-narrow { max-width: 760px; }
+/* same container as everywhere (.wrap); the text inside keeps a readable measure */
+.auto-narrow > * { max-width: var(--measure); }
 .auto-narrow .facts { margin-top: 26px; }
 .auto-price { margin: 28px 0 22px; font-weight: 600; }
 

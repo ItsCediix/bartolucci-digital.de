@@ -7,8 +7,9 @@ html[data-mode='mobile'] .story, html[data-mode='mobile'] .rail { display: none;
 .story {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 55fr) 56px minmax(0, 45fr);
-  width: min(100% - 2 * var(--gutter), var(--max));
+  /* v12: fluid columns, the stage column is the wider one so the scenes (esp. the 1180 × 760 website) get big */
+  grid-template-columns: minmax(360px, 44fr) 56px minmax(480px, 56fr);
+  width: min(100% - 2 * var(--gutter), var(--content-max));
   margin-inline: auto;
 }
 .col-text { grid-column: 1; min-width: 0; }
@@ -22,16 +23,17 @@ html[data-mode='mobile'] .story, html[data-mode='mobile'] .rail { display: none;
   display: flex; align-items: center;
   padding: 40px clamp(16px, 4vw, 64px) 48px 0;
 }
-.copy { max-width: 620px; }
-.copy .h-chapter { font-size: clamp(30px, 3.3vw, 48px); }
-.copy .body { margin-top: 20px; color: var(--ink-2); font-size: clamp(16.5px, 1.15vw, 18px); }
+.copy { width: 100%; max-width: clamp(560px, 36vw, 1100px); }
+.copy .h-chapter { font-size: clamp(30px, 3.1vw, 64px); }
+.copy .body { margin-top: clamp(20px, 1.4vw, 32px); color: var(--ink-2); font-size: clamp(16.5px, 0.6vw + 9px, 22px); }
+.copy .body p { max-width: var(--measure); }
 .copy .body p + p, .copy .body .clip + .clip { margin-top: 12px; }
-.copy .facts { margin-top: 24px; max-width: 560px; }
-.copy .demo-note { margin-top: 20px; font-size: 14.5px; color: var(--ink-3); }
+.copy .facts { margin-top: 24px; max-width: var(--measure); }
+.copy .demo-note { margin-top: 20px; font-size: clamp(14.5px, 0.75vw, 17px); color: var(--ink-3); max-width: var(--measure); }
 .copy .more-link { margin-top: 14px; font-size: 15px; font-weight: 600; }
 .copy .more-link a { color: var(--accent); text-underline-offset: 3px; }
 .copy .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
-.chapter[data-chapter='hook'] .lead { margin-top: 22px; max-width: 560px; }
+.chapter[data-chapter='hook'] .lead { margin-top: 22px; }
 
 /* hero spotlight: faint grid revealed around the cursor */
 .chapter[data-chapter='hook'] .chapter-inner::before {
