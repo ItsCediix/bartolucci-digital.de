@@ -135,7 +135,9 @@
       if (i === 0) return;
       var tl = gsap.timeline({
         defaults: {ease: S.ease.brand},
-        scrollTrigger: {trigger: c.el, start: 'top 55%', end: 'bottom bottom', scrub: 0.6},
+        // v12: start at 50 % (v11: 55 %): with the shorter chapters the copy of beat 1 must already be fully
+        // on screen when its beat starts on the right
+        scrollTrigger: {trigger: c.el, start: 'top 50%', end: 'bottom bottom', scrub: 0.6},
       });
       S.swap(tl, scenes[chapters[i - 1].id], scenes[c.id], 0);
       var beats = S.beats[c.id](tl, scenes[c.id], BEATS[c.id] || [0.8, 4.0, 7.0]);

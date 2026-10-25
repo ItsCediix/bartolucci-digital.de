@@ -1,25 +1,25 @@
 {
-  "note": "v11: three scroll chapters. Each chapter is one scroll section on desktop (vh = min-height) and one frameless DOM scene on the stage (public/assets/scenes.js). beats = what happens on the right, in order; the left copy marks its elements with data-beat=\"n\". Beat positions as shares of the chapter's scroll are set in desktop.js (BEATS).",
+  "note": "v12: chapter heights 100/170/160 vh (v11: 130/300/280), about half the scroll per chapter. v11: three scroll chapters. Each chapter is one scroll section on desktop (vh = min-height) and one frameless DOM scene on the stage (public/assets/scenes.js). beats = what happens on the right, in order; the left copy marks its elements with data-beat=\"n\". Beat positions as shares of the chapter's scroll are set in desktop.js (BEATS).",
   "chapters": [
     {
       "id": "hook",
       "index": 1,
       "label": "Start",
-      "vh": 130,
+      "vh": 100,
       "beats": ["Blase 1 von links", "Blase 2 von rechts", "Blase 3 von links", "Antwort „Machen wir.“ von rechts"]
     },
     {
       "id": "website",
       "index": 2,
       "label": "Website",
-      "vh": 300,
+      "vh": 170,
       "beats": ["Blasen ziehen nach oben in den Laptop, Laptop + Handy steigen auf, Seitenblöcke setzen sich zusammen", "Öffnungszeiten springen auf den heutigen Tag", "Anfrage-Karte landet mit Haken, Bildunterschrift links blendet ein"]
     },
     {
       "id": "betreuung",
       "index": 3,
       "label": "Betreuung",
-      "vh": 280,
+      "vh": 160,
       "beats": ["Kundenblase „Ab Montag … bis 19 Uhr“ federt ein", "18 Uhr blendet aus, 19 Uhr fällt ein, Antwort „Erledigt.“", "Statusleiste Hosting / Domain / Updates fährt hoch, Punkte füllen sich; danach tritt die Bühne ab"]
     }
   ]
