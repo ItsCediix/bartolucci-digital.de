@@ -39,23 +39,25 @@
      The struck regular price is never shown as "statt"/"vorher": it has not been charged yet, so it is only
      presented as the regular price from the 4th customer on (UWG § 5, no "Mondpreis"). */
   var fmt = function (n) { return n.toLocaleString('de-DE') + ' €'; };
-  // a .facts row: lead clause (up to the first comma or bracket) semibold, the rest regular
+  // a .facts row: lead clause (up to the first comma, full stop or bracket) semibold, the rest regular
   var fact = function (text) {
     var li = mk('li');
-    var m = /^([^,(]+,?)(.*)$/.exec(text);
+    var m = /^([^,.(]+[,.]?)(.*)$/.exec(text);
     li.appendChild(mk('strong', null, m ? m[1] : text));
     if (m && m[2]) li.appendChild(d.createTextNode(m[2]));
     return li;
   };
+  // v12 card in the logo palette: heading, price row, availability as a plain sentence, .facts, button.
+  // No tag, no pill, no dots. slotsLeft 0 -> fixed-price heading, 1.990 € as the only price, no sentence.
   function renderOffer(el) {
     var o = BD.offer;
     if (!o || !o.text) return;
     var t = o.text;
-    var values = {launch: fmt(o.launchPrice), regular: fmt(o.regularPrice), care: fmt(o.carePrice), round: fmt(o.roundPrice), slotsLeft: o.slotsLeft, slotsTotal: o.slotsTotal};
+    var values = {launch: fmt(o.launchPrice), regular: fmt(o.regularPrice), care: fmt(o.carePrice), round: fmt(o.roundPrice)};
     var fill = function (s) { return s.replace(/\{(\w+)\}/g, function (_, k) { return values[k]; }); };
     var launch = o.slotsLeft > 0;
     var frag = d.createDocumentFragment();
-    if (launch) frag.appendChild(mk('p', 'price-tag', t.tag));
+    frag.appendChild(mk('h3', 'price-h', launch ? t.heading : t.headingRegular));
     var row = mk('div', 'price-row');
     row.appendChild(mk('p', 'price-now', fmt(launch ? o.launchPrice : o.regularPrice)));
     if (launch) {
@@ -65,25 +67,15 @@
       row.appendChild(reg);
     }
     frag.appendChild(row);
-    if (launch) {
-      frag.appendChild(mk('p', 'price-line', fill(t.launchLine)));
-      var slots = mk('p', 'price-slots');
-      slots.appendChild(mk('i'));
-      slots.appendChild(d.createTextNode(fill(t.slots)));
-      frag.appendChild(slots);
-    } else {
-      frag.appendChild(mk('p', 'price-line', t.regularOnly));
-    }
+    if (launch && t.availability[o.slotsLeft - 1]) frag.appendChild(mk('p', 'price-avail', t.availability[o.slotsLeft - 1]));
     var list = mk('ul', 'facts');
     list.appendChild(fact(fill(t.included)));
     list.appendChild(fact(fill(t.care)));
+    list.appendChild(fact(t.fine));
     frag.appendChild(list);
-    var cta = mk('div', 'price-cta');
     var btn = mk('a', 'btn btn-primary btn-lg', t.button);
     btn.href = '#kontakt';
-    cta.appendChild(btn);
-    cta.appendChild(mk('p', 'price-fine', t.fine));
-    frag.appendChild(cta);
+    frag.appendChild(btn);
     el.textContent = '';
     el.appendChild(frag);
   }

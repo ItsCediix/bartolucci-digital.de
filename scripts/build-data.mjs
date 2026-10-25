@@ -17,11 +17,14 @@ const offer = read('data/offer.json');
 for (const k of ['launchPrice', 'regularPrice', 'slotsTotal', 'slotsLeft', 'carePrice', 'roundPrice']) {
   if (typeof offer[k] !== 'number') throw new Error(`offer.json: "${k}" must be a number`);
 }
-for (const k of ['tag', 'regularLabel', 'launchLine', 'slots', 'regularOnly', 'included', 'care', 'button', 'fine']) {
+for (const k of ['heading', 'headingRegular', 'regularLabel', 'included', 'care', 'button', 'fine']) {
   if (typeof offer.text?.[k] !== 'string') throw new Error(`offer.json: "text.${k}" must be a string`);
 }
+// availability sentence per free slot count: index 0 = one place left … slotsTotal - 1 = all free
+const avail = offer.text.availability;
+if (!Array.isArray(avail) || avail.length !== offer.slotsTotal || avail.some((s) => typeof s !== 'string')) throw new Error('offer.json: "text.availability" needs one sentence per slot (slotsTotal)');
 // UWG § 5: the higher price may only appear as the future regular price, never as a "was"-price
-if (/\b(statt|vorher|UVP)\b|%/i.test(Object.values(offer.text).join(' '))) throw new Error('offer.json: no "statt"/"vorher"/"UVP"/percent wording');
+if (/\b(statt|vorher|UVP)\b|%/i.test(Object.values(offer.text).flat().join(' '))) throw new Error('offer.json: no "statt"/"vorher"/"UVP"/percent wording');
 if (offer.slotsLeft < 0 || offer.slotsLeft > offer.slotsTotal) throw new Error('offer.json: slotsLeft out of range');
 for (const c of chapters.chapters) {
   if (!Array.isArray(c.beats) || c.beats.length < 1) throw new Error(`chapters.json: "${c.id}" needs a beats array`);
