@@ -1,26 +1,23 @@
 {
-  "note": "v12: chapter heights 100/170/160 vh (v11: 130/300/280), about half the scroll per chapter. v11: three scroll chapters. Each chapter is one scroll section on desktop (vh = min-height) and one frameless DOM scene on the stage (public/assets/scenes.js). beats = what happens on the right, in order; the left copy marks its elements with data-beat=\"n\". Beat positions as shares of the chapter's scroll are set in desktop.js (BEATS).",
+  "note": "v13: free scroll. No chapter heights any more (v12: 100/170/160 vh); each chapter is as tall as its copy plus clamp(96px, 12vh, 160px) padding top and bottom. The left copy reveals once per [data-beat] element when it reaches 78 % of the viewport; the sticky stage on the right switches to a chapter's scene when its copy reaches 55 % and plays the scene's beats once, time-based (desktop.js). beats = what happens on the right, in order (documentation; data-beat=\"n\" on the left still names the beat a copy element belongs to).",
   "chapters": [
     {
       "id": "hook",
       "index": 1,
       "label": "Start",
-      "vh": 100,
       "beats": ["Blase 1 von links", "Blase 2 von rechts", "Blase 3 von links", "Antwort „Machen wir.“ von rechts"]
     },
     {
       "id": "website",
       "index": 2,
       "label": "Website",
-      "vh": 170,
-      "beats": ["Blasen ziehen nach oben in den Laptop, Laptop + Handy steigen auf, Seitenblöcke setzen sich zusammen", "Öffnungszeiten springen auf den heutigen Tag", "Anfrage-Karte landet mit Haken, Bildunterschrift links blendet ein"]
+      "beats": ["Blasen ziehen nach oben in den Laptop, Laptop + Handy steigen auf, Seitenblöcke setzen sich zusammen", "Öffnungszeiten springen auf den heutigen Tag", "Anfrage-Karte landet mit Haken"]
     },
     {
       "id": "betreuung",
       "index": 3,
       "label": "Betreuung",
-      "vh": 160,
-      "beats": ["Kundenblase „Ab Montag … bis 19 Uhr“ federt ein", "18 Uhr blendet aus, 19 Uhr fällt ein, Antwort „Erledigt.“", "Statusleiste Hosting / Domain / Updates fährt hoch, Punkte füllen sich; danach tritt die Bühne ab"]
+      "beats": ["Kundenblase „Ab Montag … bis 19 Uhr“ federt ein", "18 Uhr blendet aus, 19 Uhr fällt ein, Antwort „Erledigt.“", "Statusleiste Hosting / Domain / Updates fährt hoch, Punkte füllen sich"]
     }
   ]
 }

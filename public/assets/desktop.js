@@ -1,9 +1,11 @@
-/* Desktop scroll engine (v11): the sticky, frameless stage on the right shows three live DOM scenes
-   (scenes.js). One ScrollTrigger timeline per chapter (scrub 0.6) plays the scene in three beats placed at
-   fixed shares of the chapter's scroll; the left column's text for a beat reveals in the same timeline at
-   the same moment, so the copy never runs ahead of the picture. After the last chapter the stage hands over
-   (fade + scale over the last 10 %) and the page continues single-column. Rail (chapters + sections),
-   keyboard, spotlight, magnetic buttons, skyline parallax.
+/* Desktop scroll engine (v13: free flow). The page scrolls like a normal page: no pinned copy, no scrubbed
+   timelines. Every [data-beat] element of the left column reveals once when it reaches 78 % of the viewport
+   (time-based, never replayed, never hidden again); the sections after the story reveal once each.
+   The stage on the right stays sticky for the whole story and switches scenes when a chapter's copy reaches
+   55 % of the viewport: a time-based crossfade (swap(), 0.9 s), then the scene's three beats play once,
+   back to back. Scrolling back up shows the earlier scene in its end state. When "So läuft's" reaches 70 %
+   the stage steps back (fade + scale, 0.6 s). Rail (chapters + sections), keyboard, spotlight, magnetic
+   buttons, skyline parallax.
    Runs only when <html data-mode="desktop">. Depends on gsap + ScrollTrigger + Lenis (local files). */
 (function () {
   'use strict';
@@ -23,10 +25,6 @@
   var stage = d.getElementById('stage');
   var railLinks = Array.prototype.slice.call(d.querySelectorAll('[data-rail]'));
   var chapters = BD.chapters.map(function (c) { return Object.assign({}, c, {el: d.getElementById('k-' + c.id)}); });
-  var last = chapters[chapters.length - 1];
-
-  // chapter heights come from chapters.json (each ≥ 100 vh, room for the beats and the holds)
-  chapters.forEach(function (c) { if (!NARROW) c.el.style.minHeight = c.vh + 'vh'; });
 
   S.fit(stage);
   var scenes = S.collect(stage);
@@ -40,7 +38,7 @@
     gsap.ticker.lagSmoothing(0);
   }
 
-  /* ------------------------------------------------------------ active item (rail + reduced-motion scene switch) */
+  /* ------------------------------------------------------------ active rail item */
   var active = null;
   function setActive(id) {
     if (active === id) return;
@@ -49,7 +47,6 @@
       if (a.getAttribute('data-rail') === id) a.setAttribute('aria-current', 'true');
       else a.removeAttribute('aria-current');
     });
-    if (RM && scenes[id]) S.show(scenes, id);
   }
   // the active item is the last one whose top has passed 55 % of the viewport. Picked from the scroll
   // position on every update, so exact boundaries and big jumps (rail click, Home/End) never leave a gap.
@@ -93,64 +90,146 @@
     line.appendChild(el);
     return line;
   }
-  // every [data-beat] element starts hidden in CSS (desktop.css, html.js), so the tweens start exactly from
-  // that state; immediateRender: false leaves the CSS state alone until the beat is reached
-  function reveal(tl, el, at) {
-    tl.fromTo(el, {opacity: 0}, {opacity: 1, duration: 0.01, ease: 'none', immediateRender: false}, at);
+
+  /* ------------------------------------------------------------ play-once reveals (left column + sections)
+     Every [data-beat] element starts hidden in CSS (desktop.css, html.js, v12), so each tween starts exactly
+     from that state (fromTo / immediateRender: false). once: true kills the trigger after the first play, so
+     scrolling back never hides or replays anything. Elements that are already above the start line on load
+     (reload mid-page) play at once. */
+  var DUR = 0.75, STAGGER = 0.06;
+  function onceAt(trigger, tl, start) {
+    ScrollTrigger.create({trigger: trigger, start: start || 'top 78%', once: true, toggleActions: 'play none none none', animation: tl});
   }
-  // adds the reveal of every [data-beat="n"] element of a chapter at the start of beat n
-  function addTextBeats(tl, c, beatTimes) {
-    var els = c.el.querySelectorAll('[data-beat]');
-    Array.prototype.forEach.call(els, function (el) {
-      var n = parseInt(el.getAttribute('data-beat'), 10) || 1;
-      var at = beatTimes[Math.min(n, beatTimes.length) - 1];
-      if (el.matches('h1, h2')) {
-        reveal(tl, el, at);
-        tl.fromTo(splitWords(el), {opacity: 0, y: 18, rotateX: -30}, {opacity: 1, y: 0, rotateX: 0, duration: 0.5, stagger: 0.03, ease: S.ease.brand}, at);
-      } else if (el.matches('.demo-note')) {
-        // the demo caption belongs to the inquiry card: same start, a plain fade (Cederic: it came too early)
-        tl.fromTo(el, {opacity: 0}, {opacity: 1, duration: 0.6, ease: 'none', immediateRender: false}, at);
-      } else if (el.matches('p')) {
-        reveal(tl, el, at + 0.12);
-        tl.fromTo(wrapLine(el), {yPercent: 110}, {yPercent: 0, duration: 0.55, ease: S.ease.brand}, at + 0.12);
-      } else if (el.matches('ul')) {
-        tl.fromTo(el.children, {opacity: 0, x: -14}, {opacity: 1, x: 0, duration: 0.4, stagger: 0.08, ease: S.ease.brand, immediateRender: false}, at + 0.2);
-      } else {
-        tl.fromTo(el, {opacity: 0, x: -14}, {opacity: 1, x: 0, duration: 0.45, ease: S.ease.brand, immediateRender: false}, at + 0.2);
-      }
+  function revealCopy(el) {
+    var tl = gsap.timeline({paused: true, defaults: {ease: S.ease.brand}});
+    if (el.matches('h1, h2')) {
+      tl.fromTo(el, {opacity: 0}, {opacity: 1, duration: 0.01, ease: 'none', immediateRender: false}, 0);
+      tl.fromTo(splitWords(el), {opacity: 0, y: 18, rotateX: -30}, {opacity: 1, y: 0, rotateX: 0, duration: DUR, stagger: STAGGER}, 0);
+    } else if (el.matches('.demo-note')) {
+      tl.fromTo(el, {opacity: 0}, {opacity: 1, duration: DUR, ease: 'none', immediateRender: false}, 0);
+    } else if (el.matches('p')) {
+      tl.fromTo(el, {opacity: 0}, {opacity: 1, duration: 0.01, ease: 'none', immediateRender: false}, 0);
+      tl.fromTo(wrapLine(el), {yPercent: 110}, {yPercent: 0, duration: DUR}, 0);
+    } else if (el.matches('ul')) {
+      tl.fromTo(el.children, {opacity: 0, x: -14}, {opacity: 1, x: 0, duration: 0.6, stagger: STAGGER, immediateRender: false}, 0);
+    } else {
+      tl.fromTo(el, {opacity: 0, x: -14}, {opacity: 1, x: 0, duration: 0.6, immediateRender: false}, 0);
+    }
+    onceAt(el, tl);
+  }
+  // one reveal per section after the story: its blocks rise in together (start state in desktop.css)
+  function revealSection(sec, blocks, fromY) {
+    if (!sec || !blocks.length) return;
+    var tl = gsap.timeline({paused: true});
+    tl.fromTo(blocks, {opacity: 0, y: fromY}, {opacity: 1, y: 0, duration: 0.8, stagger: STAGGER, ease: 'power3.out', immediateRender: false}, 0);
+    onceAt(sec, tl);
+  }
+  if (!RM) {
+    d.querySelectorAll('.chapter [data-beat]').forEach(revealCopy);
+    ['ablauf', 'preise', 'morgens', 'ueber-uns'].forEach(function (id) {
+      var sec = d.getElementById(id);
+      if (sec) revealSection(sec, Array.prototype.slice.call(sec.querySelectorAll(':scope > .wrap > *')), 40);
     });
+    // the contact block keeps its v12 start state (#kontakt > .wrap: opacity 0, 60 px down)
+    var contactSec = d.getElementById('kontakt');
+    if (contactSec) revealSection(contactSec, [contactSec.querySelector(':scope > .wrap')], 60);
   }
 
-  /* ------------------------------------------------------------ scenes + text, bound to the scroll
-     Every chapter timeline is 10 units long, so a time t is t × 10 % of the chapter's scroll. */
-  var LEN = 10;
-  var BEATS = {website: [0.8, 4.0, 7.3], betreuung: [0.8, 4.0, 7.0]};
+  /* ------------------------------------------------------------ the sticky stage: scene switch + beats, time-based
+     BEATS: start times of beat 1..3 inside a scene's beat timeline, so the three beats play back to back with
+     0.4 s between them (beat lengths from scenes.js: website 1.55 / 1.5 / 0.95 s, betreuung 1.1 / 1.65 / 1.15 s). */
+  var GAP = 0.4;
+  var BEATS = {website: [0, 1.55 + GAP, 1.55 + GAP + 1.5 + GAP], betreuung: [0, 1.1 + GAP, 1.1 + GAP + 1.65 + GAP]};
+  var SWAP_SECONDS = 0.9;
+  var beatTl = {};
+  var current = null; // index of the chapter whose scene is on the stage
+  var loaded = false;
+
   if (RM) {
-    S.show(scenes, chapters[0].id);
     stage.classList.add('is-ready'); // from here .is-hidden decides which static scene shows
   } else {
-    // hook: the four bubbles spring in on load (nothing to scrub at scroll 0), the hero copy is visible at once (LCP)
+    // hook: the four bubbles spring in on load, the hero copy is visible at once (LCP)
     chapters[0].tl = S.intro(scenes.hook);
     chapters.forEach(function (c, i) {
       if (i === 0) return;
-      var tl = gsap.timeline({
-        defaults: {ease: S.ease.brand},
-        // v12: start at 50 % (v11: 55 %): with the shorter chapters the copy of beat 1 must already be fully
-        // on screen when its beat starts on the right
-        scrollTrigger: {trigger: c.el, start: 'top 50%', end: 'bottom bottom', scrub: 0.6},
-      });
-      S.swap(tl, scenes[chapters[i - 1].id], scenes[c.id], 0);
-      var beats = S.beats[c.id](tl, scenes[c.id], BEATS[c.id] || [0.8, 4.0, 7.0]);
-      addTextBeats(tl, c, beats);
-      if (c === last) {
-        // hand-over: over the last 10 % of the chapter the stage fades out and steps back
-        tl.to(stage, {opacity: 0, scale: 0.96, duration: 1, ease: S.ease.soft}, LEN - 1);
-      }
-      tl.set({}, {}, LEN); // hold until the end of the chapter
+      // built paused now, so the scene sits in its pre-beat state (from() renders at once) behind its hidden layer
+      var tl = gsap.timeline({paused: true, defaults: {ease: S.ease.brand}});
+      S.beats[c.id](tl, scenes[c.id], BEATS[c.id] || [0, 1.6, 3.2]);
+      beatTl[c.id] = tl;
       c.tl = tl;
-      c.beatShares = beats.map(function (t) { return t / LEN; });
     });
   }
+
+  function playBeats(id, delay) {
+    var tl = beatTl[id];
+    if (tl && !tl._played) {
+      tl._played = true;
+      gsap.delayedCall(delay, function () { tl.play(); });
+    }
+  }
+  function sceneIn(sc) { return sc.querySelector('.scene-in'); }
+  // shows chapter i's scene at once (reload mid-page, reduced motion, first pick)
+  function showInstant(i) {
+    var id = chapters[i].id;
+    if (RM) { S.show(scenes, id); return; }
+    Object.keys(scenes).forEach(function (k) {
+      var sc = scenes[k];
+      gsap.killTweensOf([sc, sceneIn(sc)]);
+      if (k === id) {
+        gsap.set(sc, {yPercent: 0, opacity: 1});
+        gsap.set(sceneIn(sc), {y: 0, yPercent: 0, scale: 1, opacity: 1});
+      } else {
+        gsap.set(sc, {opacity: 0});
+      }
+    });
+    playBeats(id, 0.15);
+  }
+  // time-based crossfade with the existing swap() (hook -> website: the bubbles fly up into the laptop)
+  function switchTo(i) {
+    var prev = scenes[chapters[current].id];
+    var next = scenes[chapters[i].id];
+    gsap.killTweensOf([prev, sceneIn(prev), next, sceneIn(next)]);
+    // the incoming scene may have left earlier (outer layer faded, hook layer flown up): reset it first
+    gsap.set(next, {yPercent: 0, opacity: 1});
+    if (next === scenes.hook) gsap.set(sceneIn(next), {y: 0, scale: 1});
+    var tl = gsap.timeline();
+    S.swap(tl, prev, next, 0);
+    tl.timeScale(tl.duration() / SWAP_SECONDS);
+    playBeats(chapters[i].id, SWAP_SECONDS * 0.3);
+  }
+  // hand-over at the end of the story: the stage steps back when "So läuft's" reaches 70 %
+  var handed = false;
+  function handover(on, instant) {
+    if (handed === on) return;
+    handed = on;
+    if (RM || instant) gsap.set(stage, {opacity: on ? 0 : 1, scale: on ? 0.96 : 1});
+    else gsap.to(stage, {opacity: on ? 0 : 1, scale: on ? 0.96 : 1, duration: 0.6, ease: S.ease.soft, overwrite: true});
+  }
+  var ablauf = d.getElementById('ablauf');
+  var handMark = ablauf && ScrollTrigger.create({trigger: ablauf, start: 'top 70%'});
+
+  // the chapter whose copy has passed 55 % of the viewport last; switches only when it changes
+  function sync() {
+    if (!chapterMarks) return; // a callback during the creation of the marks below
+    var y = window.scrollY || 0;
+    if (handMark) handover(y >= handMark.start - 1, !loaded);
+    var i = 0;
+    chapterMarks.forEach(function (st, k) { if (st.start <= y + 1) i = k; });
+    if (i === current) return;
+    // before load + a moment, a change means the browser restored a scroll position: no fly-in, jump straight there
+    if (current === null || !loaded || RM) showInstant(i);
+    else switchTo(i);
+    current = i;
+  }
+  var chapterMarks = chapters.map(function (c, i) {
+    return ScrollTrigger.create({trigger: c.el, start: 'top 55%', end: 'bottom 55%', onEnter: sync, onEnterBack: sync, onLeaveBack: sync});
+  });
+  // safety net for very fast jumps (Home/End, rail): the same check on every scroll update, cheap when unchanged
+  ScrollTrigger.create({start: 0, end: 'max', onUpdate: sync, onRefresh: sync});
+  sync();
+  function markLoaded() { setTimeout(function () { loaded = true; ScrollTrigger.refresh(); sync(); }, 250); }
+  if (d.readyState === 'complete') markLoaded();
+  else addEventListener('load', markLoaded, {once: true});
 
   /* ------------------------------------------------------------ rail: click + keyboard */
   function scrollToEl(el) {
@@ -222,17 +301,10 @@
         scrollTrigger: {trigger: '#kontakt', start: 'top bottom', end: 'bottom top', scrub: 0.6},
       });
     });
-    var contact = d.getElementById('kontakt');
-    if (contact) {
-      // starts from the CSS state in desktop.css (html.js #kontakt > .wrap)
-      gsap.fromTo(contact.querySelector('.wrap'), {y: 60, opacity: 0}, {
-        y: 0, opacity: 1, duration: 1, ease: 'power3.out',
-        scrollTrigger: {trigger: contact, start: 'top 85%', toggleActions: 'play none none reverse'},
-      });
-    }
   }
 
   addEventListener('resize', function () { ScrollTrigger.refresh(); });
-  // test hook for the QA screenshots: jump a chapter timeline to an exact progress without scrolling noise
+  // test hooks for the QA scripts: chapters (with their paused beat timelines) and the scene now on the stage
   window.__bdChapters = chapters;
+  window.__bdStage = function () { return {current: current === null ? null : chapters[current].id, handed: handed}; };
 })();

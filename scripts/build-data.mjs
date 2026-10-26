@@ -35,7 +35,8 @@ const teamDir = path.join(PUB, 'assets', 'team');
 const team = fs.existsSync(teamDir) ? fs.readdirSync(teamDir).filter((f) => /\.jpg$/i.test(f)).sort() : [];
 
 const data = {
-  chapters: chapters.chapters.map(({id, index, label, vh, beats}) => ({id, index, label, vh: Math.max(100, vh || 100), beats: beats.length})),
+  // v13: no vh any more (free scroll, chapters are as tall as their copy)
+  chapters: chapters.chapters.map(({id, index, label, beats}) => ({id, index, label, beats: beats.length})),
   offer,
   team,
   built: new Date().toISOString().slice(0, 10),

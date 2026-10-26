@@ -1,8 +1,8 @@
 /* The three scenes (v11): hook, website, betreuung. Ported in v10 from the Remotion demo to GSAP; in v11
    the phone frame is gone and every scene has its own canvas (data-w × data-h), scaled to fit the stage.
-   Shared by both bodies: desktop scrubs one timeline per chapter (desktop.js), mobile plays each once
-   (mobile.js). Every beat builder takes the start times of its three beats, so desktop can place them at
-   fixed shares of the chapter's scroll and the left column reveals its copy at exactly those times.
+   Shared by both bodies: desktop plays each scene's beats once, time-based, when its chapter becomes active
+   (desktop.js, v13; v12 scrubbed them), mobile plays each once on entry (mobile.js). Every beat builder
+   takes the start times of its three beats, so each body can space them as it needs.
    The CSS (scenes.css) holds each scene's END state; the builders animate from the start states.
    Easing mapping (Remotion -> GSAP), see REPORT.md:
      brand  cubic-bezier(0.2, 0.8, 0.2, 1)  pops, fades, cards  (≈ power3.out, used exactly)
