@@ -91,7 +91,8 @@ html[data-mode='mobile'] .story, html[data-mode='mobile'] .rail { display: none;
 
 /* ---------- contact section with the harbour skyline ---------- */
 .section-contact { position: relative; overflow: hidden; padding-top: clamp(96px, 12vw, 180px); padding-bottom: clamp(200px, 22vw, 320px); }
-.section-contact::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%); z-index: 0; }
+/* v13: translucent, so the page background (#bg grain + fields) runs through this section too */
+.section-contact::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--bg-2) 75%, transparent) 100%); z-index: 0; }
 .section-contact .wrap { position: relative; z-index: 2; }
 
 /* magnetic buttons (desktop + fine pointer only, set up by JS) */

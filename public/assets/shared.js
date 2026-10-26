@@ -27,6 +27,26 @@
     });
   }
 
+  /* ---------- background fields (v13): a slight drift with the scroll, one rAF per scroll frame,
+     at most 120 px; static with reduced motion and in the mobile layout ---------- */
+  var fields = d.querySelectorAll('#bg .bg-f');
+  if (fields.length && html.getAttribute('data-mode') !== 'mobile' && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var RATES = [0.04, -0.03, 0.025];
+    var queued = false;
+    var drift = function () {
+      queued = false;
+      var y = window.scrollY || 0;
+      for (var i = 0; i < fields.length; i++) {
+        var v = Math.max(-120, Math.min(120, y * RATES[i]));
+        fields[i].style.transform = 'translate3d(0,' + v.toFixed(1) + 'px,0)';
+      }
+    };
+    addEventListener('scroll', function () {
+      if (!queued) { queued = true; requestAnimationFrame(drift); }
+    }, {passive: true});
+    drift();
+  }
+
   /* ---------- header shadow ---------- */
   var header = d.querySelector('[data-header]');
   if (header) {
