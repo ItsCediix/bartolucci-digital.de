@@ -114,9 +114,12 @@ for (const [w, h] of SIZES) {
 // ---------------------------------------------------------------- scene size + scroll distance at 1440 / 1920
 for (const [w, h] of [[1440, 900], [1920, 1080]]) {
   const {context, page} = await open(`${BASE}/?mode=desktop`, w, h, false);
-  const y = await page.evaluate(() => { const st = window.__bdChapters.find((c) => c.id === 'website').tl.scrollTrigger; return Math.round(st.end) - 2; });
+  // v13: no scroll timelines; scroll the website chapter active, then jump its beat timeline to the end
+  const y = await page.evaluate(() => { const c = window.__bdChapters.find((x) => x.id === 'website'); return Math.round(c.el.getBoundingClientRect().top + scrollY - innerHeight * 0.55 + 40); });
   await page.evaluate((yy) => window.scrollTo(0, yy), y);
-  await page.waitForTimeout(1800);
+  await page.waitForTimeout(1600);
+  await page.evaluate(() => window.__bdChapters.find((x) => x.id === 'website').tl.progress(1));
+  await page.waitForTimeout(300);
   await page.screenshot({path: path.join(OUT, `scene_website_100_${w}.png`)});
   report.scene[w] = await page.evaluate(() => {
     const col = document.querySelector('.col-panel');
@@ -132,31 +135,14 @@ for (const [w, h] of [[1440, 900], [1920, 1080]]) {
     };
   });
   if (w === 1440) {
+    // v13: chapter heights only (the scroll-per-beat checks of v12 no longer apply: the copy is not pinned);
+    // the page-length gate itself moved to qa-v13.mjs (≤ 6.5)
     report.scroll = await page.evaluate(() => {
       const vh = innerHeight;
       const out = {pageVh: +(document.documentElement.scrollHeight / vh).toFixed(2), chapters: {}};
-      window.__bdChapters.forEach((c) => {
-        const st = c.tl && c.tl.scrollTrigger;
-        out.chapters[c.id] = {heightVh: +(c.el.offsetHeight / vh).toFixed(2), scrollVh: st ? +((st.end - st.start) / vh).toFixed(2) : null, beatShares: c.beatShares || null};
-      });
+      window.__bdChapters.forEach((c) => { out.chapters[c.id] = {heightVh: +(c.el.offsetHeight / vh).toFixed(2)}; });
       return out;
     });
-    // at the start of every beat: are all copy elements of that beat inside the viewport (below the header)?
-    const checks = [];
-    for (const id of ['website', 'betreuung']) {
-      const shares = report.scroll.chapters[id].beatShares;
-      for (let b = 0; b < shares.length; b++) {
-        const yy = await page.evaluate(([cid, s]) => { const st = window.__bdChapters.find((c) => c.id === cid).tl.scrollTrigger; return Math.round(st.start + (st.end - st.start) * s) + 4; }, [id, shares[b]]);
-        await page.evaluate((v) => window.scrollTo(0, v), yy);
-        await page.waitForTimeout(900);
-        const r = await page.evaluate(([cid, n]) => Array.from(document.querySelectorAll(`#k-${cid} [data-beat="${n}"]`)).map((el) => {
-          const rc = el.getBoundingClientRect();
-          return {el: el.tagName.toLowerCase(), top: Math.round(rc.top), bottom: Math.round(rc.bottom), inView: rc.top >= 60 && rc.bottom <= innerHeight};
-        }), [id, b + 1]);
-        checks.push({chapter: id, beat: b + 1, scrollY: yy, elements: r, pass: r.every((e) => e.inView)});
-      }
-    }
-    report.scroll.beatVisibility = checks;
   }
   await context.close();
 }
@@ -175,10 +161,8 @@ const longest = Object.entries(report.lines).sort((a, b) => b[1].chars - a[1].ch
 gate.lineLength = {worst: longest[0], chars: longest[1].chars, text: longest[1].text, pass: longest[1].chars <= 80};
 gate.sceneFill = {1440: report.scene[1440].fillPct >= 85, 1920: report.scene[1920].fillPct >= 90, headline1920: report.scene[1920].demoHeadlinePx >= 20};
 gate.pageLength = {vh: report.scroll.pageVh, pass: report.scroll.pageVh <= 10};
-gate.beats = report.scroll.beatVisibility.every((c) => c.pass);
 report.gate = gate;
 fs.writeFileSync(path.join(OUT, 'v12-qa.json'), JSON.stringify(report, null, 2));
 console.log(JSON.stringify({gate, scene: report.scene, scroll: {pageVh: report.scroll.pageVh, chapters: report.scroll.chapters}, errors: report.errors}, null, 2));
-for (const c of report.scroll.beatVisibility) console.log(c.chapter, c.beat, c.pass, JSON.stringify(c.elements));
-const ok = Object.values(gate.margins).every((g) => g.pass) && gate.lineLength.pass && Object.values(gate.sceneFill).every(Boolean) && gate.pageLength.pass && gate.beats && !report.errors.length;
+const ok = Object.values(gate.margins).every((g) => g.pass) && gate.lineLength.pass && Object.values(gate.sceneFill).every(Boolean) && gate.pageLength.pass && !report.errors.length;
 if (!ok) process.exitCode = 1;

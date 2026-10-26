@@ -139,7 +139,8 @@ img, svg, video, canvas { display: block; max-width: 100%; }
   background-size: 180px 180px;
   opacity: 0.05; mix-blend-mode: multiply;
 }
-.bg-f { position: absolute; border-radius: 50%; will-change: transform; background: radial-gradient(closest-side, var(--bg-c) 0%, color-mix(in srgb, var(--bg-c) 55%, transparent) 45%, transparent 100%); }
+/* no border-radius: the gradient already fades to transparent at closest-side, a round clip would change nothing */
+.bg-f { position: absolute; will-change: transform; background: radial-gradient(closest-side, var(--bg-c) 0%, color-mix(in srgb, var(--bg-c) 55%, transparent) 45%, transparent 100%); }
 .bg-f1 { --bg-c: color-mix(in srgb, #5a6592 6%, transparent); left: -16vw; top: -22vw; width: 66vw; height: 66vw; }
 .bg-f2 { --bg-c: color-mix(in srgb, var(--bg-sand) 6%, transparent); right: -22vw; top: calc(50vh - 30vw); width: 60vw; height: 60vw; }
 .bg-f3 { --bg-c: color-mix(in srgb, var(--bg-sand) 6%, transparent); left: -14vw; bottom: -26vw; width: 56vw; height: 56vw; }

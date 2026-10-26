@@ -93,12 +93,15 @@
 
   /* ------------------------------------------------------------ play-once reveals (left column + sections)
      Every [data-beat] element starts hidden in CSS (desktop.css, html.js, v12), so each tween starts exactly
-     from that state (fromTo / immediateRender: false). once: true kills the trigger after the first play, so
-     scrolling back never hides or replays anything. Elements that are already above the start line on load
+     from that state (fromTo / immediateRender: false). Played once (see onceAt), so scrolling back never
+     hides or replays anything. Elements that are already above the start line on load
      (reload mid-page) play at once. */
   var DUR = 0.75, STAGGER = 0.06;
+  // play-once = toggleActions 'play none none none': the timeline plays on the first enter and is never
+  // reversed or restarted (a finished timeline stays finished). No once: true – ScrollTrigger 3.13 throws
+  // ("reading 'end'") when such a trigger kills itself during the first refresh after a reload mid-page.
   function onceAt(trigger, tl, start) {
-    ScrollTrigger.create({trigger: trigger, start: start || 'top 78%', once: true, toggleActions: 'play none none none', animation: tl});
+    ScrollTrigger.create({trigger: trigger, start: start || 'top 78%', toggleActions: 'play none none none', animation: tl});
   }
   function revealCopy(el) {
     var tl = gsap.timeline({paused: true, defaults: {ease: S.ease.brand}});

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-// QA: freeze every chapter scene at 0 / 50 / 100 % of its scroll timeline (desktop 1440 × 900) and save
-// review/scene_<id>_<pct>.png. The hook has no scroll timeline (it plays on load), so its intro timeline
-// is paused and seeked instead. Needs `npx serve public -l 4173` running.
+// QA: freeze every chapter scene at 0 / 50 / 100 % of its beat timeline (desktop 1440 × 900) and save
+// review/scene_<id>_<pct>.png. v13: the timelines are time-based (no scroll timelines), each is paused and
+// seeked once its chapter is active. Needs `npx serve public -l 4173` running.
 //   node scripts/qa-scenes.mjs [--base http://localhost:4173] [--out review] [--theme dark]
 import fs from 'node:fs';
 import path from 'node:path';
@@ -30,27 +30,26 @@ page.on('response', (r) => { if (r.status() >= 400) missing.push(`${r.status()} 
 await page.goto(`${BASE}/?mode=desktop`, {waitUntil: 'load'});
 await page.waitForTimeout(2500);
 const ids = await page.evaluate(() => window.__bdChapters.map((c) => c.id));
-const lastId = ids[ids.length - 1];
 const facts = {};
 for (const id of ids) {
   if (only && id !== only) continue;
-  // the last chapter hands the stage over during its final 10 % (fade to 0), so its "100 %" frame is the
-  // scene's end state just before the hand-over (89 %); 60 % of "website" proves the caption is still hidden
-  const shots = id === lastId ? [[0, 0], [50, 50], [100, 89]] : id === 'website' ? [[0, 0], [50, 50], [60, 60], [100, 100]] : [[0, 0], [50, 50], [100, 100]];
+  // frames of the scene's own (time-based) beat timeline
+  const shots = [[0, 0], [50, 50], [100, 100]];
   for (const [label, pct] of shots) {
-    const y = await page.evaluate(([cid, p]) => {
+    // v13: no scroll timelines. Scroll so the chapter is the active one (its copy just past 55 %), let the
+    // time-based switch finish, then pause the scene's beat timeline and seek it
+    const y = await page.evaluate((cid) => {
       const c = window.__bdChapters.find((x) => x.id === cid);
-      if (!c.tl.scrollTrigger) {
-        c.tl.pause();
-        c.tl.progress(p / 100);
-        return 0;
-      }
-      const st = c.tl.scrollTrigger;
-      return Math.round(st.start + (st.end - st.start) * (p / 100)) + (p === 0 ? 2 : p === 100 ? -2 : 0);
-    }, [id, pct]);
-    if (id !== 'hook') await page.evaluate((yy) => window.scrollTo(0, yy), y);
-    else await page.evaluate(() => window.scrollTo(0, 0));
+      return cid === 'hook' ? 0 : Math.round(c.el.getBoundingClientRect().top + scrollY - innerHeight * 0.55 + 40);
+    }, id);
+    await page.evaluate((yy) => window.scrollTo(0, yy), y);
     await page.waitForTimeout(1600);
+    await page.evaluate(([cid, p]) => {
+      const c = window.__bdChapters.find((x) => x.id === cid);
+      c.tl.pause();
+      c.tl.progress(p / 100);
+    }, [id, pct]);
+    await page.waitForTimeout(300);
     const file = path.join(OUT, `scene_${id}_${String(label).padStart(3, '0')}${THEME === 'dark' ? '_dark' : ''}.png`);
     await page.screenshot({path: file});
     const state = await page.evaluate(() => {
@@ -63,8 +62,7 @@ for (const id of ids) {
     console.log(`${id} ${pct}% -> ${path.basename(file)} (y=${y}) ${JSON.stringify(state)}`);
   }
 }
-const beatShares = await page.evaluate(() => Object.fromEntries(window.__bdChapters.filter((c) => c.beatShares).map((c) => [c.id, c.beatShares])));
-fs.writeFileSync(path.join(OUT, `scenes-qa${THEME === 'dark' ? '-dark' : ''}.json`), JSON.stringify({theme: THEME, beatShares, frames: facts, errors}, null, 2));
+fs.writeFileSync(path.join(OUT, `scenes-qa${THEME === 'dark' ? '-dark' : ''}.json`), JSON.stringify({theme: THEME, frames: facts, errors}, null, 2));
 await browser.close();
 const unexpected = missing.filter((m) => !/\/assets\/team\/(luca|cederic)\.jpg$/.test(m));
 const realErrors = errors.filter((e) => !/status of 404/.test(e) || unexpected.length);
