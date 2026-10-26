@@ -1,3 +1,6 @@
+// reload (F5) always starts at the top instead of restoring the old scroll position; #anchor links still work
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+if (!location.hash) window.scrollTo(0, 0);
 /* Shared behaviour for all pages: theme toggle, header state, price card, team photos, contact lines, year. */
 (function () {
   'use strict';

@@ -298,9 +298,18 @@ html[data-theme='dark'] .theme-toggle .ico-moon { display: block; }
 html[data-theme='dark'] .sky-layer { color: var(--end-sky); opacity: 0.12; }
 html[data-theme='dark'] .sky-layer.sky-cranes { opacity: 0.22; }
 html[data-theme='dark'] .sky-layer.sky-ship { color: var(--end-sky); opacity: 0.22; }
-.ship-drift { animation: ship-drift 90s linear infinite; }
-@keyframes ship-drift { from { transform: translateX(1640px); } to { transform: translateX(-300px); } }
-@media (prefers-reduced-motion: reduce) { .ship-drift, .sky-layer use { animation-play-state: paused; } } /* the <use> value is inherited by the cars and gulls inside the SVG */
+.ship-drift { animation: ship-drift 135s linear infinite; }
+@keyframes ship-drift { from { transform: translateX(2100px); } to { transform: translateX(-800px); } }
+@media (prefers-reduced-motion: reduce) { .ship-drift { animation-play-state: paused; } }
+/* gulls + cars on the Koehlbrandbruecke (inline SVG in .skyline, same parallax depth as the city layer) */
+.sky-layer { overflow: visible; }
+.skyline { overflow-x: clip; }
+.sky-car { animation: sky-drive 96s linear infinite; }
+.sky-car.rev { animation-duration: 114s; animation-direction: reverse; }
+@keyframes sky-drive { 0% { transform: translate(-446px, 300.4px) rotate(-5.05deg); } 4.17% { transform: translate(-342.17px, 291.62px) rotate(-4.63deg); } 8.33% { transform: translate(-238.33px, 283.59px) rotate(-4.21deg); } 12.5% { transform: translate(-134.5px, 276.34px) rotate(-3.79deg); } 16.67% { transform: translate(-30.67px, 269.84px) rotate(-3.37deg); } 20.83% { transform: translate(73.17px, 264.12px) rotate(-2.95deg); } 25% { transform: translate(177px, 259.15px) rotate(-2.53deg); } 29.17% { transform: translate(280.83px, 254.95px) rotate(-2.11deg); } 33.33% { transform: translate(384.67px, 251.51px) rotate(-1.69deg); } 37.5% { transform: translate(488.5px, 248.84px) rotate(-1.26deg); } 41.67% { transform: translate(592.33px, 246.93px) rotate(-0.84deg); } 45.83% { transform: translate(696.17px, 245.78px) rotate(-0.42deg); } 50% { transform: translate(800px, 245.4px) rotate(0deg); } 54.17% { transform: translate(903.83px, 245.78px) rotate(0.42deg); } 58.33% { transform: translate(1007.67px, 246.93px) rotate(0.84deg); } 62.5% { transform: translate(1111.5px, 248.84px) rotate(1.26deg); } 66.67% { transform: translate(1215.33px, 251.51px) rotate(1.69deg); } 70.83% { transform: translate(1319.17px, 254.95px) rotate(2.11deg); } 75% { transform: translate(1423px, 259.15px) rotate(2.53deg); } 79.17% { transform: translate(1526.83px, 264.12px) rotate(2.95deg); } 83.33% { transform: translate(1630.67px, 269.84px) rotate(3.37deg); } 87.5% { transform: translate(1734.5px, 276.34px) rotate(3.79deg); } 91.67% { transform: translate(1838.33px, 283.59px) rotate(4.21deg); } 95.83% { transform: translate(1942.17px, 291.62px) rotate(4.63deg); } 100% { transform: translate(2046px, 300.4px) rotate(5.05deg); } }
+.sky-gull { animation: sky-bob 4s ease-in-out infinite alternate; }
+@keyframes sky-bob { from { transform: translate(0, 0); } to { transform: translate(5px, -5px); } }
+@media (prefers-reduced-motion: reduce) { .sky-car, .sky-gull { animation-play-state: paused; } }
 
 /* ---------- contact ---------- */
 .contact { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 80px); align-items: center; }
