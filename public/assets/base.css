@@ -300,7 +300,7 @@ html[data-theme='dark'] .sky-layer.sky-cranes { opacity: 0.22; }
 html[data-theme='dark'] .sky-layer.sky-ship { color: var(--end-sky); opacity: 0.22; }
 .ship-drift { animation: ship-drift 90s linear infinite; }
 @keyframes ship-drift { from { transform: translateX(1640px); } to { transform: translateX(-300px); } }
-@media (prefers-reduced-motion: reduce) { .ship-drift { animation-play-state: paused; } }
+@media (prefers-reduced-motion: reduce) { .ship-drift, .sky-layer use { animation-play-state: paused; } } /* the <use> value is inherited by the cars and gulls inside the SVG */
 
 /* ---------- contact ---------- */
 .contact { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 80px); align-items: center; }
