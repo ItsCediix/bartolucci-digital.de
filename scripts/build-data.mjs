@@ -17,7 +17,7 @@ const offer = read('data/offer.json');
 for (const k of ['launchPrice', 'regularPrice', 'slotsTotal', 'slotsLeft', 'carePrice', 'roundPrice']) {
   if (typeof offer[k] !== 'number') throw new Error(`offer.json: "${k}" must be a number`);
 }
-for (const k of ['heading', 'headingRegular', 'regularLabel', 'included', 'care', 'button', 'fine']) {
+for (const k of ['heading', 'headingRegular', 'regularLabel', 'included', 'care', 'button', 'footnote']) {
   if (typeof offer.text?.[k] !== 'string') throw new Error(`offer.json: "text.${k}" must be a string`);
 }
 // availability sentence per free slot count: index 0 = one place left … slotsTotal - 1 = all free

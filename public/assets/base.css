@@ -263,6 +263,8 @@ html[data-theme='dark'] .theme-toggle .ico-moon { display: block; }
 .price .facts > li { color: var(--price-text); border-color: var(--price-line); }
 .price .facts > li strong { color: var(--price-ink); }
 .price .btn { margin-top: clamp(24px, 2vw, 40px); }
+/* v13: asterisk on the website prices (same colour as the number, 60 %), footnote below the card, outside it */
+.price-star { font-size: 0.6em; color: inherit; vertical-align: super; line-height: 0; margin-left: 0.04em; }.price-note { margin-top: 14px; font-size: 13.5px; line-height: 1.5; color: var(--ink-3); text-align: left; max-width: var(--measure); }
 .price .btn-primary { background: var(--price-accent); color: var(--price-on-accent); }
 .price .btn-primary:hover { background: var(--price-ink); color: var(--price-bg); }
 

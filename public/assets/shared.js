@@ -69,6 +69,12 @@
   };
   // v12 card in the logo palette: heading, price row, availability as a plain sentence, .facts, button.
   // No tag, no pill, no dots. slotsLeft 0 -> fixed-price heading, 1.990 € as the only price, no sentence.
+  // v13: the website prices carry an asterisk; its footnote stands below the card, outside it.
+  var starred = function (tag, cls, n) {
+    var e = mk(tag, cls, fmt(n));
+    e.appendChild(mk('sup', 'price-star', '*'));
+    return e;
+  };
   function renderOffer(el) {
     var o = BD.offer;
     if (!o || !o.text) return;
@@ -79,10 +85,10 @@
     var frag = d.createDocumentFragment();
     frag.appendChild(mk('h3', 'price-h', launch ? t.heading : t.headingRegular));
     var row = mk('div', 'price-row');
-    row.appendChild(mk('p', 'price-now', fmt(launch ? o.launchPrice : o.regularPrice)));
+    row.appendChild(starred('p', 'price-now', launch ? o.launchPrice : o.regularPrice));
     if (launch) {
       var reg = mk('p', 'price-reg');
-      reg.appendChild(mk('s', null, fmt(o.regularPrice)));
+      reg.appendChild(starred('s', null, o.regularPrice));
       reg.appendChild(mk('span', null, t.regularLabel));
       row.appendChild(reg);
     }
@@ -91,13 +97,18 @@
     var list = mk('ul', 'facts');
     list.appendChild(fact(fill(t.included)));
     list.appendChild(fact(fill(t.care)));
-    list.appendChild(fact(t.fine));
     frag.appendChild(list);
     var btn = mk('a', 'btn btn-primary btn-lg', t.button);
     btn.href = '#kontakt';
     frag.appendChild(btn);
     el.textContent = '';
     el.appendChild(frag);
+    var note = el.nextElementSibling;
+    if (!note || !note.classList.contains('price-note')) {
+      note = mk('p', 'price-note');
+      el.parentNode.insertBefore(note, el.nextSibling);
+    }
+    note.textContent = t.footnote;
   }
   d.querySelectorAll('[data-offer]').forEach(renderOffer);
 
