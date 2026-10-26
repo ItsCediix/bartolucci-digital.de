@@ -188,5 +188,29 @@
     return [b1, b2, b3];
   };
 
-  window.BDScenes = {ease: ease, SWAP: SWAP, fit: fit, collect: collect, show: show, intro: intro, introInto: introInto, swap: swap, beats: beats};
+  /* ------------------------------------------------------------ morgens (v13, own section, plays once)
+     Three small cards spring in 0.35 s apart, then slide together into one message card with its time stamp.
+     The CSS holds the END state (cards merged = hidden, message visible). */
+  function morning(tl, sc, at) {
+    var chips = qa(sc, '.mg-chip');
+    var msg = q(sc, '.mg-msg');
+    var STEP = 0.35;
+    gsap.set(msg, {opacity: 0, scale: 0.92}); // start state; the scene layer itself is hidden until it plays
+    chips.forEach(function (el, i) {
+      var left = !el.classList.contains('mg-r');
+      tl.fromTo(el, {x: left ? -160 : 160, y: 0, rotation: left ? -5 : 5, scale: 0.86, opacity: 0},
+        {x: 0, rotation: 0, scale: 1, opacity: 1, duration: SPRING_D, ease: spring, immediateRender: true}, at + i * STEP);
+    });
+    // layout positions in scene pixels (offsets ignore the fit() scale): every card travels to the message centre
+    var merge = at + (chips.length - 1) * STEP + SPRING_D + 0.5;
+    var cx = msg.offsetLeft + msg.offsetWidth / 2, cy = msg.offsetTop + msg.offsetHeight / 2;
+    chips.forEach(function (el, i) {
+      tl.to(el, {x: cx - (el.offsetLeft + el.offsetWidth / 2), y: cy - (el.offsetTop + el.offsetHeight / 2), rotation: 0, scale: 0.55, opacity: 0, duration: 0.7, ease: ease.soft}, merge + i * 0.06);
+    });
+    tl.to(msg, {opacity: 1, scale: 1, duration: 0.6, ease: ease.pop}, merge + 0.35)
+      .fromTo(q(sc, '.mg-time'), {opacity: 0}, {opacity: 1, duration: 0.4, ease: 'none', immediateRender: false}, merge + 0.75);
+    return tl;
+  }
+
+  window.BDScenes = {ease: ease, SWAP: SWAP, fit: fit, collect: collect, show: show, intro: intro, introInto: introInto, swap: swap, beats: beats, morning: morning};
 })();

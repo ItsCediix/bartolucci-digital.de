@@ -5,7 +5,7 @@
 //  2. 10 reloads: at domcontentloaded a below-fold [data-beat] element must have computed opacity '0' and no
 //     inline opacity (= the hidden state comes from the stylesheet, not from GSAP)
 //  3. same check with desktop.js blocked (no GSAP timeline at all): the CSS alone hides the element
-//  4. /automatisierung: the briefing cards are hidden at domcontentloaded
+//  4. v13: the sections after the story (incl. "morgens" and its scene) are hidden at domcontentloaded
 // Needs `npx serve public -l 4173` running.   node scripts/qa-fouc.mjs [--base …] [--out review]
 import fs from 'node:fs';
 import path from 'node:path';
@@ -118,11 +118,11 @@ const check = () => {
   await context.close();
 }
 
-// 4. /automatisierung
+// 4. v13 (the sub-page is gone): the "morgens" section and its scene layer are hidden at domcontentloaded
 {
   const {context, page} = await throttledPage();
-  const p = new Promise((res) => page.once('domcontentloaded', () => res(page.evaluate(() => Array.from(document.querySelectorAll('.br-card, .ib-mail')).map((e) => getComputedStyle(e).opacity)))));
-  await page.goto(`${BASE}/automatisierung`, {waitUntil: 'load'});
+  const p = new Promise((res) => page.once('domcontentloaded', () => res(page.evaluate(() => ['#morgens .morgens-copy', '#morgens .morgens-fig', '[data-morning] .scene-in', '#preise .price-col', '#ueber-uns .team'].map((s) => getComputedStyle(document.querySelector(s)).opacity)))));
+  await page.goto(`${BASE}/?mode=desktop`, {waitUntil: 'load'});
   const r = await p;
   report.auto.push({opacities: r, pass: r.every((o) => o === '0')});
   await context.close();

@@ -135,6 +135,20 @@
     if (contactSec) revealSection(contactSec, [contactSec.querySelector(':scope > .wrap')], 60);
   }
 
+  // "morgens": its small scene plays once when the section reaches 70 % (reduced motion: the CSS end state)
+  var morningStage = d.querySelector('[data-morning]');
+  if (morningStage) {
+    S.fit(morningStage);
+    var morningScene = morningStage.querySelector('.scene');
+    if (!RM && S.morning) {
+      var mtl = gsap.timeline({paused: true, defaults: {ease: S.ease.brand}});
+      // the scene layer starts hidden in CSS (scenes.css, html.js) like the story scenes
+      mtl.fromTo(morningScene.querySelector('.scene-in'), {opacity: 0}, {opacity: 1, duration: 0.3, ease: 'none', immediateRender: false}, 0);
+      S.morning(mtl, morningScene, 0.1);
+      onceAt(d.getElementById('morgens'), mtl, 'top 70%');
+    }
+  }
+
   /* ------------------------------------------------------------ the sticky stage: scene switch + beats, time-based
      BEATS: start times of beat 1..3 inside a scene's beat timeline, so the three beats play back to back with
      0.4 s between them (beat lengths from scenes.js: website 1.55 / 1.5 / 0.95 s, betreuung 1.1 / 1.65 / 1.15 s). */

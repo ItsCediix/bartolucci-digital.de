@@ -103,11 +103,10 @@ for (const [w, h] of SIZES) {
     }
     await context.close();
   }
-  for (const [name, url] of [['automatisierung', '/automatisierung'], ['impressum', '/impressum.html'], ['datenschutz', '/datenschutz.html']]) {
+  for (const [name, url] of [['impressum', '/impressum.html'], ['datenschutz', '/datenschutz.html']]) {
     const {context, page} = await open(BASE + url, w, h, false);
     report.width[`${name}_${w}`] = await page.evaluate(margins);
     report.lines[`${name}_${w}`] = await page.evaluate(longestLines);
-    if (name === 'automatisierung' && (w === 2560 || w === 3440)) await page.screenshot({path: path.join(OUT, `width_${w}_auto.png`)});
     await context.close();
   }
 }
@@ -168,7 +167,7 @@ const gate = {};
 gate.margins = Object.fromEntries([2560, 3440].map((w) => {
   const m = report.width[w];
   const worst = Math.max(...['story', 'preise', 'ablauf', 'kontakt'].flatMap((k) => [m[k].leftPct, m[k].rightPct]));
-  const subs = ['automatisierung', 'impressum', 'datenschutz'].map((n) => report.width[`${n}_${w}`]).flatMap((x) => [x.autoWrap, x.legal].filter(Boolean)).flatMap((r) => [r.leftPct, r.rightPct]);
+  const subs = ['impressum', 'datenschutz'].map((n) => report.width[`${n}_${w}`]).flatMap((x) => [x.autoWrap, x.legal].filter(Boolean)).flatMap((r) => [r.leftPct, r.rightPct]);
   const all = Math.max(worst, ...subs);
   return [w, {worstMarginPct: all, pass: all <= 7}];
 }));

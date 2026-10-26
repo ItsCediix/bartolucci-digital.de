@@ -12,7 +12,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PUB = path.join(ROOT, 'public');
 
 const hashes = new Set();
-for (const file of ['index.html', 'automatisierung.html', 'impressum.html', 'datenschutz.html']) {
+for (const file of ['index.html', 'impressum.html', 'datenschutz.html']) {
   const html = fs.readFileSync(path.join(PUB, file), 'utf8');
   const re = /<script(?![^>]*\bsrc=)([^>]*)>([\s\S]*?)<\/script>/gi;
   let m;

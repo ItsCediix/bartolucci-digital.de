@@ -70,10 +70,6 @@ await session('dark', {width: 1440, height: 900}, `${BASE}/`, {colorScheme: 'lig
 await session('mobile', {width: 390, height: 844}, `${BASE}/`, {isMobile: true, hasTouch: true}, {positions: [0, 30, 100]});
 await session('mobile360', {width: 360, height: 780}, `${BASE}/`, {isMobile: true, hasTouch: true}, {positions: [0, 30, 100]});
 await session('reduced', {width: 1440, height: 900}, `${BASE}/`, {reducedMotion: 'reduce'}, {positions: [0, 35, 75]});
-await session('auto', {width: 1440, height: 900}, `${BASE}/automatisierung`, {colorScheme: 'dark'}, {positions: [0, 50, 100]});
-await session('auto_dark', {width: 1440, height: 900}, `${BASE}/automatisierung`, {}, {dark: true, positions: [0, 50, 100]});
-await session('auto_mobile', {width: 390, height: 844}, `${BASE}/automatisierung`, {isMobile: true, hasTouch: true}, {positions: [0, 50, 100]});
-await session('auto_mobile360', {width: 360, height: 780}, `${BASE}/automatisierung`, {isMobile: true, hasTouch: true}, {positions: [0, 50, 100]});
 await session('impressum', {width: 1440, height: 900}, `${BASE}/impressum.html`, {}, {positions: [0]});
 await session('datenschutz', {width: 1440, height: 900}, `${BASE}/datenschutz.html`, {}, {positions: [0]});
 await browser.close();
@@ -87,4 +83,5 @@ if (report.initialTheme.desktop?.theme !== 'light') { console.error('FAIL: initi
 if (report.foreign.length) { console.error('FOREIGN REQUESTS:', report.foreign); process.exitCode = 2; }
 if (report.consoleErrors.length || report.pageErrors.length || report.httpErrors.length) { console.error('ERRORS:', report.consoleErrors, report.pageErrors, report.httpErrors); process.exitCode = 3; }
 console.log('focus gate', JSON.stringify(report.focusGate.desktop), JSON.stringify(report.focusGate.mobile));
-for (const k of ['desktop', 'dark', 'mobile', 'mobile360']) if (report.focusGate[k] && report.focusGate[k].textContent > 2) { console.error(`FAIL focus gate ${k}`); process.exitCode = 5; }
+// v13: the gate is raised from ≤ 2 to ≤ 5, the "morgens" section is part of / now (the sub-page is gone)
+for (const k of ['desktop', 'dark', 'mobile', 'mobile360']) if (report.focusGate[k] && report.focusGate[k].textContent > 5) { console.error(`FAIL focus gate ${k}`); process.exitCode = 5; }

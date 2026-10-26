@@ -215,7 +215,31 @@
         <h2 class="h-section" id="preise-h">Ein Preis für deine Website.</h2>
         <p class="lead">Gestaltung, Aufbau und Livegang zum Festpreis. Danach betreuen wir die Seite für einen festen Betrag im Monat.</p>
       </div>
-      <div class="price" data-offer></div>
+      <div class="price-col">
+        <div class="price" data-offer></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="morgens" aria-labelledby="morgens-h">
+    <div class="wrap morgens-wrap">
+      <div class="morgens-copy">
+        <h2 class="h-section" id="morgens-h">Wenn du willst, arbeitet die Technik morgens für dich.</h2>
+        <p class="lead">Jeden Morgen eine kurze Nachricht in dein Postfach: welche Termine heute anstehen, welche Anfragen über Nacht reingekommen sind, wie das Wetter wird. Du liest dreißig Sekunden und weißt Bescheid.</p>
+        <p class="lead">Keine neue App, nichts zu lernen. Wir richten es einmal ein, danach läuft es im Hintergrund. Sag uns beim Gespräch einfach, ob du das willst.</p>
+        <p class="morgens-link"><a href="#kontakt">Frag uns danach</a></p>
+      </div>
+      <!-- frameless DOM scene like the story scenes (own canvas, scaled by scenes.js fit()); plays once -->
+      <div class="morgens-fig" aria-hidden="true">
+        <div class="stage" data-morning>
+          <div class="scene" data-scene="morgens" data-w="920" data-h="540"><div class="scene-fit"><div class="scene-in">
+            <p class="mg-chip mg-c1">Heute · 3 Termine</p>
+            <p class="mg-chip mg-c2 mg-r">2 Anfragen über Nacht</p>
+            <p class="mg-chip mg-c3">Trocken bis 16 Uhr, 12&nbsp;°C</p>
+            <div class="mg-msg"><p class="mg-time">07:00</p><p class="mg-text">Guten Morgen. Heute 3 Termine, 2 neue Anfragen, trocken bis 16 Uhr.</p></div>
+          </div></div></div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -246,16 +270,6 @@
     </div>
   </section>
 
-  <section class="section section-more" id="mehr" aria-labelledby="mehr-h">
-    <div class="wrap">
-      <div class="more-card">
-        <h2 class="h-card" id="mehr-h">Außerdem: Automatisierung</h2>
-        <p>Wenn du willst, fassen wir dir jeden Morgen Termine, offene Mails und Wetter in einer kurzen Nachricht zusammen – in dem Postfach, das du schon hast. Wie das aussieht, zeigen wir dir auf einer eigenen Seite.</p>
-        <a class="btn btn-ghost" href="/automatisierung">Mehr dazu</a>
-      </div>
-    </div>
-  </section>
-
   <section class="section section-contact" id="kontakt" aria-labelledby="kontakt-h">
     <div class="skyline" aria-hidden="true">
       <svg class="sky-layer sky-cranes" data-depth="0.35" viewBox="0 0 1600 300" preserveAspectRatio="xMidYMax meet"><use href="/assets/skyline-hamburg.svg#sky-cranes"/></svg>
@@ -278,7 +292,7 @@
     <div class="wrap">
       <p class="foot-brand"><img class="logo-light" src="/assets/logo-mark.svg" alt="" width="22" height="21"><img class="logo-dark" src="/assets/logo-mark-dark.svg" alt="" width="22" height="21"><span>© <span data-year>2026</span> Bartolucci Digital GbR · Hamburg</span></p>
       <p>Websites für kleine Betriebe · Hamburg</p>
-      <nav aria-label="Weitere Seiten"><a href="/impressum.html">Impressum</a><a href="/datenschutz.html">Datenschutz</a><a href="/automatisierung">Automatisierung</a></nav>
+      <nav aria-label="Weitere Seiten"><a href="/impressum.html">Impressum</a><a href="/datenschutz.html">Datenschutz</a></nav>
     </div>
   </footer>
 </template>

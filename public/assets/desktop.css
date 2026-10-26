@@ -89,6 +89,10 @@ html[data-mode='mobile'] .story, html[data-mode='mobile'] .rail { display: none;
 }
 .panel-sticky .stage { will-change: transform, opacity; }
 
+/* v13: a little less air between the sections after the story (v12: clamp(72px, 7vw, 160px)), so the whole
+   page stays within 6.5 viewport heights with the new "morgens" section */
+html[data-mode='desktop'] .section:not(.section-contact) { padding: clamp(56px, 4.4vw, 128px) 0; }
+
 /* ---------- contact section with the harbour skyline ---------- */
 .section-contact { position: relative; overflow: hidden; padding-top: clamp(96px, 12vw, 180px); padding-bottom: clamp(200px, 22vw, 320px); }
 /* v13: translucent, so the page background (#bg grain + fields) runs through this section too */

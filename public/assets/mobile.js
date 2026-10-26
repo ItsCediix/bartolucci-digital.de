@@ -55,6 +55,24 @@
     io.observe(device);
   });
 
+  /* ---------- "morgens" (v13): the small scene plays once when half visible, like the cards above ---------- */
+  var morningStage = d.querySelector('[data-morning]');
+  if (morningStage) {
+    S.fit(morningStage);
+    if (!RM && S.morning) {
+      var msc = morningStage.querySelector('.scene');
+      var mtl = gsap.timeline({paused: true, defaults: {ease: S.ease.brand}});
+      mtl.fromTo(msc.querySelector('.scene-in'), {opacity: 0}, {opacity: 1, duration: 0.3, ease: 'none', immediateRender: false}, 0);
+      S.morning(mtl, msc, 0.1);
+      var mio = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting && e.intersectionRatio >= 0.45) { mtl.play(); mio.disconnect(); }
+        });
+      }, {threshold: [0, 0.45, 1]});
+      mio.observe(morningStage);
+    }
+  }
+
   /* ---------- header + CTA state ---------- */
   var onScroll = function () { header.classList.toggle('is-past', (window.scrollY || 0) > 40); };
   addEventListener('scroll', onScroll, {passive: true});

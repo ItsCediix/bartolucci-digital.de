@@ -277,13 +277,15 @@ html[data-theme='dark'] .theme-toggle .ico-moon { display: block; }
 .person-text p + p { margin-top: 10px; }
 .person-text p:last-child { color: var(--ink-2); }
 
-/* ---------- teaser card ---------- */
-/* full container width: text on a readable measure left, the link at the right end */
-.more-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 20px clamp(32px, 4vw, 96px); padding: clamp(26px, 2.6vw, 48px); border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
-.h-card { font-size: clamp(24px, 1.8vw, 38px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; }
-.more-card p { margin-top: 12px; color: var(--ink-2); max-width: var(--measure); }
-.more-card > :not(.btn) { grid-column: 1; }
-.more-card .btn { grid-column: 2; grid-row: 1 / span 2; align-self: end; }
+/* ---------- "morgens" (v13, replaces the /automatisierung teaser): two columns like the story, text left
+   ~44 %, the small DOM scene right ~56 % (scenes.css); stacked on narrow screens, text first ---------- */
+.morgens-wrap { display: grid; grid-template-columns: minmax(0, 44fr) minmax(0, 56fr); gap: clamp(32px, 4vw, 96px); align-items: center; }
+.morgens-copy .lead { margin-top: 16px; }
+.morgens-copy .lead + .lead { margin-top: 12px; }
+.morgens-link { margin-top: 22px; font-weight: 600; }
+.morgens-link a { color: var(--accent); text-underline-offset: 3px; }
+.morgens-fig { position: relative; width: 100%; aspect-ratio: 920 / 540; }
+.morgens-fig .stage { position: absolute; inset: 0; }
 
 /* ---------- skyline behind the contact section: three parallax layers, the ship drifts right -> left ---------- */
 .skyline { position: absolute; left: 0; right: 0; bottom: 0; height: min(38vw, 340px); z-index: 1; pointer-events: none; }
@@ -333,7 +335,7 @@ html[data-theme='dark'] .sky-layer.sky-ship { color: var(--end-sky); opacity: 0.
   .team { grid-template-columns: 1fr; max-width: 640px; }
 }
 @media (max-width: 900px) {
-  .contact, .price-wrap { grid-template-columns: 1fr; }
+  .contact, .price-wrap, .morgens-wrap { grid-template-columns: 1fr; }
 }
 @media (max-width: 640px) {
   .timeline::before { left: 5px; }
@@ -344,6 +346,4 @@ html[data-theme='dark'] .sky-layer.sky-ship { color: var(--end-sky); opacity: 0.
   .tl-cols { grid-template-columns: 1fr; }
   .tl-result { align-items: flex-start; }
   .person { grid-template-columns: 1fr; }
-  .more-card { grid-template-columns: 1fr; }
-  .more-card .btn { grid-column: 1; grid-row: auto; justify-self: start; margin-top: 4px; }
 }
