@@ -30,9 +30,29 @@ if (!location.hash) window.scrollTo(0, 0);
     });
   }
 
+  /* ---------- background fields (v15): each field is centred on its anchor in document coordinates – blue
+     behind the hero, sand in between, blue at the price card. Re-measured whenever the page height changes
+     (fonts, scenes, theme); pages without the anchors (legal) keep the CSS defaults ---------- */
+  var fields = d.querySelectorAll('#bg .bg-f');
+  // the price field sits beside the opaque card (desktop) or behind heading + lead above it (mobile)
+  var ANCHORS = [['#k-hook', 0.45], ['#k-betreuung', 0.5], html.getAttribute('data-mode') === 'mobile' ? ['#preise', 0.22] : ['#preise .price-col', 0.2]];
+  var place = function () {
+    var top = d.body.getBoundingClientRect().top;
+    for (var i = 0; i < fields.length && i < ANCHORS.length; i++) {
+      var a = d.querySelector(ANCHORS[i][0]);
+      if (!a) continue;
+      var r = a.getBoundingClientRect();
+      fields[i].style.setProperty('--y', Math.round(r.top - top + r.height * ANCHORS[i][1]) + 'px');
+    }
+  };
+  if (fields.length) {
+    place();
+    if ('ResizeObserver' in window) new ResizeObserver(place).observe(d.body);
+    addEventListener('load', place);
+  }
+
   /* ---------- background fields (v13): a slight drift with the scroll, one rAF per scroll frame,
      at most 120 px; static with reduced motion and in the mobile layout ---------- */
-  var fields = d.querySelectorAll('#bg .bg-f');
   if (fields.length && html.getAttribute('data-mode') !== 'mobile' && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     var RATES = [0.04, -0.03, 0.025];
     var queued = false;
