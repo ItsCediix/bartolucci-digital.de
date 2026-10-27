@@ -309,13 +309,15 @@
   }
 
   // 3) three-layer skyline parallax behind the contact section (cranes / city / ship), scroll only;
-  //    the ship additionally drifts right -> left in a 90 s CSS loop (base.css)
+  //    the ship additionally drifts right -> left in a 90 s CSS loop (base.css). The layers come up from below and
+  //    reach their drawn position (0) exactly when #kontakt is fully in view, i.e. at the end of the page, so
+  //    the skyline never ends shifted against the water line
   if (!RM) {
     d.querySelectorAll('.sky-layer').forEach(function (layer) {
       var depth = parseFloat(layer.getAttribute('data-depth') || '0.3');
-      gsap.fromTo(layer, {yPercent: 30 * depth + 10}, {
-        yPercent: -14 * depth, ease: 'none',
-        scrollTrigger: {trigger: '#kontakt', start: 'top bottom', end: 'bottom top', scrub: 0.6},
+      gsap.fromTo(layer, {yPercent: 40 * depth}, {
+        yPercent: 0, ease: 'none',
+        scrollTrigger: {trigger: '#kontakt', start: 'top bottom', end: 'bottom bottom', scrub: 0.6},
       });
     });
   }
