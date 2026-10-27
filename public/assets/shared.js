@@ -169,12 +169,24 @@ if (!location.hash) window.scrollTo(0, 0);
       p.setAttribute('d', svgPath);
       svg.appendChild(p);
       a.appendChild(svg);
-      a.appendChild(mk('span', null, label));
+      a.appendChild(mk('span', 'contact-val', label));
       a.appendChild(mk('span', 'small', hint));
       return a;
     };
-    box.appendChild(line('mailto:' + mail, mail, 'M3 6h18v12H3zM3 6l9 7 9-7', 'E-Mail'));
+    // v15: "E‑Mail" with a non-breaking hyphen (U+2011); the address stays on one line, and where it does not
+    // fit (very narrow screens, large text) the line reads "Mail schreiben" with the address in href + title
+    var mailLine = line('mailto:' + mail, mail, 'M3 6h18v12H3zM3 6l9 7 9-7', 'E‑Mail');
+    mailLine.title = mail;
+    box.appendChild(mailLine);
     box.appendChild(line(telHref, telDisplay, 'M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 5a2 2 0 0 1 2-2z', 'Telefon'));
+    var val = mailLine.querySelector('.contact-val');
+    var fitMail = function () {
+      val.textContent = mail;
+      if (val.scrollWidth > val.clientWidth + 1) val.textContent = 'Mail schreiben';
+    };
+    fitMail();
+    addEventListener('resize', fitMail, {passive: true});
+    if (d.fonts && d.fonts.ready) d.fonts.ready.then(fitMail);
   }
 
   /* ---------- year ---------- */
