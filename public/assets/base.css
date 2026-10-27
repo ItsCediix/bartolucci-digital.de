@@ -136,31 +136,23 @@ img, svg, video, canvas { display: block; max-width: 100%; }
    behind the hero, sand in between, blue at the price card. shared.js writes each field's vertical centre (--y,
    document px) from its anchor and drifts the fields a little with the scroll (off with reduced motion and in the
    mobile layout). The fields are plain radial gradients with a long soft falloff. Pure decoration: nothing clickable. */
-#bg { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+/* v15.1 background: fog (variant 16). The layer is fixed to the viewport, so the fields stay put while scrolling.
+   shared.js still writes --y and a drift transform; neither is used here any more (transform is pinned below). */
+#bg { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
 #bg::after {
   content: ''; position: absolute; inset: 0;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 180px 180px;
-  opacity: 0.05; mix-blend-mode: multiply;
+  opacity: 0.21; mix-blend-mode: multiply;
 }
-/* no border-radius: the gradient already fades to transparent at closest-side, a round clip would change nothing */
-/* a field: centre (--x, --y), size --s; full colour in the middle, fading softly to nothing at the edge */
-.bg-f {
-  position: absolute; left: calc(var(--x) - var(--s) / 2); top: calc(var(--y) - var(--s) / 2); width: var(--s); height: var(--s);
-  will-change: transform;
-  background: radial-gradient(closest-side, var(--bg-c) 0%, color-mix(in srgb, var(--bg-c) 80%, transparent) 30%, color-mix(in srgb, var(--bg-c) 40%, transparent) 62%, color-mix(in srgb, var(--bg-c) 12%, transparent) 84%, transparent 100%);
-}
-/* light: blue 20 %, sand 10 % (pure sand, not pre-mixed with the paper) */
-.bg-f1 { --bg-c: color-mix(in srgb, #5a6592 20%, transparent); --x: 16vw; --y: 32vh; --s: max(78vw, 640px); }
-.bg-f2 { --bg-c: color-mix(in srgb, #c9a36a 10%, transparent); --x: 88vw; --y: 150vh; --s: max(64vw, 560px); }
-.bg-f3 { --bg-c: color-mix(in srgb, #5a6592 20%, transparent); --x: 36vw; --y: 260vh; --s: max(70vw, 620px); }
-html[data-mode='mobile'] .bg-f1 { --x: 30vw; --s: max(150vw, 560px); }
-html[data-mode='mobile'] .bg-f2 { --x: 90vw; --s: max(130vw, 500px); }
-html[data-mode='mobile'] .bg-f3 { --x: 72vw; --s: max(150vw, 560px); }
-/* dark: the logo's dark blue, scaled so the measured distance to the paper is about the same as in light */
-html[data-theme='dark'] #bg::after { opacity: 0.07; mix-blend-mode: screen; }
-html[data-theme='dark'] .bg-f1, html[data-theme='dark'] .bg-f3 { --bg-c: color-mix(in srgb, #a3addb 11%, transparent); }
-html[data-theme='dark'] .bg-f2 { --bg-c: color-mix(in srgb, #c9a36a 7%, transparent); }
+.bg-f { position: absolute; border-radius: 50%; filter: blur(70px); transform: translate(-50%, -50%) !important; }
+.bg-f1 { background: #5a6592; width: 57vw; height: 66vw; left: 62%; top: 96%; opacity: 0.05; }
+.bg-f2 { background: #c9a36a; width: 54vw; height: 60vw; left: 69%; top: 4%; opacity: 0.32; }
+.bg-f3 { background: #5a6592; width: 74vw; height: 46vw; left: 61%; top: 85%; opacity: 0.03; }
+/* dark: grain screens instead of multiplying, blue from the logo's dark palette at 1.3x opacity */
+html[data-theme='dark'] #bg::after { mix-blend-mode: screen; }
+html[data-theme='dark'] .bg-f1 { background: #a3addb; opacity: 0.065; }
+html[data-theme='dark'] .bg-f3 { background: #a3addb; opacity: 0.039; }
 a { color: inherit; }
 button { font: inherit; color: inherit; }
 h1, h2, h3, h4, p, ul, ol { margin: 0; }
