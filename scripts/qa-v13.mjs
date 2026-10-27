@@ -200,7 +200,7 @@ async function priceFacts(page) {
 }
 {
   // slotsLeft = 0, the data file rewritten on the fly
-  const route = (page) => page.route('**/data/site-data.js', async (r) => {
+  const route = (page) => page.route('**/data/site-data.js*',async (r) => {
     const res = await r.fetch();
     const body = (await res.text()).replace(/"slotsLeft":\d+/, '"slotsLeft":0');
     await r.fulfill({response: res, body});

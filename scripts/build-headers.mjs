@@ -3,6 +3,8 @@
 // index.html: the one-line `html.js` marker in <head> (v12, CSS start states of the reveals) and the boot
 // script (mode + theme before first paint); their SHA-256 hashes are whitelisted here so script-src stays
 // 'self' + those hashes. Re-run after changing an inline script: `npm run build`.
+// Caching (v15): /assets, /vendor, /data are referenced with ?v=<content hash> (build-version.mjs) and are
+// immutable for a year; the pages themselves are no-cache, so a deploy is visible on the next load.
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -49,13 +51,25 @@ const headers = `/*
   Cache-Control: public, max-age=31536000, immutable
 
 /vendor/*
-  Cache-Control: public, max-age=2592000
+  Cache-Control: public, max-age=31536000, immutable
 
 /assets/*
-  Cache-Control: public, max-age=86400
+  Cache-Control: public, max-age=31536000, immutable
+
+/data/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/
+  Cache-Control: no-cache
+
+/impressum
+  Cache-Control: no-cache
+
+/datenschutz
+  Cache-Control: no-cache
 
 /*.html
-  Cache-Control: public, max-age=600
+  Cache-Control: no-cache
 `;
 fs.writeFileSync(path.join(PUB, '_headers'), headers);
 console.log(`_headers written, ${hashes.size} inline script hash(es)`);

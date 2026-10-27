@@ -108,7 +108,7 @@ const check = () => {
 // 3. CSS only: desktop.js blocked, so no timeline ever touches the copy
 {
   const {context, page} = await throttledPage();
-  await page.route('**/assets/desktop.js', (route) => route.fulfill({status: 200, contentType: 'text/javascript', body: '/* blocked for the FOUC test */'}));
+  await page.route('**/assets/desktop.js*',(route) => route.fulfill({status: 200, contentType: 'text/javascript', body: '/* blocked for the FOUC test */'}));
   const p = new Promise((res) => page.once('domcontentloaded', () => res(page.evaluate(check))));
   await page.goto(`${BASE}/?mode=desktop`, {waitUntil: 'load'});
   const r = await p;
