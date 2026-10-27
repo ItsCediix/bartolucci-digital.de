@@ -144,7 +144,30 @@ for (const v of VIEWS) for (const dark of [false, true]) {
   }
   await context.close();
 }
+// contact line at 360 / 390 (mobile) and 1440: one line, not cut, 15 px on mobile, "E‑Mail" with U+2011
+report.contact = [];
+for (const [w, h, mobile] of [[360, 780, true], [390, 844, true], [1440, 900, false]]) {
+  if (TAG === 'live') break;
+  const context = await browser.newContext({viewport: {width: w, height: h}, isMobile: mobile, hasTouch: mobile});
+  const page = await context.newPage();
+  await page.goto(`${BASE}/`, {waitUntil: 'load'});
+  await page.evaluate(() => document.getElementById('kontakt').scrollIntoView());
+  await page.waitForTimeout(1500);
+  const c = await page.evaluate(() => {
+    const a = document.querySelector('#kontakt .contact-line'), v = a.querySelector('.contact-val'), s = getComputedStyle(v);
+    return {text: v.textContent, href: a.getAttribute('href'), title: a.title, hint: a.querySelector('.small').textContent,
+      oneLine: v.getBoundingClientRect().height < parseFloat(s.lineHeight || '0') * 1.5 || v.getBoundingClientRect().height < 30,
+      cut: v.scrollWidth > v.clientWidth + 1, fontSize: s.fontSize, lineInView: a.getBoundingClientRect().right <= innerWidth};
+  });
+  c.w = w;
+  c.pass = c.oneLine && !c.cut && c.lineInView && c.hint === 'E‑Mail' && c.href === 'mailto:info@bartolucci-digital.de' && (!mobile || c.fontSize === '15px');
+  if (!c.pass) fail = true;
+  report.contact.push(c);
+  await page.screenshot({path: path.join(OUT, `kontakt_${w}.png`)});
+  await context.close();
+}
 await browser.close();
+for (const c of report.contact) console.log(`contact ${c.w}: "${c.text}" ${c.fontSize} oneLine=${c.oneLine} cut=${c.cut} hint=${JSON.stringify(c.hint)} ${c.pass ? 'PASS' : 'FAIL'}`);
 fs.writeFileSync(path.join(OUT, `v15-bg-${TAG}.json`), JSON.stringify(report, null, 2));
 for (const r of report.runs) {
   console.log(`${r.label.padEnd(34)} ${r.mode.padEnd(7)} ${r.fields.map((f) => `${f.field}=${f.mean ?? '-'}/${f.max ?? '-'}[${f.patches}]`).join('  ')}  contrast=${r.texts.map((t) => t.contrast ?? '-').join('/')} ${r.gate.pass ? 'PASS' : 'FAIL'}`);

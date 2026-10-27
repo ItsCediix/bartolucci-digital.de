@@ -113,8 +113,12 @@ const toSel = async (page, sel, wait = 2600) => {
     await page.waitForTimeout(ms);
     samples.push(await page.evaluate(() => ({y: Math.round(scrollY), stage: window.__bdStage ? window.__bdStage() : {current: null}, hook: +getComputedStyle(document.querySelector('#stage [data-scene="hook"]')).opacity, hookY: getComputedStyle(document.querySelector('#stage [data-scene="hook"] .scene-in')).transform})));
   }
-  // the hook never flies up (its .scene-in keeps no transform) and the stage ends on "betreuung"
-  gate.reloadMidPage = {samples, pass: samples[samples.length - 1].stage.current === 'betreuung' && samples.every((s) => s.hookY === 'none' || /matrix\(1, 0, 0, 1, 0, 0\)/.test(s.hookY)) && samples[samples.length - 1].hook === 0};
+  // the hook never flies up (its .scene-in keeps no transform). Since a849c7e a reload deliberately starts at the
+  // top (shared.js, scrollRestoration manual): then the stage must show the hook; if a browser still restores
+  // the position, it must end on "betreuung" as before
+  const last = samples[samples.length - 1];
+  const noFly = samples.every((s) => s.hookY === 'none' || /matrix\(1, 0, 0, 1, 0, 0\)/.test(s.hookY));
+  gate.reloadMidPage = {samples, pass: noFly && (last.y === 0 ? last.stage.current === 'hook' && last.hook === 1 : last.stage.current === 'betreuung' && last.hook === 0)};
   await context.close();
 }
 
@@ -164,7 +168,8 @@ for (const f of ['impressum', 'datenschutz']) {
   await context.close();
 }
 gate.background = {layer: report.bgLayer, legal: [report.bg_impressum, report.bg_datenschutz]};
-gate.background.pass = report.bgLayer.position === 'fixed' && report.bgLayer.zIndex === '-1' && report.bgLayer.pointerEvents === 'none' && !report.bgLayer.filters.length && report.bg_impressum && report.bg_datenschutz;
+// v15: the layer spans the whole document (absolute) instead of the viewport (fixed); visibility is gated by qa-v15
+gate.background.pass = ['fixed', 'absolute'].includes(report.bgLayer.position) &&report.bgLayer.zIndex === '-1' && report.bgLayer.pointerEvents === 'none' && !report.bgLayer.filters.length && report.bg_impressum && report.bg_datenschutz;
 // the grain tile is a data: URI of at most 8 KB
 const baseCss = fs.readFileSync(path.join(PUB, 'assets', 'base.css'), 'utf8');
 const uri = (baseCss.match(/url\("(data:image\/svg\+xml[^"]+)"\)/) || [])[1] || '';
