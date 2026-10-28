@@ -4,8 +4,10 @@
    v16: every story chapter is one viewport tall (desktop.css) and, once the scroll has come to rest, a chapter
    start within 25 % of the viewport is settled to (0.45 s, power2.out; never during wheel/touch/drag).
    The stage on the right stays sticky for the whole story and switches scenes when a chapter's top passes
-   50 % of the viewport: a short cut (old scene out 0.12 s, then the new one in 0.18 s, 0.985 -> 1, never both
-   visible), then the scene's beats play once. Scrolling back up shows the earlier scene in its end state.
+   50 % of the viewport: a cut with motion (v17: old scene sucked out towards the text 0.28 s, then the new one
+   flies in 0.38 s, never both visible, a light streak across the stage), then the scene's beats play once.
+   Scrolling back up mirrors it and shows the earlier scene in its end state. v17: the story text block on the
+   left cuts in the same rhythm (out 0.2 s with the old scene, in 0.4 s with the new one, lines 0.04 s apart).
    When "So läuft's" reaches 70 % the stage steps back (fade + scale, 0.6 s). Rail (chapters + sections),
    keyboard, spotlight, magnetic buttons, skyline parallax.
    Runs only when <html data-mode="desktop">. Depends on gsap + ScrollTrigger + Lenis (local files). */
@@ -129,9 +131,12 @@
     tl.fromTo(blocks, {opacity: 0, y: fromY}, {opacity: 1, y: 0, duration: 0.8, stagger: STAGGER, ease: 'power3.out', immediateRender: false}, 0);
     onceAt(sec, tl);
   }
+  // v17: on the wide layout the story copy no longer trickles in word by word; each chapter's text block cuts in
+  // with the stage (textIn / textOut below). The narrow single-column layout keeps the v16 per-element reveals.
+  var BLOCK = !RM && !NARROW;
   if (!RM) {
     // v16: 'top 70%' (v13: 78 %), so the copy is in by the time the one-viewport chapter is centred
-    d.querySelectorAll('.chapter [data-beat]').forEach(function (el) { revealCopy(el, 'top 70%'); });
+    if (!BLOCK) d.querySelectorAll('.chapter [data-beat]').forEach(function (el) { revealCopy(el, 'top 70%'); });
     ['ablauf', 'preise', 'morgens', 'ueber-uns'].forEach(function (id) {
       var sec = d.getElementById(id);
       if (sec) revealSection(sec, Array.prototype.slice.call(sec.querySelectorAll(':scope > .wrap > *')), 40);
@@ -160,7 +165,10 @@
      0.4 s between them (beat lengths from scenes.js: website 1.55 / 1.5 / 0.95 s, betreuung 1.1 / 1.65 / 1.15 s). */
   var GAP = 0.4;
   var BEATS = {website: [0, 1.55 + GAP, 1.55 + GAP + 1.5 + GAP], betreuung: [0, 1.1 + GAP, 1.1 + GAP + 1.65 + GAP]};
-  var CUT_OUT = 0.12, CUT_IN = 0.18; // v16: the cut (v13: swap() stretched to 0.9 s)
+  // v17: "sucked in, flown in" (v16: 0.12 s out + 0.18 s in). Out: 1 -> 0.62, 38 % towards the text, power3.in;
+  // in: from 0.62 / 38 % on the other side, back.out(1.25). Never both visible: the new scene starts after the old is gone.
+  var CUT_OUT = 0.28, CUT_IN = 0.38, CUT_SCALE = 0.62, CUT_X = 38;
+  var TEXT_OUT = 0.2, TEXT_IN = 0.4, TEXT_STAGGER = 0.04;
   var beatTl = {};
   var current = null; // index of the chapter whose scene is on the stage
   var loaded = false;
@@ -188,7 +196,39 @@
     }
   }
   function sceneIn(sc) { return sc.querySelector('.scene-in'); }
-  // shows chapter i's scene at once (reload mid-page, reduced motion, first pick)
+
+  /* v17: the text block on the left cuts with the stage. Lines = the chapter's [data-beat] elements in document
+     order (a ul[data-beat] counts as its items): headline, paragraphs, facts, note. */
+  chapters.forEach(function (c) {
+    c.block = c.el && c.el.querySelector('.copy');
+    c.lines = [];
+    if (c.block) c.block.querySelectorAll('[data-beat]').forEach(function (el) {
+      if (el.matches('ul')) c.lines.push.apply(c.lines, el.children);
+      else c.lines.push(el);
+    });
+  });
+  function textSet(i, on) {
+    var c = chapters[i];
+    if (!BLOCK || !c.block) return;
+    gsap.killTweensOf([c.block].concat(c.lines));
+    gsap.set(c.block, {opacity: on ? 1 : 0, x: 0, y: 0});
+    if (c.lines.length) gsap.set(c.lines, {opacity: on ? 1 : 0, x: 0});
+  }
+  function textOut(i) {
+    var c = chapters[i];
+    if (!BLOCK || !c.block) return;
+    gsap.killTweensOf([c.block].concat(c.lines));
+    gsap.to(c.block, {opacity: 0, y: -16, duration: TEXT_OUT, ease: 'power2.in'});
+  }
+  function textIn(i, delay) {
+    var c = chapters[i];
+    if (!BLOCK || !c.block) return;
+    gsap.killTweensOf([c.block].concat(c.lines));
+    gsap.fromTo(c.block, {opacity: 0, x: -24, y: 0}, {opacity: 1, x: 0, duration: TEXT_IN, ease: 'power3.out', delay: delay});
+    if (c.lines.length) gsap.fromTo(c.lines, {opacity: 0}, {opacity: 1, x: 0, duration: TEXT_IN, ease: 'power3.out', stagger: TEXT_STAGGER, delay: delay});
+  }
+
+  // shows chapter i's scene (and its text block) at once (reload mid-page, reduced motion, first pick)
   function showInstant(i) {
     var id = chapters[i].id;
     if (RM) { S.show(scenes, id); return; }
@@ -196,31 +236,57 @@
       var sc = scenes[k];
       gsap.killTweensOf([sc, sceneIn(sc)]);
       if (k === id) {
-        gsap.set(sc, {yPercent: 0, opacity: 1});
+        gsap.set(sc, {yPercent: 0, xPercent: 0, scale: 1, opacity: 1});
         gsap.set(sceneIn(sc), {y: 0, yPercent: 0, scale: 1, opacity: 1});
       } else {
         gsap.set(sc, {opacity: 0});
       }
     });
+    // the hook copy is never hidden on load (LCP); story blocks: only the active one shows
+    chapters.forEach(function (c, k) { if (k) textSet(k, k === i); });
     playBeats(id, 0.15);
   }
-  // v16: a short cut instead of the crossfade. The old scene fades out (0.12 s), only then the new one comes in
-  // (0.18 s, scale 0.985 -> 1), so no frame ever shows both. The new scene arrives as a finished picture: a scene
-  // seen before (or the hook) at its end state; a first visit with beat 1 (the build-up) already complete, then
-  // the remaining beats play once right after the cut with their v13 spacing. No bubble flight any more.
+  // reduced motion: a plain 0.2 s fade, no movement, no sweep
+  function fadeTo(i) {
+    var next = scenes[chapters[i].id];
+    S.show(scenes, chapters[i].id);
+    gsap.fromTo(next, {opacity: 0}, {opacity: 1, duration: 0.2, ease: 'none', overwrite: true});
+  }
+  // the light sweep: a CSS animation on #stage::after (desktop.css), restarted by alternating two keyframe names
+  var sweepRun = 0;
+  function sweep(back) {
+    stage.setAttribute('data-sweep', (sweepRun++ % 2) ? 'b' : 'a');
+    stage.classList.toggle('is-back', back);
+  }
+  // v17: "sucked in, flown in". The old scene shrinks to 0.62 and is pulled 38 % of the stage width towards the
+  // text while fading (0.28 s, power3.in); only then the new one flies in from 0.62 / 38 % on the other side
+  // (0.38 s, back.out(1.25)), so no frame ever shows both. Scrolling up mirrors it. A light streak crosses the stage
+  // meanwhile. The new scene arrives as a finished picture: a scene seen before at its end state; a first visit
+  // with beat 1 (the build-up) complete, then the remaining beats play once after it has settled (v16 rule).
   function switchTo(i) {
     var id = chapters[i].id;
-    var prev = scenes[chapters[current].id];
+    var from = current;
+    var prev = scenes[chapters[from].id];
     var next = scenes[id];
-    gsap.killTweensOf([prev, sceneIn(prev), next, sceneIn(next)]);
+    var dir = i > from ? 1 : -1; // down: out to the left, in from the right
+    Object.keys(scenes).forEach(function (k) {
+      var sc = scenes[k];
+      gsap.killTweensOf([sc, sceneIn(sc)]);
+      // a third scene still leaving after a very fast double switch is cut off at once
+      if (sc !== prev && sc !== next) gsap.set(sc, {opacity: 0});
+    });
     var tl = chapters[i].tl;
     if (tl && !tl._played && BEATS[id]) tl.seek(BEATS[id][1], false);
     else if (tl && tl.progress() < 1) tl.progress(1);
-    gsap.set(next, {yPercent: 0, opacity: 0});
-    gsap.set(sceneIn(next), {y: 0, yPercent: 0, opacity: 1, scale: 0.985, transformOrigin: '50% 50%'});
-    gsap.to(prev, {opacity: 0, duration: CUT_OUT, ease: 'power1.in'});
-    gsap.to(next, {opacity: 1, duration: CUT_IN, ease: 'power2.out', delay: CUT_OUT});
-    gsap.to(sceneIn(next), {scale: 1, duration: CUT_IN, ease: 'power2.out', delay: CUT_OUT});
+    gsap.set(next, {yPercent: 0, xPercent: CUT_X * dir, scale: CUT_SCALE, opacity: 0, transformOrigin: '50% 50%'});
+    gsap.set(sceneIn(next), {y: 0, yPercent: 0, opacity: 1, scale: 1});
+    gsap.to(prev, {opacity: 0, scale: CUT_SCALE, xPercent: -CUT_X * dir, duration: CUT_OUT, ease: 'power3.in', transformOrigin: '50% 50%'});
+    gsap.to(next, {opacity: 1, scale: 1, xPercent: 0, duration: CUT_IN, ease: 'back.out(1.25)', delay: CUT_OUT,
+      // back.out overshoots past 1; opacity is clamped, only scale and position settle
+      modifiers: {opacity: function (o) { return Math.min(1, Math.max(0, o)); }}});
+    sweep(dir < 0);
+    textOut(from);
+    textIn(i, CUT_OUT);
     playBeats(id, CUT_OUT + CUT_IN);
   }
   // hand-over at the end of the story: the stage steps back when "So läuft's" reaches 70 %
@@ -243,7 +309,8 @@
     chapterMarks.forEach(function (st, k) { if (st.start <= y + 1) i = k; });
     if (i === current) return;
     // before load + a moment, a change means the browser restored a scroll position: no fly-in, jump straight there
-    if (current === null || !loaded || RM) showInstant(i);
+    if (current === null || !loaded) showInstant(i);
+    else if (RM) fadeTo(i);
     else switchTo(i);
     current = i;
   }

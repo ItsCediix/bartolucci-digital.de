@@ -93,6 +93,23 @@ html[data-mode='mobile'] .story, html[data-mode='mobile'] .rail { display: none;
   padding: 24px 0 32px;
 }
 .panel-sticky .stage { will-change: transform, opacity; }
+/* v17: light sweep during a scene change. One soft diagonal streak of paper white (18 % light, 10 % dark, no blur)
+   crosses the stage left -> right in 0.5 s (power2.inOut); scrolling up runs it mirrored (.is-back). desktop.js
+   restarts it by alternating data-sweep between two identical keyframe names. Transform + opacity only. */
+#stage::after {
+  content: ''; position: absolute; top: 0; left: 0; z-index: 3; width: 34%; height: 100%; pointer-events: none;
+  /* the streak fades out on all four sides (gradient across, mask along), the slant comes from skewX */
+  background: linear-gradient(90deg, transparent, rgb(250 248 243 / var(--sweep-a, 0.18)) 50%, transparent);
+  -webkit-mask-image: linear-gradient(transparent, #000 22%, #000 78%, transparent);
+  mask-image: linear-gradient(transparent, #000 22%, #000 78%, transparent);
+  opacity: 0; transform: translateX(-110%) skewX(-16deg);
+}
+html[data-theme='dark'] #stage::after { --sweep-a: 0.10; }
+#stage[data-sweep='a']::after { animation: stage-sweep-a 0.5s cubic-bezier(0.45, 0, 0.55, 1) 0.04s both; }
+#stage[data-sweep='b']::after { animation: stage-sweep-b 0.5s cubic-bezier(0.45, 0, 0.55, 1) 0.04s both; }
+#stage.is-back::after { animation-direction: reverse; }
+@keyframes stage-sweep-a { 0% { opacity: 0; transform: translateX(-110%) skewX(-16deg); } 25%, 75% { opacity: 1; } 100% { opacity: 0; transform: translateX(300%) skewX(-16deg); } }
+@keyframes stage-sweep-b { 0% { opacity: 0; transform: translateX(-110%) skewX(-16deg); } 25%, 75% { opacity: 1; } 100% { opacity: 0; transform: translateX(300%) skewX(-16deg); } }
 
 /* v13: a little less air between the sections after the story (v12: clamp(72px, 7vw, 160px)), so the whole
    page stays within 6.5 viewport heights with the new "morgens" section */
@@ -125,4 +142,5 @@ html[data-mode='desktop'] .section:not(.section-contact) { padding: clamp(56px, 
 @media (prefers-reduced-motion: reduce) {
   .copy .w, .copy .clip > .line { transform: none !important; opacity: 1 !important; }
   .rail .dot, .btn, .contact-line { transition: none; }
+  #stage::after { display: none; }
 }
