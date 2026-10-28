@@ -159,19 +159,21 @@ img, svg, video, canvas { display: block; max-width: 100%; }
     rgb(var(--c) / 0) calc(var(--fw) / 2 + 2.5 * var(--s)));
 }
 #bg .f1 { --fw: 58vw; --fh: 66vw; --fx: 14vw; --fy: 12vh; opacity: 0.16; }
-#bg .f2 { --c: 201 163 106; --fw: 56vw; --fh: 62vw; --fx: 86vw; --fy: 30vh; opacity: 0.22; }
+/* v16: the one big sand field (56 × 62 vw @ 86/30 %, 0.22) is split into two smaller, quieter ones */
+#bg .f2 { --c: 201 163 106; --fw: 40vw; --fh: 46vw; --fx: 88vw; --fy: 22vh; opacity: 0.08; }
+#bg .f4 { --c: 201 163 106; --fw: 36vw; --fh: 40vw; --fx: 70vw; --fy: 68vh; opacity: 0.08; }
 #bg .f3 { --fw: 74vw; --fh: 46vw; --fx: 48vw; --fy: 104vh; opacity: 0.1; }
 /* paper grain: greyscale SVG noise as a data: URI (CSP img-src 'self' data:), static */
 #bg .grain {
   position: absolute; inset: 0;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 180px 180px;
-  opacity: 0.16; mix-blend-mode: multiply;
+  opacity: 0.27; mix-blend-mode: multiply; /* v16: 0.16 -> 0.27 (0.24 gave only 1.44x the grain std-dev, the gate asks 1.6x) */
 }
 /* dark: blue from the logo's dark palette, grain screens instead of multiplying */
 html[data-theme='dark'] #bg .f1, html[data-theme='dark'] #bg .f3 { --c: 163 173 219; opacity: 0.22; }
-html[data-theme='dark'] #bg .f2 { opacity: 0.14; }
-html[data-theme='dark'] #bg .grain { opacity: 0.1; mix-blend-mode: screen; }
+html[data-theme='dark'] #bg .f2, html[data-theme='dark'] #bg .f4 { opacity: 0.05; }
+html[data-theme='dark'] #bg .grain { opacity: 0.14; mix-blend-mode: screen; }
 @media (max-width: 767px) {
   #bg .f { --s: clamp(60px, 14vw, 110px); }
 }
