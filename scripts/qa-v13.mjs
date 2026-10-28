@@ -247,7 +247,7 @@ gate.jargon = {source: indexSrc.split('\n').filter(jargonLine).map((l) => l.trim
     roles: Array.from(document.querySelectorAll('.person-role')).map((e) => e.textContent),
     bios: Array.from(document.querySelectorAll('.person-text p:last-child')).map((e) => e.textContent),
   }));
-  gate.teamTexts = {...team, pass: team.lead.startsWith('Zu zweit, kurze Wege: Du redest mit einem von uns, und der kümmert sich. Wir bauen') && !/Ladenfläche/.test(team.lead) && team.roles.join('|') === 'Konzept, Texte, dein Ansprechpartner|Technik, Hosting, Updates'};
+  gate.teamTexts = {...team, pass: team.lead.startsWith('Zu zweit, kurze Wege: Du redest mit einem von uns, und der kümmert sich. Wir bauen') && !/Ladenfläche/.test(team.lead) && team.roles.join('|') === 'Konzept, Texte, dein Ansprechpartner|Technik, Hosting, Updates, Compliance'};
   const m = await page.evaluate(() => {
     const s = document.getElementById('morgens');
     const order = Array.from(document.querySelectorAll('main section[id]')).map((e) => e.id);
