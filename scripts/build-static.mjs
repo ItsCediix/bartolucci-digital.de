@@ -55,6 +55,8 @@ const fact = (text) => {
   return m ? `<li><strong>${esc(m[1])}</strong>${esc(m[2])}</li>` : `<li><strong>${esc(text)}</strong></li>`;
 };
 const star = '<sup class="price-star">*</sup>';
+// mailto with subject and a prefilled body (one line per field, URL-encoded; CR LF line breaks for the mail clients)
+export const mailto = (company) => `mailto:${company.email}?subject=${encodeURIComponent(company.mailto.subject)}&body=${encodeURIComponent(company.mailto.body.join('\r\n'))}`;
 export function renderOffer(o, company) {
   const t = o.text;
   const values = {launch: fmt(o.launchPrice), regular: fmt(o.regularPrice), care: fmt(o.carePrice), round: fmt(o.roundPrice)};
@@ -66,7 +68,10 @@ export function renderOffer(o, company) {
   h += '</div>';
   if (launch && t.availability[o.slotsLeft - 1]) h += `<p class="price-avail">${esc(t.availability[o.slotsLeft - 1])}</p>`;
   h += `<ul class="facts">${fact(fill(t.included))}${fact(fill(t.care))}</ul>`;
-  h += `<a class="btn btn-primary btn-lg" href="#kontakt">${esc(t.button)}</a>`;
+  // v18 (audit M4): the button opens the mail client with subject and a short German template (company.json), and the
+  // address stands next to it as plain text with a copy button (shared.js); no form, no booking tool, no third party
+  h += `<a class="btn btn-primary btn-lg" href="${esc(mailto(company))}">${esc(t.button)}</a>`;
+  h += `<p class="price-mail">Oder per Mail an <span class="price-mail-addr" data-mail>${esc(company.email)}</span> <button type="button" class="copy-btn" data-copy="${esc(company.email)}" aria-label="E-Mail-Adresse kopieren">Kopieren</button></p>`;
   h += '</div>';
   h += `<p class="price-note">${esc(t.footnote)}</p>`;
   return h;

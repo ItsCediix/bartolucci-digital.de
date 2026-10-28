@@ -299,6 +299,15 @@ html[data-theme='dark'] .theme-toggle .ico-moon { display: block; }
 html[data-theme='dark'] .price-note { color: var(--ink-2); }
 .price .btn-primary { background: var(--price-accent); color: var(--price-on-accent); }
 .price .btn-primary:hover { background: var(--price-ink); color: var(--price-bg); }
+/* v18 (audit M4): the address as plain text under the button, with a small copy button (shared.js) */
+.price-mail { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-top: 16px; font-size: 14.5px; color: var(--price-text); }
+.price-mail-addr { font-weight: 600; color: var(--price-ink); overflow-wrap: anywhere; user-select: all; }
+.copy-btn {
+  padding: 6px 12px; border-radius: 999px; border: 1.5px solid var(--price-line); background: transparent;
+  color: var(--price-ink); font-weight: 600; font-size: 13.5px; line-height: 1; cursor: pointer; transition: border-color 0.2s, color 0.2s;
+}
+.copy-btn:hover { border-color: var(--price-accent); }
+.copy-btn.is-done { color: var(--price-accent); border-color: var(--price-accent); }
 
 /* ---------- about: two person cards, photos load from fixed file names, initials tile as fallback ---------- */
 .team { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(24px, 2vw, 48px); }

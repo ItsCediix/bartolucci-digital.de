@@ -129,6 +129,35 @@ if (!location.hash) window.scrollTo(0, 0);
     addEventListener('orientationchange', recheck, {passive: true});
   }
 
+  /* ---------- v18 (audit M4): copy button next to the e-mail address in the price card. Clipboard API first; where it
+     is missing or refused (http, old browsers) the address is selected so Ctrl+C works. No third party, no form. ---------- */
+  d.querySelectorAll('[data-copy]').forEach(function (btn) {
+    var text = btn.getAttribute('data-copy');
+    var label = btn.textContent;
+    var timer = 0;
+    var done = function (msg) {
+      btn.textContent = msg;
+      btn.classList.add('is-done');
+      clearTimeout(timer);
+      timer = setTimeout(function () { btn.textContent = label; btn.classList.remove('is-done'); }, 1800);
+    };
+    var select = function () {
+      var el = d.querySelector('[data-mail]');
+      if (!el || !window.getSelection) return false;
+      var range = d.createRange();
+      range.selectNodeContents(el);
+      var sel = getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      return true;
+    };
+    btn.addEventListener('click', function () {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done('Kopiert'); }, function () { done(select() ? 'Markiert' : label); });
+      } else done(select() ? 'Markiert' : label);
+    });
+  });
+
   /* ---------- year ---------- */
   var y = d.querySelector('[data-year]');
   if (y) y.textContent = String(new Date().getFullYear());
