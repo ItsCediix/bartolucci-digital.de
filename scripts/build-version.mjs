@@ -21,15 +21,28 @@ const hash = (rel) => {
 };
 
 let total = 0;
-for (const page of ['index.html', 'impressum.html', 'datenschutz.html']) {
+// v18: 404.html joins the pages; srcset lists (team photos as AVIF/WebP, M16) get the same ?v= per candidate
+for (const page of ['index.html', 'impressum.html', 'datenschutz.html', '404.html']) {
   const file = path.join(PUB, page);
+  if (!fs.existsSync(file)) continue;
   const html = fs.readFileSync(file, 'utf8');
   let n = 0;
-  const out = html.replace(/\b(src|href)="(\/(?:assets|vendor|data)\/[^"?#]+)(\?v=[^"#]*)?(#[^"]*)?"/g, (all, attr, p, _v, frag = '') => {
+  let out = html.replace(/\b(src|href)="(\/(?:assets|vendor|data)\/[^"?#]+)(\?v=[^"#]*)?(#[^"]*)?"/g, (all, attr, p, _v, frag = '') => {
     const h = hash(p.slice(1));
     if (!h) return all;
     n++;
     return `${attr}="${p}?v=${h}${frag}"`;
+  });
+  out = out.replace(/\bsrcset="([^"]+)"/g, (all, list) => {
+    const cands = list.split(',').map((c) => c.trim()).map((c) => {
+      const m = /^(\/(?:assets|vendor|data)\/[^\s?#]+)(\?v=[^\s#]*)?(\s+\S+)?$/.exec(c);
+      if (!m) return c;
+      const h = hash(m[1].slice(1));
+      if (!h) return c;
+      n++;
+      return `${m[1]}?v=${h}${m[3] || ''}`;
+    });
+    return `srcset="${cands.join(', ')}"`;
   });
   if (out !== html) fs.writeFileSync(file, out);
   total += n;

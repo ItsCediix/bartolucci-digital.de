@@ -323,6 +323,8 @@ html[data-theme='dark'] .price-note { color: var(--ink-2); }
 }
 /* v17.1: very light inner ring so the white photo background does not read as a pasted square on the card */
 .card-photo-box::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgb(20 20 20 / 6%); pointer-events: none; }
+/* v18 (audit M16): the <picture> (AVIF / WebP sources, JPEG fallback) is no box of its own, the img keeps the framing */
+.card-photo-box picture { display: contents; }
 .card-photo {
   width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%;
   transform: scale(var(--photo-zoom, 1)); transform-origin: var(--photo-origin, 50% 100%);

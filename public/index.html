@@ -30,10 +30,8 @@
 <link rel="preload" href="/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/inter-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/inter-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/base.css?v=5a95fe9c37">
-<link rel="stylesheet" href="/assets/scenes.css?v=97cd7ecdb0">
-<link rel="stylesheet" href="/assets/desktop.css?v=b976cc1a02">
-<link rel="stylesheet" href="/assets/mobile.css?v=a0f5df4650">
+<!-- v18 (M16): one stylesheet, built by scripts/build-css.mjs from base.css + scenes.css + desktop.css + mobile.css (edit those) -->
+<link rel="stylesheet" href="/assets/site.css?v=970e21e6d2">
 <script src="/assets/shared.js?v=8125f8b9af" defer></script>
 <script src="/vendor/gsap.min.js?v=92bb9a9647" defer></script>
 <script src="/vendor/ScrollTrigger.min.js?v=b0b14d67b5" defer></script>
@@ -298,7 +296,7 @@
       </div>
       <ul class="team">
         <li class="person">
-          <div class="card-photo-box"><img class="card-photo" src="/assets/team/luca.jpg?v=77d8c44084" alt="Luca-Kay Bartolucci" width="480" height="600" loading="lazy" data-initials="LB"></div>
+          <div class="card-photo-box"><picture><source type="image/avif" srcset="/assets/team/luca.avif?v=6d821152c7"><source type="image/webp" srcset="/assets/team/luca.webp?v=ef601665b3"><img class="card-photo" src="/assets/team/luca.jpg?v=77d8c44084" alt="Luca-Kay Bartolucci" width="480" height="600" loading="lazy" data-initials="LB"></picture></div>
           <div class="person-text">
             <h3>Luca-Kay Bartolucci</h3>
             <p class="person-role">Konzept, Texte, dein Ansprechpartner</p>
@@ -306,7 +304,7 @@
           </div>
         </li>
         <li class="person">
-          <div class="card-photo-box"><img class="card-photo" src="/assets/team/cederic.jpg?v=dd36ee9f20" alt="Cederic Langpaap" width="480" height="600" loading="lazy" data-initials="CL"></div>
+          <div class="card-photo-box"><picture><source type="image/avif" srcset="/assets/team/cederic.avif?v=fb2c3f3bcb"><source type="image/webp" srcset="/assets/team/cederic.webp?v=5a7fb83272"><img class="card-photo" src="/assets/team/cederic.jpg?v=dd36ee9f20" alt="Cederic Langpaap" width="480" height="600" loading="lazy" data-initials="CL"></picture></div>
           <div class="person-text">
             <h3>Cederic Langpaap</h3>
             <p class="person-role">Technik, Hosting, Updates, Compliance</p>

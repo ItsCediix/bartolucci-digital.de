@@ -27,6 +27,8 @@ scripts/
   brand.mjs             Logo-Varianten + Favicons aus dem verbindlichen Logo-SVG (sharp)
   og.mjs                og.png (1200 × 630) per Playwright
   build-static.mjs      offer.json + company.json → Preiskarte, Kontaktzeilen, JSON-LD in index.html (Marker)
+  build-css.mjs         base + scenes + desktop + mobile.css → public/assets/site.css (nur die Startseite lädt die Datei)
+  team-images.mjs       Teamfotos 960 × 960 ohne Metadaten, dazu .webp und .avif für das <picture> auf der Startseite
   build-version.mjs     ?v=<hash> an jede /assets-, /vendor- und /data-Referenz
   build-headers.mjs     schreibt public/_headers (Hashes der beiden Inline-Skripte)
   vendor.mjs            kopiert Bibliotheken + Schriften aus node_modules nach public/
