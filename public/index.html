@@ -26,11 +26,11 @@
 <link rel="preload" href="/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/inter-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/inter-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/base.css?v=610680023c">
+<link rel="stylesheet" href="/assets/base.css?v=d4aa0b4be3">
 <link rel="stylesheet" href="/assets/scenes.css?v=eaabc77986">
 <link rel="stylesheet" href="/assets/desktop.css?v=3f1ab6c885">
 <link rel="stylesheet" href="/assets/mobile.css?v=13bd5e0bdb">
-<script src="/data/site-data.js?v=958307544a"></script>
+<script src="/data/site-data.js?v=1bd3bd7809"></script>
 <script src="/assets/shared.js?v=52b6d3c6a1" defer></script>
 <script src="/vendor/gsap.min.js?v=dd7dc87e02" defer></script>
 <script src="/vendor/ScrollTrigger.min.js?v=ba6ffe7b85" defer></script>
@@ -253,7 +253,7 @@
       </div>
       <ul class="team">
         <li class="person">
-          <img class="card-photo" src="/assets/team/luca.jpg?v=74cf50244e" alt="Luca Bartolucci" width="480" height="480" loading="lazy" data-initials="LB">
+          <img class="card-photo" src="/assets/team/luca.jpg?v=77d8c44084" alt="Luca Bartolucci" width="480" height="480" loading="lazy" data-initials="LB">
           <div class="person-text">
             <h3>Luca-Kay Bartolucci</h3>
             <p class="person-role">Konzept, Texte, dein Ansprechpartner</p>
@@ -261,7 +261,7 @@
           </div>
         </li>
         <li class="person">
-          <img class="card-photo" src="/assets/team/cederic.jpg?v=55f2c30a2f" alt="Cederic Langpaap" width="480" height="480" loading="lazy" data-initials="CL">
+          <img class="card-photo" src="/assets/team/cederic.jpg?v=75b1258773" alt="Cederic Langpaap" width="480" height="480" loading="lazy" data-initials="CL">
           <div class="person-text">
             <h3>Cederic Langpaap</h3>
             <p class="person-role">Technik, Hosting, Updates</p>
@@ -354,7 +354,7 @@
 </template>
 </head>
 <body>
-<div id="bg" aria-hidden="true"><div class="bg-f bg-f1"></div><div class="bg-f bg-f2"></div><div class="bg-f bg-f3"></div></div>
+<div id="bg" aria-hidden="true"><div class="f f1"></div><div class="f f2"></div><div class="f f3"></div><div class="grain"></div></div>
 <script>(function(){var d=document,h=d.documentElement,q=null;try{q=new URLSearchParams(location.search).get("mode")}catch(e){}var t=null;try{t=localStorage.getItem("bd-theme")}catch(e){}t=t==="dark"?"dark":"light";h.setAttribute("data-theme",t);var mc=d.querySelector("meta[data-theme-color]");if(mc)mc.setAttribute("content",t==="dark"?"#0b1220":"#faf8f3");var m;if(q==="desktop"||q==="mobile"){m=q}else{var coarse=matchMedia("(pointer: coarse)").matches,portrait=matchMedia("(orientation: portrait)").matches;m=(coarse&&portrait)||innerWidth<768?"mobile":"desktop"}h.setAttribute("data-mode",m);var f=d.createDocumentFragment();f.appendChild(d.getElementById("tpl-header").content.cloneNode(true));if(m==="mobile")f.querySelector("[data-header]").classList.add("m-header");var tpl=d.getElementById("tpl-"+m).content.cloneNode(true);var scenes=d.getElementById("tpl-scenes").content;var slot=tpl.querySelector("[data-chapters-slot]");var arts=d.getElementById("tpl-chapters").content.querySelectorAll("article");for(var i=0;i<arts.length;i++){var a=arts[i].cloneNode(true),id=a.getAttribute("data-chapter"),w=d.createElement(m==="desktop"?"section":"div");w.className=m==="desktop"?"chapter":"m-card";w.id="k-"+id;w.setAttribute("data-chapter",id);if(m==="desktop"){var inner=d.createElement("div");inner.className="chapter-inner";inner.appendChild(a);w.appendChild(inner)}else{var sc=scenes.querySelector('[data-scene="'+id+'"]').cloneNode(true),dv=d.createElement("div");dv.className="m-stage";dv.setAttribute("aria-hidden","true");dv.style.aspectRatio=sc.getAttribute("data-w")+" / "+sc.getAttribute("data-h");var st=d.createElement("div");st.className="stage";st.appendChild(sc);dv.appendChild(st);w.appendChild(dv);w.appendChild(a)}slot.appendChild(w)}if(m==="desktop")tpl.querySelector("[data-scenes-slot]").appendChild(scenes.cloneNode(true));tpl.querySelector("[data-shared-slot]").appendChild(d.getElementById("tpl-shared").content.cloneNode(true));var tm=(window.BD||{}).team;if(tm){var ps=tpl.querySelectorAll("img.card-photo");for(var j=0;j<ps.length;j++){var im=ps[j];if(tm.indexOf(im.getAttribute("src").split("?")[0].split("/").pop())<0){var ti=d.createElement("div");ti.className="card-photo card-photo--fallback";ti.setAttribute("role","img");ti.setAttribute("aria-label",im.getAttribute("alt"));ti.textContent=im.getAttribute("data-initials");im.parentNode.replaceChild(ti,im)}}}f.appendChild(tpl);d.body.appendChild(f)})();</script>
 <noscript><div class="noscript"><p>Diese Seite braucht JavaScript, um die Kapitel anzuzeigen. Kontakt: siehe <a href="/impressum.html">Impressum</a>.</p></div></noscript>
 </body>

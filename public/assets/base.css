@@ -138,21 +138,43 @@ img, svg, video, canvas { display: block; max-width: 100%; }
    mobile layout). The fields are plain radial gradients with a long soft falloff. Pure decoration: nothing clickable. */
 /* v15.1 background: fog (variant 16). The layer is fixed to the viewport, so the fields stay put while scrolling.
    shared.js still writes --y and a drift transform; neither is used here any more (transform is pinned below). */
+/* v15.1 fix (variant 16, rebuilt in v16 from REPORT_website_v15_1_nebel): no live filter: blur() (233 ms per scroll
+   frame in the software renderer, a hard ellipse on wide screens). Each field is a radial gradient with a Gaussian
+   edge profile instead: full colour up to --fw/2 - 2.5 sigma, then the normal CDF over +-2.5 sigma, sigma = --s.
+   The boxes sit at 0/0 and are placed with translate (left/top in % gave a mobile CLS of ~1). shared.js still looks
+   for #bg .bg-f and finds nothing, so the fields stay put. */
 #bg { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
-#bg::after {
-  content: ''; position: absolute; inset: 0;
+#bg .f {
+  --s: clamp(80px, 7vw, 160px);
+  --c: 90 101 146;
+  position: absolute; left: 0; top: 0;
+  width: calc(var(--fw) + 5 * var(--s)); height: calc(var(--fh) + 5 * var(--s));
+  transform: translate(calc(var(--fx) - 50%), calc(var(--fy) - 50%));
+  background: radial-gradient(closest-side,
+    rgb(var(--c) / 1) calc(var(--fw) / 2 - 2.5 * var(--s)), rgb(var(--c) / 0.977) calc(var(--fw) / 2 - 2 * var(--s)),
+    rgb(var(--c) / 0.933) calc(var(--fw) / 2 - 1.5 * var(--s)), rgb(var(--c) / 0.841) calc(var(--fw) / 2 - var(--s)),
+    rgb(var(--c) / 0.692) calc(var(--fw) / 2 - 0.5 * var(--s)), rgb(var(--c) / 0.5) calc(var(--fw) / 2),
+    rgb(var(--c) / 0.309) calc(var(--fw) / 2 + 0.5 * var(--s)), rgb(var(--c) / 0.159) calc(var(--fw) / 2 + var(--s)),
+    rgb(var(--c) / 0.067) calc(var(--fw) / 2 + 1.5 * var(--s)), rgb(var(--c) / 0.023) calc(var(--fw) / 2 + 2 * var(--s)),
+    rgb(var(--c) / 0) calc(var(--fw) / 2 + 2.5 * var(--s)));
+}
+#bg .f1 { --fw: 58vw; --fh: 66vw; --fx: 14vw; --fy: 12vh; opacity: 0.16; }
+#bg .f2 { --c: 201 163 106; --fw: 56vw; --fh: 62vw; --fx: 86vw; --fy: 30vh; opacity: 0.22; }
+#bg .f3 { --fw: 74vw; --fh: 46vw; --fx: 48vw; --fy: 104vh; opacity: 0.1; }
+/* paper grain: greyscale SVG noise as a data: URI (CSP img-src 'self' data:), static */
+#bg .grain {
+  position: absolute; inset: 0;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 180px 180px;
-  opacity: 0.21; mix-blend-mode: multiply;
+  opacity: 0.16; mix-blend-mode: multiply;
 }
-.bg-f { position: absolute; border-radius: 50%; filter: blur(70px); transform: translate(-50%, -50%) !important; }
-.bg-f1 { background: #5a6592; width: 57vw; height: 66vw; left: 62%; top: 96%; opacity: 0.05; }
-.bg-f2 { background: #c9a36a; width: 54vw; height: 60vw; left: 69%; top: 4%; opacity: 0.32; }
-.bg-f3 { background: #5a6592; width: 74vw; height: 46vw; left: 61%; top: 85%; opacity: 0.03; }
-/* dark: grain screens instead of multiplying, blue from the logo's dark palette at 1.3x opacity */
-html[data-theme='dark'] #bg::after { mix-blend-mode: screen; }
-html[data-theme='dark'] .bg-f1 { background: #a3addb; opacity: 0.065; }
-html[data-theme='dark'] .bg-f3 { background: #a3addb; opacity: 0.039; }
+/* dark: blue from the logo's dark palette, grain screens instead of multiplying */
+html[data-theme='dark'] #bg .f1, html[data-theme='dark'] #bg .f3 { --c: 163 173 219; opacity: 0.22; }
+html[data-theme='dark'] #bg .f2 { opacity: 0.14; }
+html[data-theme='dark'] #bg .grain { opacity: 0.1; mix-blend-mode: screen; }
+@media (max-width: 767px) {
+  #bg .f { --s: clamp(60px, 14vw, 110px); }
+}
 a { color: inherit; }
 button { font: inherit; color: inherit; }
 h1, h2, h3, h4, p, ul, ol { margin: 0; }
