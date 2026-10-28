@@ -151,7 +151,7 @@ if (!location.hash) window.scrollTo(0, 0);
   /* ---------- contact (assembled at runtime from split strings, so address harvesters that read the raw HTML find nothing) ---------- */
   var box = d.querySelector('[data-contact]');
   if (box) {
-    var user = ['in', 'fo'].join('');
+    var user = ['luca', 'bartolucci'].join('.'); // v16 (Luca, 28.10.), before: the info box
     var host = ['bartolucci-digital', 'de'].join('.');
     var mail = user + '@' + host;
     var tel = ['0170', '7240', '195'];

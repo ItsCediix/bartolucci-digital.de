@@ -160,7 +160,7 @@ for (const [w, h, mobile] of [[360, 780, true], [390, 844, true], [1440, 900, fa
       cut: v.scrollWidth > v.clientWidth + 1, fontSize: s.fontSize, lineInView: a.getBoundingClientRect().right <= innerWidth};
   });
   c.w = w;
-  c.pass = c.oneLine && !c.cut && c.lineInView && c.hint === 'E‑Mail' && c.href === 'mailto:info@bartolucci-digital.de' && (!mobile || c.fontSize === '15px');
+  c.pass = c.oneLine && !c.cut && c.lineInView && c.hint === 'E‑Mail' && c.href === 'mailto:luca.bartolucci@bartolucci-digital.de' && (!mobile || c.fontSize === '15px');
   if (!c.pass) fail = true;
   report.contact.push(c);
   await page.screenshot({path: path.join(OUT, `kontakt_${w}.png`)});
