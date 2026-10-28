@@ -3,6 +3,8 @@
   "name": "bartolucci-digital-de",
   "compatibility_date": "2026-10-01",
   "assets": {
-    "directory": "./public"
+    "directory": "./public",
+    // v18 (Audit M17): unbekannte Pfade bekommen public/404.html mit Status 404 (vorher: leere Antwort)
+    "not_found_handling": "404-page"
   }
 }
