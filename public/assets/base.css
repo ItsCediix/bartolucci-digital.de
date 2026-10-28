@@ -308,15 +308,21 @@ html[data-theme='dark'] .price-note { color: var(--ink-2); }
    (scripts/team-images.mjs, 960 × 960); the framing is a zoom about a transform origin: by default 1.25 from the
    bottom centre, which puts the eyes of a frontal head-and-neck photo (like luca.jpg) at ~37 % of the box.
    A new photo in that framing is a pure file swap. */
-.card-photo-box { position: relative; width: clamp(148px, 9vw, 240px); aspect-ratio: 4 / 5; border-radius: 12px; overflow: hidden; background: var(--bg-2); }
+.card-photo-box {
+  position: relative; width: clamp(148px, 9vw, 240px); aspect-ratio: 4 / 5; border-radius: 18px; overflow: hidden; background: var(--bg-2);
+  -webkit-mask-image: linear-gradient(to bottom, #000 88%, transparent); mask-image: linear-gradient(to bottom, #000 88%, transparent);
+}
+/* v17.1: very light inner ring so the white photo background does not read as a pasted square on the card */
+.card-photo-box::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgb(20 20 20 / 6%); pointer-events: none; }
 .card-photo {
   width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%;
-  transform: scale(var(--photo-zoom, 1.25)); transform-origin: var(--photo-origin, 50% 100%);
+  transform: scale(var(--photo-zoom, 1)); transform-origin: var(--photo-origin, 50% 100%);
 }
-/* v17: the new cederic.jpg (28.10.) is frontal head-and-shoulders like luca.jpg and uses the standard rule; only his
-   eyes sit lower in the file (53.5 % vs. 50.5 % of the height), so his zoom from the bottom edge is 1.33 instead of
-   1.25: both pairs of eyes end at ~38 % of the box, the bottom edge stays filled. */
-.card-photo[src*='cederic.jpg'] { --photo-zoom: 1.33; }
+/* v17.1: full hair visible. The files are square (960 × 960) and the 4:5 box shows the full height, so zoom 1 shows
+   everything. cederic.jpg: hair top 5.8 %, eyes 53.5 %, chin ~90.5 % of the height, zoom 1 (default). luca.jpg: hair top
+   9.5 %, eyes 50.5 %, chin ~87.5 % (smaller head), so zoom 1.09 about 50% 16%: head height equal (~85 % of the box), eyes at
+   ~53.6 % in both, hair top at 8.9 %; the box stays filled at the bottom and sides (origin above 0, zoom above 1). */
+.card-photo[src*='luca.jpg'] { --photo-zoom: 1.09; --photo-origin: 50% 16%; }
 .card-photo--fallback { transform: none; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); font-weight: 800; font-size: 40px; letter-spacing: -0.03em; }
 .person h3 { font-size: clamp(21px, 1.3vw, 28px); font-weight: 800; letter-spacing: -0.02em; }
 .person-role { margin-top: 2px; font-weight: 600; color: var(--accent); }
