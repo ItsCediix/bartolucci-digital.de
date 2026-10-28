@@ -311,9 +311,10 @@ html[data-theme='dark'] .theme-toggle .ico-moon { display: block; }
   width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%;
   transform: scale(var(--photo-zoom, 1.25)); transform-origin: var(--photo-origin, 50% 100%);
 }
-/* TEMPORARY (v16): the current cederic.jpg is a half-body shot; this crops it to head and neck. The selector holds
-   the file's content hash, so it stops matching by itself as soon as a new cederic.jpg is built in. */
-.card-photo[src*='cederic.jpg?v=75b1258773'] { --photo-zoom: 2.2; --photo-origin: 47.6% 48.6%; }
+/* v17: the new cederic.jpg (28.10.) is frontal head-and-shoulders like luca.jpg and uses the standard rule; only his
+   eyes sit lower in the file (53.5 % vs. 50.5 % of the height), so his zoom from the bottom edge is 1.33 instead of
+   1.25: both pairs of eyes end at ~38 % of the box, the bottom edge stays filled. */
+.card-photo[src*='cederic.jpg'] { --photo-zoom: 1.33; }
 .card-photo--fallback { transform: none; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); font-weight: 800; font-size: 40px; letter-spacing: -0.03em; }
 .person h3 { font-size: clamp(21px, 1.3vw, 28px); font-weight: 800; letter-spacing: -0.02em; }
 .person-role { margin-top: 2px; font-weight: 600; color: var(--accent); }
