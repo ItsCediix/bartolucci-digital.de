@@ -16,10 +16,9 @@
   var d = document;
   var html = d.documentElement;
   if (html.getAttribute('data-mode') !== 'desktop') return;
-  var BD = window.BD;
   var S = window.BDScenes;
   // without the libraries nothing would ever reveal: drop html.js so the CSS start states no longer apply
-  if (!BD || !S || !window.gsap || !window.ScrollTrigger) { html.classList.remove('js'); return; }
+  if (!S || !window.gsap || !window.ScrollTrigger) { html.classList.remove('js'); return; }
   gsap.registerPlugin(ScrollTrigger);
 
   var RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -28,7 +27,8 @@
 
   var stage = d.getElementById('stage');
   var railLinks = Array.prototype.slice.call(d.querySelectorAll('[data-rail]'));
-  var chapters = BD.chapters.map(function (c) { return Object.assign({}, c, {el: d.getElementById('k-' + c.id)}); });
+  // v18: the chapters come from the static markup (one .chapter section per story scene), not from site-data.js
+  var chapters = Array.prototype.slice.call(d.querySelectorAll('.chapter[data-chapter]')).map(function (el) { return {id: el.getAttribute('data-chapter'), el: el}; });
 
   S.fit(stage);
   var scenes = S.collect(stage);

@@ -1,12 +1,12 @@
 // reload (F5) always starts at the top instead of restoring the old scroll position; #anchor links still work
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 if (!location.hash) window.scrollTo(0, 0);
-/* Shared behaviour for all pages: theme toggle, header state, price card, team photos, contact lines, year. */
+/* Shared behaviour for all pages: theme toggle, header state, team photos, contact line fit, year.
+   v18: the price card and the contact lines are static HTML (scripts/build-static.mjs), nothing is rendered here. */
 (function () {
   'use strict';
   var d = document;
   var html = d.documentElement;
-  var BD = window.BD || {};
   var mk = function (tag, cls, text) { var e = d.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
 
   /* ---------- theme ---------- */
@@ -78,62 +78,8 @@ if (!location.hash) window.scrollTo(0, 0);
     onScroll();
   }
 
-  /* ---------- price card: all numbers and texts come from offer.json ----------
-     The struck regular price is never shown as "statt"/"vorher": it has not been charged yet, so it is only
-     presented as the regular price from the 4th customer on (UWG § 5, no "Mondpreis"). */
-  var fmt = function (n) { return n.toLocaleString('de-DE') + ' €'; };
-  // a .facts row: lead clause (up to the first comma, full stop or bracket) semibold, the rest regular
-  var fact = function (text) {
-    var li = mk('li');
-    var m = /^([^,.(]+[,.]?)(.*)$/.exec(text);
-    li.appendChild(mk('strong', null, m ? m[1] : text));
-    if (m && m[2]) li.appendChild(d.createTextNode(m[2]));
-    return li;
-  };
-  // v12 card in the logo palette: heading, price row, availability as a plain sentence, .facts, button.
-  // No tag, no pill, no dots. slotsLeft 0 -> fixed-price heading, 1.990 € as the only price, no sentence.
-  // v13: the website prices carry an asterisk; its footnote stands below the card, outside it.
-  var starred = function (tag, cls, n) {
-    var e = mk(tag, cls, fmt(n));
-    e.appendChild(mk('sup', 'price-star', '*'));
-    return e;
-  };
-  function renderOffer(el) {
-    var o = BD.offer;
-    if (!o || !o.text) return;
-    var t = o.text;
-    var values = {launch: fmt(o.launchPrice), regular: fmt(o.regularPrice), care: fmt(o.carePrice), round: fmt(o.roundPrice)};
-    var fill = function (s) { return s.replace(/\{(\w+)\}/g, function (_, k) { return values[k]; }); };
-    var launch = o.slotsLeft > 0;
-    var frag = d.createDocumentFragment();
-    frag.appendChild(mk('h3', 'price-h', launch ? t.heading : t.headingRegular));
-    var row = mk('div', 'price-row');
-    row.appendChild(starred('p', 'price-now', launch ? o.launchPrice : o.regularPrice));
-    if (launch) {
-      var reg = mk('p', 'price-reg');
-      reg.appendChild(starred('s', null, o.regularPrice));
-      reg.appendChild(mk('span', null, t.regularLabel));
-      row.appendChild(reg);
-    }
-    frag.appendChild(row);
-    if (launch && t.availability[o.slotsLeft - 1]) frag.appendChild(mk('p', 'price-avail', t.availability[o.slotsLeft - 1]));
-    var list = mk('ul', 'facts');
-    list.appendChild(fact(fill(t.included)));
-    list.appendChild(fact(fill(t.care)));
-    frag.appendChild(list);
-    var btn = mk('a', 'btn btn-primary btn-lg', t.button);
-    btn.href = '#kontakt';
-    frag.appendChild(btn);
-    el.textContent = '';
-    el.appendChild(frag);
-    var note = el.nextElementSibling;
-    if (!note || !note.classList.contains('price-note')) {
-      note = mk('p', 'price-note');
-      el.parentNode.insertBefore(note, el.nextSibling);
-    }
-    note.textContent = t.footnote;
-  }
-  d.querySelectorAll('[data-offer]').forEach(renderOffer);
+  /* ---------- price card: static HTML since v18, rendered at build time from data/offer.json (build-static.mjs,
+     renderOffer); the UWG § 5 rule for the struck regular price lives there as well ---------- */
 
   /* ---------- team photos: /assets/team/<name>.jpg shows up by itself once the file exists; until then an
      initials tile takes its place (listener set here, no inline handler, CSP) ---------- */
@@ -148,38 +94,14 @@ if (!location.hash) window.scrollTo(0, 0);
     else img.addEventListener('error', function () { photoFallback(img); }, {once: true});
   });
 
-  /* ---------- contact (assembled at runtime from split strings, so address harvesters that read the raw HTML find nothing) ---------- */
-  var box = d.querySelector('[data-contact]');
-  if (box) {
-    var user = ['luca', 'bartolucci'].join('.'); // v16 (Luca, 28.10.), before: the info box
-    var host = ['bartolucci-digital', 'de'].join('.');
-    var mail = user + '@' + host;
-    var tel = ['0170', '7240', '195'];
-    var telDisplay = tel.join(' '); // non-breaking: the number never wraps
-    var telHref = 'tel:+49' + tel.join('').slice(1);
-    var line = function (href, label, svgPath, hint) {
-      var a = d.createElement('a');
-      a.className = 'contact-line';
-      a.href = href;
-      var ns = 'http://www.w3.org/2000/svg';
-      var svg = d.createElementNS(ns, 'svg');
-      svg.setAttribute('viewBox', '0 0 24 24');
-      svg.setAttribute('aria-hidden', 'true');
-      var p = d.createElementNS(ns, 'path');
-      p.setAttribute('d', svgPath);
-      svg.appendChild(p);
-      a.appendChild(svg);
-      a.appendChild(mk('span', 'contact-val', label));
-      a.appendChild(mk('span', 'small', hint));
-      return a;
-    };
-    // v15: "E‑Mail" with a non-breaking hyphen (U+2011); the address stays on one line, and where it does not
-    // fit (very narrow screens, large text) the line reads "Mail schreiben" with the address in href + title
-    var mailLine = line('mailto:' + mail, mail, 'M3 6h18v12H3zM3 6l9 7 9-7', 'E‑Mail');
-    mailLine.title = mail;
-    box.appendChild(mailLine);
-    box.appendChild(line(telHref, telDisplay, 'M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 5a2 2 0 0 1 2-2z', 'Telefon'));
-    var val = mailLine.querySelector('.contact-val');
+  /* ---------- contact lines: static HTML since v18 (build-static.mjs from data/company.json; the address is in the
+     raw HTML on purpose, the audit of 28.10. asked for it and the JSON-LD carries it anyway). Here only the v15 fit:
+     the address stays on one line, and where it does not fit (very narrow screens, large text) the line reads
+     "Mail schreiben" with the address still in href + title ---------- */
+  var mailLine = d.querySelector('[data-contact] a[href^="mailto:"]');
+  var val = mailLine && mailLine.querySelector('.contact-val');
+  if (val) {
+    var mail = val.textContent;
     var fitMail = function () {
       val.textContent = mail;
       if (val.scrollWidth > val.clientWidth + 1) val.textContent = 'Mail schreiben';

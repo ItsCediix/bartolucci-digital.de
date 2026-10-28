@@ -4,27 +4,31 @@ Statische Website von Bartolucci Digital (Hamburg). Kein Framework, kein Bundler
 Anfragen an fremde Server. Gehostet als Cloudflare Workers Static Assets (`wrangler.jsonc`,
 `assets.directory = ./public`).
 
-## Aufbau (v10)
+## Aufbau (v18)
 
 ```
 public/
-  index.html            eine Seite, zwei Bodies: <template id="tpl-desktop"> / <template id="tpl-mobile">
-                        (ein Inline-Skript am Anfang von <body> wählt einmal vor dem ersten Paint und setzt
-                        das helle Theme, falls nicht „dunkel“ gespeichert ist). <template id="tpl-scenes">
-                        enthält die sechs Handy-Szenen als HTML/SVG.
+  index.html            eine Seite, statisches HTML: Kapiteltexte, Preiskarte, Kontakt, die drei DOM-Szenen und
+                        der Footer stehen komplett im <body> (lesbar ohne JavaScript, für Crawler ohne JS-Ausführung).
+                        Ein Inline-Skript im <head> setzt vor dem ersten Paint Theme und Modus (desktop/mobile),
+                        eines am Ende von <body> baut im Mobil-Modus die Kapitel zu Karten um. Keine <template>s mehr.
+                        Preiskarte, Kontaktzeilen und JSON-LD werden von scripts/build-static.mjs zwischen
+                        Markern (<!-- offer:start --> …) aus data/offer.json + data/company.json erzeugt.
   impressum.html        rechtlich finaler Text aus main, nur neu gestylt
   datenschutz.html      rechtlich finaler Text aus main, nur neu gestylt
   assets/               base.css, scenes.css/js (Handy-Szenen), desktop.css/js, mobile.css/js, shared.js,
                         logo.svg, logo-dark.svg, logo-mark(-dark).svg, skyline-hamburg.svg, og.png
-  data/                 chapters.json (Kapitel, Höhe in vh, Beats), offer.json (Preise), site-data.js (generiert)
+  data/                 chapters.json (Kapitel, Beats: Doku), offer.json (Preise), company.json (Firmendaten für
+                        Kontaktzeilen, Mailto und JSON-LD); nichts davon wird zur Laufzeit geladen
   fonts/                Inter 400/600/800 (woff2, OFL)
   vendor/               gsap.min.js, ScrollTrigger.min.js, lenis.min.js (lokal, kein CDN)
   _headers              CSP + Sicherheits-Header + Cache-Control (generiert)
 scripts/
   brand.mjs             Logo-Varianten + Favicons aus dem verbindlichen Logo-SVG (sharp)
   og.mjs                og.png (1200 × 630) per Playwright
-  build-data.mjs        JSON → public/data/site-data.js
-  build-headers.mjs     schreibt public/_headers (Hash des Inline-Boot-Skripts)
+  build-static.mjs      offer.json + company.json → Preiskarte, Kontaktzeilen, JSON-LD in index.html (Marker)
+  build-version.mjs     ?v=<hash> an jede /assets-, /vendor- und /data-Referenz
+  build-headers.mjs     schreibt public/_headers (Hashes der beiden Inline-Skripte)
   vendor.mjs            kopiert Bibliotheken + Schriften aus node_modules nach public/
   check-sizes.mjs       10 größte Dateien, 25-MB-Grenze je Datei, 3-MB-Budget für public/
   qa-shots.mjs          Playwright-Screenshots (Desktop hell/dunkel, Mobil 390/360, reduced motion) + Netzwerk-Log
@@ -40,7 +44,7 @@ scripts/
 npm install                      # nur devDependencies
 npm run vendor                   # Bibliotheken + Schriften nach public/
 npm run brand                    # Logo-Varianten + Favicons neu erzeugen
-npm run build                    # site-data.js + _headers neu erzeugen
+npm run build                    # Preiskarte/Kontakt/JSON-LD, Asset-Hashes und _headers neu erzeugen
 npm run serve                    # http://localhost:4173
 npm run qa:shots                 # Screenshots nach review/, Netzwerk-Assertion
 npm run qa:lighthouse
@@ -58,4 +62,4 @@ npm run check:sizes
 - **Mobil (grober Zeiger + Hochformat oder < 768 px):** eigener Body, jede Kapitelkarte hat ein kleines Handy mit ihrer Szene; die Szene spielt einmal (~2,5 s), wenn sie zur Hälfte im Bild ist, und bleibt stehen. `?mode=desktop|mobile` erzwingt einen Body (zum Testen).
 - **Reduzierte Bewegung:** keine Timelines; die Szenen zeigen ihr Endbild (das CSS beschreibt den Endzustand), auf dem Desktop wechselt das Bild ohne Animation mit dem aktiven Kapitel.
 - **Theme:** hell ist immer der Start, `prefers-color-scheme` wird ignoriert; dunkel per Schalter, gespeichert in `localStorage` (`bd-theme`).
-- **Null Fremdanfragen:** erzwungen durch die CSP in `_headers` (`connect-src 'none'`, `default-src 'self'`). Deshalb liegen die JSON-Daten als `site-data.js` vor, nicht per `fetch()`.
+- **Null Fremdanfragen:** erzwungen durch die CSP in `_headers` (`connect-src 'none'`, `default-src 'self'`). Die JSON-Daten werden beim Build in das HTML gerendert, zur Laufzeit wird nichts geladen.

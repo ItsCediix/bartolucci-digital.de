@@ -1,0 +1,38 @@
+{
+  "note": "v18: company facts for the contact lines, the mailto link and the JSON-LD (scripts/build-static.mjs). Name, address and founders exactly as in impressum.html; the e-mail address of the start page is luca.bartolucci@ (Luca, 28.10.). Edit here, then `npm run build`.",
+  "name": "Bartolucci Digital",
+  "legalName": "Bartolucci Digital GbR",
+  "url": "https://bartolucci-digital.de/",
+  "logo": "https://bartolucci-digital.de/assets/logo.svg",
+  "image": "https://bartolucci-digital.de/assets/og.png",
+  "description": "Websites für Läden und Betriebe, mit technischer Betreuung nach dem Start.",
+  "email": "luca.bartolucci@bartolucci-digital.de",
+  "phone": {
+    "display": "0170 7240 195",
+    "e164": "+491707240195",
+    "international": "+49 170 7240195"
+  },
+  "address": {
+    "streetAddress": "Gardinger Weg 16",
+    "postalCode": "22609",
+    "addressLocality": "Hamburg",
+    "addressCountry": "DE"
+  },
+  "founders": ["Luca-Kay Bartolucci", "Cederic Langpaap"],
+  "areaServed": "Hamburg",
+  "mailto": {
+    "subject": "Platz anfragen",
+    "body": [
+      "Hallo Luca, hallo Cederic,",
+      "",
+      "ich interessiere mich für eine Website zum Festpreis.",
+      "",
+      "Betrieb: ",
+      "Branche: ",
+      "Stadtteil: ",
+      "Wunschtermin für das 30-Minuten-Gespräch: ",
+      "",
+      "Viele Grüße"
+    ]
+  }
+}

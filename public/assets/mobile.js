@@ -6,10 +6,9 @@
   var d = document;
   var html = d.documentElement;
   if (html.getAttribute('data-mode') !== 'mobile') return;
-  var BD = window.BD;
   var S = window.BDScenes;
   // without the libraries nothing would ever reveal: drop html.js so the CSS start states no longer apply
-  if (!BD || !S || !window.gsap || !window.ScrollTrigger) { html.classList.remove('js'); return; }
+  if (!S || !window.gsap || !window.ScrollTrigger) { html.classList.remove('js'); return; }
   gsap.registerPlugin(ScrollTrigger);
 
   var RM = matchMedia('(prefers-reduced-motion: reduce)').matches;

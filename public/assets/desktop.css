@@ -124,8 +124,10 @@ html[data-mode='desktop'] .section:not(.section-contact) { padding: clamp(56px, 
 /* magnetic buttons (desktop + fine pointer only, set up by JS) */
 .magnetic { will-change: transform; }
 
-/* ---------- noscript ---------- */
-.noscript { padding: 24px var(--gutter); }
+/* ---------- without JavaScript (v18): the copy is static HTML and reads top to bottom. The decorative stage (its scenes
+   are sized by scenes.js) and the morning scene stay hidden, the text column takes the width, the rail still links. ---------- */
+html:not(.js) .story { display: block; }
+html:not(.js) .col-panel, html:not(.js) .morgens-fig { display: none; }
 
 /* ---------- narrow desktop (< 1100 px): single column, stage on top ---------- */
 @media (max-width: 1099px) {

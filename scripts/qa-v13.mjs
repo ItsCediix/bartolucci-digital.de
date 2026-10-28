@@ -13,6 +13,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {chromium} from 'playwright';
+import {renderOffer} from './build-static.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PUB = path.join(ROOT, 'public');
@@ -211,10 +212,15 @@ async function priceFacts(page) {
   await context.close();
 }
 {
-  // slotsLeft = 0, the data file rewritten on the fly
-  const route = (page) => page.route('**/data/site-data.js*',async (r) => {
+  // slotsLeft = 0: v18 renders the card at build time (build-static.mjs), so the page is served with the card
+  // re-rendered for slotsLeft 0 instead of a rewritten data file
+  const offer0 = JSON.parse(fs.readFileSync(path.join(PUB, 'data', 'offer.json'), 'utf8'));
+  offer0.slotsLeft = 0;
+  const company = JSON.parse(fs.readFileSync(path.join(PUB, 'data', 'company.json'), 'utf8'));
+  const route = (page) => page.route((u) => u.pathname === '/', async (r) => {
     const res = await r.fetch();
-    const body = (await res.text()).replace(/"slotsLeft":\d+/, '"slotsLeft":0');
+    const body = (await res.text()).replace(/<div class="price" data-offer>[\s\S]*?<p class="price-note">[\s\S]*?<\/p>/, () => renderOffer(offer0, company));
+    if (!body.includes('price-h')) throw new Error('qa-v13: offer block not found in index.html');
     await r.fulfill({response: res, body});
   });
   const {context, page} = await open(1440, 900, {route});
