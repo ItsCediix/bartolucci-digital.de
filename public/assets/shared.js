@@ -111,6 +111,24 @@ if (!location.hash) window.scrollTo(0, 0);
     if (d.fonts && d.fonts.ready) d.fonts.ready.then(fitMail);
   }
 
+  /* ---------- v18 (audit M14): the layout mode (desktop / mobile) is picked once in <head>: touch + portrait or narrower
+     than 768 px. A rotation (iPad) or a window resize across that rule used to keep the old body until the next visit.
+     Now the rule is re-evaluated 300 ms after the last resize / orientationchange and the page reloads when the mode
+     would change. Skipped on the legal pages (no mode) and when ?mode= forces a body. ---------- */
+  var mode = html.getAttribute('data-mode');
+  var forced = false;
+  try { forced = /^(desktop|mobile)$/.test(new URLSearchParams(location.search).get('mode') || ''); } catch (e) { /* ignore */ }
+  if (mode && !forced) {
+    var wanted = function () { return (matchMedia('(pointer: coarse)').matches && matchMedia('(orientation: portrait)').matches) || innerWidth < 768 ? 'mobile' : 'desktop'; };
+    var modeTimer = 0;
+    var recheck = function () {
+      clearTimeout(modeTimer);
+      modeTimer = setTimeout(function () { if (wanted() !== html.getAttribute('data-mode')) location.reload(); }, 300);
+    };
+    addEventListener('resize', recheck, {passive: true});
+    addEventListener('orientationchange', recheck, {passive: true});
+  }
+
   /* ---------- year ---------- */
   var y = d.querySelector('[data-year]');
   if (y) y.textContent = String(new Date().getFullYear());
