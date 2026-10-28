@@ -82,22 +82,60 @@ export function renderContact(company) {
   return line('mailto:' + company.email, company.email, ICON_MAIL, 'E‑Mail', company.email) + '\n        ' + line('tel:' + company.phone.e164, tel, ICON_TEL, 'Telefon');
 }
 
-/* ---------- JSON-LD (ProfessionalService) ---------- */
+/* ---------- JSON-LD (ProfessionalService; audit M11): telephone, e-mail, postal address from the Impressum, the
+   three offers (website at the launch price, care per month as a UnitPriceSpecification with billingDuration P1M,
+   revision round), founders as Person entries, priceRange. No sameAs: the repo and the Impressum name no profile URLs.
+   Prices are end prices under § 19 UStG (no VAT added), as the page says. ---------- */
 export function renderJsonLd(company, offer) {
+  const eur = (price) => ({'@type': 'PriceSpecification', price: String(price), priceCurrency: 'EUR'});
   const data = {
     '@context': 'https://schema.org',
     '@type': 'ProfessionalService',
     name: company.name,
+    legalName: company.legalName,
     url: company.url,
     logo: company.logo,
     image: company.image,
     description: company.description,
     email: company.email,
-    address: {'@type': 'PostalAddress', addressLocality: company.address.addressLocality, postalCode: company.address.postalCode, addressCountry: company.address.addressCountry},
     telephone: company.phone.international,
+    address: {'@type': 'PostalAddress', streetAddress: company.address.streetAddress, postalCode: company.address.postalCode, addressLocality: company.address.addressLocality, addressCountry: company.address.addressCountry},
     areaServed: company.areaServed,
     founder: company.founders.map((name) => ({'@type': 'Person', name})),
-    priceRange: '€€',
+    priceRange: `${offer.launchPrice} € - ${offer.regularPrice} €`,
+    makesOffer: [
+      {
+        '@type': 'Offer',
+        name: 'Website zum Festpreis',
+        description: `Gestaltung, Aufbau und Livegang einer eigenen Website. Einführungspreis für die ersten ${offer.slotsTotal} Kunden, danach ${offer.regularPrice.toLocaleString('de-DE')} €. Endpreis, keine Umsatzsteuer (§ 19 UStG).`,
+        price: String(offer.launchPrice),
+        priceCurrency: 'EUR',
+        priceSpecification: eur(offer.launchPrice),
+        itemOffered: {'@type': 'Service', name: 'Webdesign und Website-Erstellung', areaServed: company.areaServed},
+        availability: 'https://schema.org/InStock',
+        url: company.url + '#preise',
+      },
+      {
+        '@type': 'Offer',
+        name: 'Technische Betreuung',
+        description: 'Hosting, Domain, regelmäßige Updates und kleine Änderungen, monatlich. Endpreis, keine Umsatzsteuer (§ 19 UStG).',
+        price: String(offer.carePrice),
+        priceCurrency: 'EUR',
+        priceSpecification: {'@type': 'UnitPriceSpecification', price: String(offer.carePrice), priceCurrency: 'EUR', billingDuration: 'P1M', unitCode: 'MON'},
+        itemOffered: {'@type': 'Service', name: 'Technische Betreuung: Hosting, Domain, Updates, kleine Änderungen', areaServed: company.areaServed},
+        url: company.url + '#k-betreuung',
+      },
+      {
+        '@type': 'Offer',
+        name: 'Korrekturrunde',
+        description: 'Größere Änderung als Korrekturrunde, ab der dritten Runde. Endpreis, keine Umsatzsteuer (§ 19 UStG).',
+        price: String(offer.roundPrice),
+        priceCurrency: 'EUR',
+        priceSpecification: eur(offer.roundPrice),
+        itemOffered: {'@type': 'Service', name: 'Korrekturrunde an einer bestehenden Website', areaServed: company.areaServed},
+        url: company.url + '#preise',
+      },
+    ],
   };
   return JSON.stringify(data);
 }
