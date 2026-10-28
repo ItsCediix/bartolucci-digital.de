@@ -53,7 +53,7 @@ const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
 async function measure(page, label) {
   const info = await page.evaluate(() => {
     const bg = document.getElementById('bg');
-    const fields = [...document.querySelectorAll('#bg .bg-f')].map((f) => {
+    const fields = [...document.querySelectorAll('#bg .f')].map((f) => {
       const r = f.getBoundingClientRect();
       const cs = getComputedStyle(f);
       // the solid core of a field: the inner 50 % of its box (the gradient is ≥ 55 % strength there)
@@ -68,7 +68,7 @@ async function measure(page, label) {
         const alpha = a ? (a.length > 3 ? +a[3] : 1) : 0;
         if (alpha > 0.5 || s.backgroundImage !== 'none') above.push(`${el.tagName.toLowerCase()}${el.id ? '#' + el.id : ''}.${[...el.classList].join('.')} bg=${s.backgroundColor}`);
       }
-      return {cls: f.className.replace('bg-f ', ''), box: [r.left, r.top, r.width, r.height].map(Math.round), core, color: cs.getPropertyValue('--bg-c').trim(), opacity: cs.opacity, above};
+      return {cls: f.className.replace(/^f /, ''), box: [r.left, r.top, r.width, r.height].map(Math.round), core, color: cs.getPropertyValue('--c').trim(), opacity: cs.opacity, above};
     });
     const chain = []; for (let e = bg.parentElement; e; e = e.parentElement) { const s = getComputedStyle(e); chain.push({el: e.tagName, bg: s.backgroundColor, opacity: s.opacity, filter: s.filter, isolation: s.isolation, z: s.zIndex, pos: s.position}); }
     const paper = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
@@ -129,9 +129,9 @@ for (const v of VIEWS) for (const dark of [false, true]) {
   const betreuung = await at('k-betreuung', 'betreuung');
   const preise = await at('preise', 'preise');
   for (const r of [top, betreuung, preise]) {
-    // blue fields (f1, f3) need ≥ 14 wherever ≥ 4 clean patches of them are on screen; sand is reported only
+    // v16/v17 markup: #bg .f1..f4 (v15.1 renamed .bg-f); blue fields (f1, f3) need ≥ 14 wherever ≥ 4 clean patches of them are on screen; sand is reported only
     const shown = r.fields.filter((f) => f.onScreen && f.patches >= 4);
-    const blue = shown.filter((f) => f.field !== 'bg-f2');
+    const blue = shown.filter((f) => f.field === 'f1' || f.field === 'f3');
     r.gate = {
       fieldsOnScreen: shown.map((f) => `${f.field}:${f.mean}`),
       blueMin: blue.length ? Math.min(...blue.map((f) => f.mean)) : null,
