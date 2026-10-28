@@ -1,11 +1,13 @@
-/* Desktop scroll engine (v13: free flow). The page scrolls like a normal page: no pinned copy, no scrubbed
-   timelines. Every [data-beat] element of the left column reveals once when it reaches 78 % of the viewport
-   (time-based, never replayed, never hidden again); the sections after the story reveal once each.
-   The stage on the right stays sticky for the whole story and switches scenes when a chapter's copy reaches
-   55 % of the viewport: a time-based crossfade (swap(), 0.9 s), then the scene's three beats play once,
-   back to back. Scrolling back up shows the earlier scene in its end state. When "So läuft's" reaches 70 %
-   the stage steps back (fade + scale, 0.6 s). Rail (chapters + sections), keyboard, spotlight, magnetic
-   buttons, skyline parallax.
+/* Desktop scroll engine (v13: free flow, v16: cuts). The page scrolls like a normal page: no pinned copy, no
+   scrubbed timelines. Every [data-beat] element of the story copy reveals once when it reaches 70 % of the
+   viewport (time-based, never replayed, never hidden again); the sections after the story reveal once each.
+   v16: every story chapter is one viewport tall (desktop.css) and, once the scroll has come to rest, a chapter
+   start within 25 % of the viewport is settled to (0.45 s, power2.out; never during wheel/touch/drag).
+   The stage on the right stays sticky for the whole story and switches scenes when a chapter's top passes
+   50 % of the viewport: a short cut (old scene out 0.12 s, then the new one in 0.18 s, 0.985 -> 1, never both
+   visible), then the scene's beats play once. Scrolling back up shows the earlier scene in its end state.
+   When "So läuft's" reaches 70 % the stage steps back (fade + scale, 0.6 s). Rail (chapters + sections),
+   keyboard, spotlight, magnetic buttons, skyline parallax.
    Runs only when <html data-mode="desktop">. Depends on gsap + ScrollTrigger + Lenis (local files). */
 (function () {
   'use strict';
@@ -103,7 +105,7 @@
   function onceAt(trigger, tl, start) {
     ScrollTrigger.create({trigger: trigger, start: start || 'top 78%', toggleActions: 'play none none none', animation: tl});
   }
-  function revealCopy(el) {
+  function revealCopy(el, start) {
     var tl = gsap.timeline({paused: true, defaults: {ease: S.ease.brand}});
     if (el.matches('h1, h2')) {
       tl.fromTo(el, {opacity: 0}, {opacity: 1, duration: 0.01, ease: 'none', immediateRender: false}, 0);
@@ -118,7 +120,7 @@
     } else {
       tl.fromTo(el, {opacity: 0, x: -14}, {opacity: 1, x: 0, duration: 0.6, immediateRender: false}, 0);
     }
-    onceAt(el, tl);
+    onceAt(el, tl, start);
   }
   // one reveal per section after the story: its blocks rise in together (start state in desktop.css)
   function revealSection(sec, blocks, fromY) {
@@ -128,7 +130,8 @@
     onceAt(sec, tl);
   }
   if (!RM) {
-    d.querySelectorAll('.chapter [data-beat]').forEach(revealCopy);
+    // v16: 'top 70%' (v13: 78 %), so the copy is in by the time the one-viewport chapter is centred
+    d.querySelectorAll('.chapter [data-beat]').forEach(function (el) { revealCopy(el, 'top 70%'); });
     ['ablauf', 'preise', 'morgens', 'ueber-uns'].forEach(function (id) {
       var sec = d.getElementById(id);
       if (sec) revealSection(sec, Array.prototype.slice.call(sec.querySelectorAll(':scope > .wrap > *')), 40);
@@ -157,7 +160,7 @@
      0.4 s between them (beat lengths from scenes.js: website 1.55 / 1.5 / 0.95 s, betreuung 1.1 / 1.65 / 1.15 s). */
   var GAP = 0.4;
   var BEATS = {website: [0, 1.55 + GAP, 1.55 + GAP + 1.5 + GAP], betreuung: [0, 1.1 + GAP, 1.1 + GAP + 1.65 + GAP]};
-  var SWAP_SECONDS = 0.9;
+  var CUT_OUT = 0.12, CUT_IN = 0.18; // v16: the cut (v13: swap() stretched to 0.9 s)
   var beatTl = {};
   var current = null; // index of the chapter whose scene is on the stage
   var loaded = false;
@@ -201,18 +204,24 @@
     });
     playBeats(id, 0.15);
   }
-  // time-based crossfade with the existing swap() (hook -> website: the bubbles fly up into the laptop)
+  // v16: a short cut instead of the crossfade. The old scene fades out (0.12 s), only then the new one comes in
+  // (0.18 s, scale 0.985 -> 1), so no frame ever shows both. The new scene arrives as a finished picture: a scene
+  // seen before (or the hook) at its end state; a first visit with beat 1 (the build-up) already complete, then
+  // the remaining beats play once right after the cut with their v13 spacing. No bubble flight any more.
   function switchTo(i) {
+    var id = chapters[i].id;
     var prev = scenes[chapters[current].id];
-    var next = scenes[chapters[i].id];
+    var next = scenes[id];
     gsap.killTweensOf([prev, sceneIn(prev), next, sceneIn(next)]);
-    // the incoming scene may have left earlier (outer layer faded, hook layer flown up): reset it first
-    gsap.set(next, {yPercent: 0, opacity: 1});
-    if (next === scenes.hook) gsap.set(sceneIn(next), {y: 0, scale: 1});
-    var tl = gsap.timeline();
-    S.swap(tl, prev, next, 0);
-    tl.timeScale(tl.duration() / SWAP_SECONDS);
-    playBeats(chapters[i].id, SWAP_SECONDS * 0.3);
+    var tl = chapters[i].tl;
+    if (tl && !tl._played && BEATS[id]) tl.seek(BEATS[id][1], false);
+    else if (tl && tl.progress() < 1) tl.progress(1);
+    gsap.set(next, {yPercent: 0, opacity: 0});
+    gsap.set(sceneIn(next), {y: 0, yPercent: 0, opacity: 1, scale: 0.985, transformOrigin: '50% 50%'});
+    gsap.to(prev, {opacity: 0, duration: CUT_OUT, ease: 'power1.in'});
+    gsap.to(next, {opacity: 1, duration: CUT_IN, ease: 'power2.out', delay: CUT_OUT});
+    gsap.to(sceneIn(next), {scale: 1, duration: CUT_IN, ease: 'power2.out', delay: CUT_OUT});
+    playBeats(id, CUT_OUT + CUT_IN);
   }
   // hand-over at the end of the story: the stage steps back when "So läuft's" reaches 70 %
   var handed = false;
@@ -225,7 +234,7 @@
   var ablauf = d.getElementById('ablauf');
   var handMark = ablauf && ScrollTrigger.create({trigger: ablauf, start: 'top 70%'});
 
-  // the chapter whose copy has passed 55 % of the viewport last; switches only when it changes
+  // the chapter whose top has passed 50 % of the viewport last (v13: 55 %); switches only when it changes
   function sync() {
     if (!chapterMarks) return; // a callback during the creation of the marks below
     var y = window.scrollY || 0;
@@ -239,7 +248,7 @@
     current = i;
   }
   var chapterMarks = chapters.map(function (c, i) {
-    return ScrollTrigger.create({trigger: c.el, start: 'top 55%', end: 'bottom 55%', onEnter: sync, onEnterBack: sync, onLeaveBack: sync});
+    return ScrollTrigger.create({trigger: c.el, start: 'top 50%', end: 'bottom 50%', onEnter: sync, onEnterBack: sync, onLeaveBack: sync});
   });
   // safety net for very fast jumps (Home/End, rail): the same check on every scroll update, cheap when unchanged
   ScrollTrigger.create({start: 0, end: 'max', onUpdate: sync, onRefresh: sync});
@@ -247,6 +256,44 @@
   function markLoaded() { setTimeout(function () { loaded = true; ScrollTrigger.refresh(); sync(); }, 250); }
   if (d.readyState === 'complete') markLoaded();
   else addEventListener('load', markLoaded, {once: true});
+
+  /* ------------------------------------------------------------ v16: soft settle on the story chapters
+     CSS scroll-snap does not work here: the scroll container is the root, and Lenis drives it (snap and Lenis
+     fight). So a JS settle: once the scroll has been at rest for 160 ms and no wheel/touch/key/drag input came
+     in for 220 ms, a story chapter start within 25 % of the viewport is eased to (0.45 s, power2.out). Proximity
+     only, only the three story chapters, off with reduced motion and in the narrow layout. A new wheel or touch
+     interrupts the settle (Lenis gives the scroll back to the user). */
+  var SETTLE = !RM && !NARROW && lenis;
+  if (SETTLE) {
+    var lastInput = 0, holding = false, settleTimer = 0, settling = false;
+    var touch = function () { lastInput = performance.now(); settling = false; };
+    ['wheel', 'touchstart', 'touchmove', 'keydown'].forEach(function (t) { addEventListener(t, touch, {passive: true}); });
+    addEventListener('pointerdown', function () { holding = true; touch(); }, {passive: true});
+    addEventListener('pointerup', function () { holding = false; touch(); }, {passive: true});
+    var chapterTop = function (c) {
+      var y = c.el.getBoundingClientRect().top + (window.scrollY || 0);
+      return y <= 120 ? 0 : Math.round(y); // the hook (right below the header) settles to the page top
+    };
+    var settle = function () {
+      settleTimer = 0;
+      if (settling || holding || handed) return;
+      var quiet = performance.now() - lastInput;
+      if (quiet < 220) { settleTimer = setTimeout(settle, 220 - quiet + 10); return; }
+      var y = window.scrollY || 0, vh = innerHeight, best = null;
+      chapters.forEach(function (c) {
+        var t = chapterTop(c);
+        if (Math.abs(t - y) <= vh * 0.25 && (best === null || Math.abs(t - y) < Math.abs(best - y))) best = t;
+      });
+      if (best === null || Math.abs(best - y) < 2) return;
+      settling = true;
+      lenis.scrollTo(best, {duration: 0.45, easing: function (p) { return 1 - (1 - p) * (1 - p); }, onComplete: function () { settling = false; }});
+    };
+    lenis.on('scroll', function () {
+      if (settling) return;
+      clearTimeout(settleTimer);
+      settleTimer = setTimeout(settle, 160);
+    });
+  }
 
   /* ------------------------------------------------------------ rail: click + keyboard */
   function scrollToEl(el) {

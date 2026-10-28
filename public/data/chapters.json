@@ -1,5 +1,5 @@
 {
-  "note": "v13: free scroll. No chapter heights any more (v12: 100/170/160 vh); each chapter is as tall as its copy plus clamp(96px, 12vh, 160px) padding top and bottom. The left copy reveals once per [data-beat] element when it reaches 78 % of the viewport; the sticky stage on the right switches to a chapter's scene when its copy reaches 55 % and plays the scene's beats once, time-based (desktop.js). beats = what happens on the right, in order (documentation; data-beat=\"n\" on the left still names the beat a copy element belongs to).",
+  "note": "v16: every story chapter is one viewport tall on desktop (copy centred); once the scroll rests, a soft JS settle eases to a chapter start within 25 % of the viewport. The copy reveals once per [data-beat] element at 70 % of the viewport; the sticky stage switches to a chapter's scene with a short cut (0.12 s out, 0.18 s in) when the chapter top passes 50 %, then the scene's remaining beats play once (desktop.js). beats = what happens on the right, in order (documentation; data-beat=\"n\" on the left still names the beat a copy element belongs to).",
   "chapters": [
     {
       "id": "hook",
@@ -11,7 +11,7 @@
       "id": "website",
       "index": 2,
       "label": "Website",
-      "beats": ["Blasen ziehen nach oben in den Laptop, Laptop + Handy steigen auf, Seitenblöcke setzen sich zusammen", "Öffnungszeiten springen auf den heutigen Tag", "Anfrage-Karte landet mit Haken"]
+      "beats": ["Schnitt: Laptop + Handy stehen, Seitenblöcke gesetzt (v16, kein Blasenflug mehr)", "Öffnungszeiten springen auf den heutigen Tag", "Anfrage-Karte landet mit Haken"]
     },
     {
       "id": "betreuung",

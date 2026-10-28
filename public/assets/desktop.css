@@ -19,6 +19,11 @@ html[data-mode='mobile'] .story, html[data-mode='mobile'] .rail { display: none;
 /* ---------- chapters (left) ----------
    v13: free flow. No pinned copy, no chapter heights: a chapter is as tall as its copy plus the padding. */
 .chapter { position: relative; }
+/* v16: every story chapter is one viewport tall, the copy centred in it, the extra height is empty paper
+   (2-3 wheel notches per chapter). Below 1100 px the narrow layout resets this (min-height: 0 !important). */
+@media (min-width: 1024px) {
+  html[data-mode='desktop'] .chapter { min-height: 100vh; display: grid; align-content: center; }
+}
 .chapter-inner {
   position: relative;
   padding: clamp(96px, 12vh, 160px) clamp(16px, 4vw, 64px) clamp(96px, 12vh, 160px) 0;
