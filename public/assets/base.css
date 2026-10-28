@@ -300,8 +300,19 @@ html[data-theme='dark'] .theme-toggle .ico-moon { display: block; }
 .team { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(24px, 2vw, 48px); }
 .person { display: grid; grid-template-columns: clamp(148px, 9vw, 240px) minmax(0, 1fr); gap: clamp(24px, 2vw, 40px); align-items: start; padding: clamp(24px, 2vw, 40px); border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
 .person-text p { max-width: var(--measure); }
-.card-photo { width: clamp(148px, 9vw, 240px); height: clamp(148px, 9vw, 240px); border-radius: 12px; object-fit: cover; background: var(--bg-2); }
-.card-photo--fallback { display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); font-weight: 800; font-size: 40px; letter-spacing: -0.03em; }
+/* v16: one image box for both people (4:5, same width, top flush with the name line). The photos are square
+   (scripts/team-images.mjs, 960 × 960); the framing is a zoom about a transform origin: by default 1.25 from the
+   bottom centre, which puts the eyes of a frontal head-and-neck photo (like luca.jpg) at ~37 % of the box.
+   A new photo in that framing is a pure file swap. */
+.card-photo-box { position: relative; width: clamp(148px, 9vw, 240px); aspect-ratio: 4 / 5; border-radius: 12px; overflow: hidden; background: var(--bg-2); }
+.card-photo {
+  width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%;
+  transform: scale(var(--photo-zoom, 1.25)); transform-origin: var(--photo-origin, 50% 100%);
+}
+/* TEMPORARY (v16): the current cederic.jpg is a half-body shot; this crops it to head and neck. The selector holds
+   the file's content hash, so it stops matching by itself as soon as a new cederic.jpg is built in. */
+.card-photo[src*='cederic.jpg?v=75b1258773'] { --photo-zoom: 2.2; --photo-origin: 47.6% 48.6%; }
+.card-photo--fallback { transform: none; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); font-weight: 800; font-size: 40px; letter-spacing: -0.03em; }
 .person h3 { font-size: clamp(21px, 1.3vw, 28px); font-weight: 800; letter-spacing: -0.02em; }
 .person-role { margin-top: 2px; font-weight: 600; color: var(--accent); }
 .person-text p + p { margin-top: 10px; }
