@@ -295,6 +295,8 @@ html[data-theme='dark'] .theme-toggle .ico-moon { display: block; }
 .price .btn { margin-top: clamp(24px, 2vw, 40px); }
 /* v13: asterisk on the website prices (same colour as the number, 60 %), footnote below the card, outside it */
 .price-star { font-size: 0.6em; color: inherit; vertical-align: super; line-height: 0; margin-left: 0.04em; }.price-note { margin-top: 14px; font-size: 13.5px; line-height: 1.5; color: var(--ink-3); text-align: left; max-width: var(--measure); }
+/* v17: --ink-3 on the dark background measured 4.11:1 (qa-v15, below AA 4.5); the footnote uses --ink-2 there */
+html[data-theme='dark'] .price-note { color: var(--ink-2); }
 .price .btn-primary { background: var(--price-accent); color: var(--price-on-accent); }
 .price .btn-primary:hover { background: var(--price-ink); color: var(--price-bg); }
 

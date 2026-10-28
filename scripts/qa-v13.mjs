@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // QA v13: free flow, background, texts, "morgens" section, price footnote. Writes review/v13-qa.json and the
 // review screenshots; exit 1 when a gate fails. Needs `npx serve public -l 4173` running.
-//  - page length of / at 1440 × 900 in viewport heights (gate ≤ 6.5)
+//  - page length of / at 1440 × 900 in viewport heights (gate ≤ 7.2; v13: 6.5, v16 made the story chapters 100vh: 7.1)
 //  - mouse-wheel scroll top -> bottom in 600 px steps, 80 ms pauses: scrollY grows monotonically, the visible
 //    text changes on every step (no stall); back to the top: no [data-beat] / section block left at opacity 0
 //  - stage: scene follows the scroll both ways; reload mid-page lands on the right scene without the fly-in
@@ -44,7 +44,8 @@ const toSel = async (page, sel, wait = 2600) => {
 {
   const {context, page} = await open(1440, 900);
   report.pageVh = await page.evaluate(() => +(document.documentElement.scrollHeight / innerHeight).toFixed(2));
-  gate.pageLength = {vh: report.pageVh, pass: report.pageVh <= 6.5};
+  // v16 (2208b11): the three story chapters are one viewport tall each, the page measures 7.1 since then
+  gate.pageLength = {vh: report.pageVh, pass: report.pageVh <= 7.2};
 
   // the visible text: every text block whose box intersects the viewport and is not transparent
   const visibleText = () => {
@@ -67,14 +68,20 @@ const toSel = async (page, sel, wait = 2600) => {
     await page.mouse.wheel(0, 600);
     await page.waitForTimeout(80);
     const cur = {y: await page.evaluate(() => Math.round(scrollY)), text: await page.evaluate(visibleText)};
-    steps.push({i, y: cur.y, dy: cur.y - prev.y, textChanged: cur.text !== prev.text});
+    // v17: the story text block cuts in with the stage (0.28 s + 0.4 s after the switch), so an unchanged text
+    // gets one more look after the cut; the step is recorded as late
+    let late = false;
+    if (cur.text === prev.text) { await page.waitForTimeout(700); const again = await page.evaluate(visibleText); if (again !== prev.text) { cur.text = again; late = true; } }
+    steps.push({i, y: cur.y, dy: cur.y - prev.y, textChanged: cur.text !== prev.text, late});
     prev = cur;
     if (cur.y >= max - 1) break;
   }
   await page.waitForTimeout(1500);
   const finalY = await page.evaluate(() => Math.round(scrollY));
   // a step counts while a whole wheel step still fits below; the last ones only ease into the page end
-  const moving = steps.filter((s, k) => (k ? steps[k - 1].y : 0) < max - 600);
+  // v16: the hook is one viewport tall, so the steps that stay inside it (before the first switch at 50 %) show the same hero copy
+  const hookEnd = await page.evaluate(() => { const el = document.getElementById('k-website'); return el.getBoundingClientRect().top + scrollY - innerHeight * 0.5; });
+  const moving = steps.filter((s, k) => (k ? steps[k - 1].y : 0) < max - 600 && s.y >= hookEnd);
   gate.wheelScroll = {
     steps: steps.length, reachedBottom: finalY >= max - 2, max,
     monotonic: steps.every((s) => s.dy >= 0) && moving.every((s) => s.dy > 0),
