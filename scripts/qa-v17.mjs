@@ -167,7 +167,8 @@ for (const [w, h, mobile] of [[1440, 900, false], [1920, 1080, false], [390, 844
   await page.evaluate(() => window.scrollTo({top: document.getElementById('ueber-uns').getBoundingClientRect().top + scrollY, behavior: 'instant'}));
   await wait(page, 2200);
   const boxes = await page.evaluate((EYE) => [...document.querySelectorAll('.card-photo')].filter((i) => i.getClientRects().length && i.offsetParent).map((img) => {
-    const box = img.parentElement.getBoundingClientRect(), cs = getComputedStyle(img);
+    // v18: the img sits in a <picture> (display: contents, no box of its own); the frame is .card-photo-box
+    const box = (img.closest('.card-photo-box') || img.parentElement).getBoundingClientRect(), cs = getComputedStyle(img);
     const z = new DOMMatrix(cs.transform).a, o = cs.transformOrigin.split(' ').map(parseFloat);
     const name = /cederic/.test(img.src) ? 'cederic' : 'luca';
     const rh = Math.max(box.width / img.naturalWidth, box.height / img.naturalHeight) * img.naturalHeight; // object-fit: cover
