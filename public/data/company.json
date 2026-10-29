@@ -1,12 +1,12 @@
 {
-  "note": "v18: company facts for the contact lines, the mailto link and the JSON-LD (scripts/build-static.mjs). Name, address and founders exactly as in impressum.html; the e-mail address of the start page is luca.bartolucci@ (Luca, 28.10.). Edit here, then `npm run build`.",
+  "note": "v18: company facts for the contact lines, the mailto link and the JSON-LD (scripts/build-static.mjs). Name, address and founders exactly as in impressum.html; the e-mail address is info@ as in the Impressum (Cederic, 29.10.). Edit here, then `npm run build`.",
   "name": "Bartolucci Digital",
   "legalName": "Bartolucci Digital GbR",
   "url": "https://bartolucci-digital.de/",
   "logo": "https://bartolucci-digital.de/assets/logo.svg",
   "image": "https://bartolucci-digital.de/assets/og.png",
   "description": "Websites für Läden und Betriebe, mit technischer Betreuung nach dem Start.",
-  "email": "luca.bartolucci@bartolucci-digital.de",
+  "email": "info@bartolucci-digital.de",
   "phone": {
     "display": "0170 7240 195",
     "e164": "+491707240195",

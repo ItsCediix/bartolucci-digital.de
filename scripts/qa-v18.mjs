@@ -142,15 +142,15 @@ gate.m14 = {};
     formular: (document.body.innerText.match(/Formular/g) || []).length,
     websiteCopy: Array.from(document.querySelectorAll('#k-website .body p')).map((p) => p.textContent),
     platz: (() => { const a = document.querySelector('#preise .price a.btn'); return a && {text: a.textContent.trim(), href: a.getAttribute('href')}; })(),
-    mailText: document.querySelector('#preise [data-mail]') && document.querySelector('#preise [data-mail]').textContent.trim(),
-    copyBtn: !!document.querySelector('#preise [data-copy]'),
+    // v18.1: no address line in the price card any more; copy icons inside both contact lines
+    copyBtns: Array.from(document.querySelectorAll('#kontakt .contact-line [data-copy]')).map((b) => b.getAttribute('data-copy')),
     headerTelDesktop: (() => { const a = document.querySelector('.header-tel'); return a ? getComputedStyle(a).display : 'absent'; })(),
     footer: Array.from(document.querySelectorAll('.site-footer nav a')).map((a) => a.getAttribute('href')),
   }));
   await context.close();
   const mailtoOk = (href) => !!href && href.startsWith('mailto:' + company.email + '?') && /subject=Platz%20anfragen/.test(href) && /body=/.test(href) && /Betrieb/.test(decodeURIComponent(href)) && /Wunschtermin/.test(decodeURIComponent(href)) && !/—/.test(decodeURIComponent(href));
   gate.m12 = {...t, pass: t.hero.join('|') === 'Erstgespräch anfragen -> #kontakt|Beispiel ansehen -> #k-website' && t.header === 'Kontakt' && t.formular === 1 && t.websiteCopy.some((p) => /Wer uns schreibt, bekommt meistens am selben Tag eine Antwort\./.test(p)) && !t.websiteCopy.some((p) => /Formular abschickt/.test(p))};
-  gate.m4 = {platz: t.platz, mailText: t.mailText, copyBtn: t.copyBtn, pass: !!t.platz && t.platz.text === 'Platz anfragen' && mailtoOk(t.platz.href) && t.mailText === company.email && t.copyBtn};
+  gate.m4 = {platz: t.platz, copyBtns: t.copyBtns, pass: !!t.platz && t.platz.text === 'Platz anfragen' && mailtoOk(t.platz.href) && t.copyBtns.join('|') === company.email + '|' + company.phone.display};
   gate.m10 = {desktop: t.headerTelDesktop};
   gate.m17 = {footer: t.footer};
 
@@ -159,16 +159,16 @@ gate.m14 = {};
     const context = await browser.newContext({viewport: {width: 1440, height: 900}, permissions: ['clipboard-read', 'clipboard-write']});
     const page = await context.newPage();
     await page.goto(`${BASE}/`, {waitUntil: 'load'});
-    await page.evaluate(() => document.getElementById('preise').scrollIntoView());
+    await page.evaluate(() => document.getElementById('kontakt').scrollIntoView());
     await page.waitForTimeout(1500);
-    const btn = page.locator('#preise [data-copy]');
-    const label0 = await btn.textContent();
+    const btn = page.locator('#kontakt [data-copy]').first();
+    const label0 = await btn.getAttribute('aria-label');
     await btn.click();
     await page.waitForTimeout(200);
-    const label1 = await btn.textContent();
+    const label1 = await btn.getAttribute('aria-label');
     const clip = await page.evaluate(() => navigator.clipboard.readText()).catch((e) => 'ERR ' + e.message);
     await page.waitForTimeout(2200);
-    const label2 = await btn.textContent();
+    const label2 = await btn.getAttribute('aria-label');
     await page.screenshot({path: path.join(OUT, 'm4_copy_1440_light.png')});
     gate.m4.copy = {label0: label0.trim(), label1: label1.trim(), clipboard: clip, label2: label2.trim()};
     gate.m4.pass = gate.m4.pass && clip === company.email && label1.trim() !== label0.trim() && label2.trim() === label0.trim();

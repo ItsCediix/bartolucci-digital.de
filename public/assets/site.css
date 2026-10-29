@@ -301,15 +301,10 @@ html[data-theme='dark'] .theme-toggle .ico-moon { display: block; }
 html[data-theme='dark'] .price-note { color: var(--ink-2); }
 .price .btn-primary { background: var(--price-accent); color: var(--price-on-accent); }
 .price .btn-primary:hover { background: var(--price-ink); color: var(--price-bg); }
-/* v18 (audit M4): the address as plain text under the button, with a small copy button (shared.js) */
-.price-mail { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-top: 16px; font-size: 14.5px; color: var(--price-text); }
-.price-mail-addr { font-weight: 600; color: var(--price-ink); overflow-wrap: anywhere; user-select: all; }
-.copy-btn {
-  padding: 6px 12px; border-radius: 999px; border: 1.5px solid var(--price-line); background: transparent;
-  color: var(--price-ink); font-weight: 600; font-size: 13.5px; line-height: 1; cursor: pointer; transition: border-color 0.2s, color 0.2s;
-}
-.copy-btn:hover { border-color: var(--price-accent); }
-.copy-btn.is-done { color: var(--price-accent); border-color: var(--price-accent); }
+/* v18.1: "opens elsewhere" icon in the mail button; the footnote runs the full width of the column (one line) */
+.btn-ic { width: 18px; height: 18px; flex: none; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.price-note { max-width: none; }
+
 
 /* ---------- about: two person cards, photos load from fixed file names, initials tile as fallback ---------- */
 .team { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(24px, 2vw, 48px); }
@@ -378,6 +373,18 @@ html[data-theme='dark'] .sky-layer.sky-ship { color: var(--end-sky); opacity: 0.
 .contact-lines { display: grid; gap: 14px; margin-top: 28px; }
 .contact-line { display: flex; align-items: center; gap: 16px; padding: 18px 22px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); box-shadow: var(--shadow); text-decoration: none; font-weight: 600; font-size: 18px; transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.2s; }
 .contact-line:hover { border-color: var(--ink); }
+/* v18.1: the box is a <div>; the link fills it (::after over the whole box), the copy icon sits inside, at the end */
+.contact-line { position: relative; padding-right: 12px; }
+.contact-link { flex: 1; min-width: 0; display: flex; align-items: center; gap: inherit; color: inherit; text-decoration: none; }
+.contact-link::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
+.contact-link:focus-visible { outline: none; }
+.contact-line:has(.contact-link:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+.copy-icon { position: relative; z-index: 1; flex: none; width: 36px; height: 36px; margin: -6px 0; display: grid; place-items: center; padding: 0; border: 0; border-radius: 10px; background: transparent; color: var(--ink-3); cursor: pointer; transition: background 0.2s, color 0.2s; }
+.copy-icon:hover, .copy-icon:focus-visible { background: var(--line); color: var(--ink); }
+.contact-line .copy-icon svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.copy-icon .ci-done, .copy-icon.is-done .ci-copy { display: none; }
+.copy-icon.is-done .ci-done { display: inline; }
+.copy-icon.is-done { color: var(--accent); }
 .contact-line svg { width: 22px; height: 22px; stroke: var(--accent); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
 .contact-line .small { font-weight: 400; margin-left: auto; flex: none; }
 /* v15: the address never wraps; shared.js swaps in "Mail schreiben" when it does not fit */

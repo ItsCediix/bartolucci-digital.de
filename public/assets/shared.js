@@ -133,16 +133,18 @@ if (!location.hash) window.scrollTo(0, 0);
      is missing or refused (http, old browsers) the address is selected so Ctrl+C works. No third party, no form. ---------- */
   d.querySelectorAll('[data-copy]').forEach(function (btn) {
     var text = btn.getAttribute('data-copy');
-    var label = btn.textContent;
+    // v18.1: icon-only button next to the e-mail line; feedback swaps the icon (CSS) and the title, not the text
+    var label = btn.getAttribute('aria-label');
     var timer = 0;
     var done = function (msg) {
-      btn.textContent = msg;
+      if (msg === label) return;
+      btn.setAttribute('aria-label', msg); btn.title = msg;
       btn.classList.add('is-done');
       clearTimeout(timer);
-      timer = setTimeout(function () { btn.textContent = label; btn.classList.remove('is-done'); }, 1800);
+      timer = setTimeout(function () { btn.setAttribute('aria-label', label); btn.title = label; btn.classList.remove('is-done'); }, 1800);
     };
     var select = function () {
-      var el = d.querySelector('[data-mail]');
+      var el = btn.parentNode.querySelector('.contact-val');
       if (!el || !window.getSelection) return false;
       var range = d.createRange();
       range.selectNodeContents(el);
@@ -153,8 +155,8 @@ if (!location.hash) window.scrollTo(0, 0);
     };
     btn.addEventListener('click', function () {
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(function () { done('Kopiert'); }, function () { done(select() ? 'Markiert' : label); });
-      } else done(select() ? 'Markiert' : label);
+        navigator.clipboard.writeText(text).then(function () { done('Kopiert'); }, function () { done(select() ? 'Markiert, mit Strg+C kopieren' : label); });
+      } else done(select() ? 'Markiert, mit Strg+C kopieren' : label);
     });
   });
 

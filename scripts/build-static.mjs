@@ -70,8 +70,9 @@ export function renderOffer(o, company) {
   h += `<ul class="facts">${fact(fill(t.included))}${fact(fill(t.care))}</ul>`;
   // v18 (audit M4): the button opens the mail client with subject and a short German template (company.json), and the
   // address stands next to it as plain text with a copy button (shared.js); no form, no booking tool, no third party
-  h += `<a class="btn btn-primary btn-lg" href="${esc(mailto(company))}">${esc(t.button)}</a>`;
-  h += `<p class="price-mail">Oder per Mail an <span class="price-mail-addr" data-mail>${esc(company.email)}</span> <button type="button" class="copy-btn" data-copy="${esc(company.email)}" aria-label="E-Mail-Adresse kopieren">Kopieren</button></p>`;
+  // v18.1: "opens elsewhere" icon on the button (it starts the mail program); no address line below, it stands in the
+  // contact section with a copy icon
+  h += `<a class="btn btn-primary btn-lg" href="${esc(mailto(company))}">${esc(t.button)}<svg class="btn-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M19 14v3a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3h3"/></svg></a>`;
   h += '</div>';
   h += `<p class="price-note">${esc(t.footnote)}</p>`;
   return h;
@@ -81,10 +82,14 @@ export function renderOffer(o, company) {
    number with non-breaking spaces so it never wraps; shared.js swaps "Mail schreiben" in when the address does not fit) ---------- */
 const ICON_MAIL = 'M3 6h18v12H3zM3 6l9 7 9-7';
 const ICON_TEL = 'M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 5a2 2 0 0 1 2-2z';
-const line = (href, label, icon, hint, title) => `<a class="contact-line" href="${esc(href)}"${title ? ` title="${esc(title)}"` : ''}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${icon}"/></svg><span class="contact-val">${esc(label)}</span><span class="small">${hint}</span></a>`;
+// v18.1: each line is a box with the link (stretched over the whole box via ::after) and a small copy icon inside it;
+// a <button> may not sit inside an <a>, so the box is a <div> and the button sits above the stretched link
+const ICON_COPY = '<path class="ci-copy" d="M9 9h11v11H9zM5 15H4V4h11v1"/><path class="ci-done" d="M5 12.5l4.5 4.5L19 7.5"/>';
+const line = (href, label, icon, hint, title, copyText, copyLabel) => `<div class="contact-line"><a class="contact-link" href="${esc(href)}"${title ? ` title="${esc(title)}"` : ''}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${icon}"/></svg><span class="contact-val">${esc(label)}</span><span class="small">${hint}</span></a><button type="button" class="copy-icon" data-copy="${esc(copyText)}" aria-label="${esc(copyLabel)}" title="${esc(copyLabel)}"><svg viewBox="0 0 24 24" aria-hidden="true">${ICON_COPY}</svg></button></div>`;
 export function renderContact(company) {
   const tel = company.phone.display.replace(/ /g, ' ');
-  return line('mailto:' + company.email, company.email, ICON_MAIL, 'E‑Mail', company.email) + '\n        ' + line('tel:' + company.phone.e164, tel, ICON_TEL, 'Telefon');
+  return line('mailto:' + company.email, company.email, ICON_MAIL, 'E‑Mail', company.email, company.email, 'E-Mail-Adresse kopieren')
+    + '\n        ' + line('tel:' + company.phone.e164, tel, ICON_TEL, 'Telefon', '', company.phone.display, 'Telefonnummer kopieren');
 }
 
 /* ---------- JSON-LD (ProfessionalService; audit M11): telephone, e-mail, postal address from the Impressum, the
