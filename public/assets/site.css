@@ -501,7 +501,10 @@ html[data-mode='mobile'] .contact-val { font-size: 15px; }
 .demo-desk .d-logo { font-size: 15px; }
 .demo-desk .d-nav { font-size: 8.5px; color: #3d3e3a; }
 .demo-desk .d-sub { margin-top: 22px; font-size: 8.5px; }
-.demo-desk .d-h { margin-top: 7px; font-size: 52px; }
+/* v19 (C2): the demo's price line steps back (52 -> 38 px, softer ink), so a visitor reads it as part of a showcased
+   design and not as our price; margin-bottom keeps the lines below where they were */
+.demo .d-h { color: #5b5a54; }
+.demo-desk .d-h { margin-top: 7px; margin-bottom: 13px; font-size: 38px; }
 .demo-desk .d-copy { margin-top: 10px; width: 250px; font-size: 9.5px; line-height: 1.4; color: #3d3e3a; }
 .demo-desk .d-row { margin-top: 14px; display: flex; align-items: center; gap: 14px; }
 .demo-desk .d-btn { font-size: 9.5px; }
@@ -516,7 +519,7 @@ html[data-mode='mobile'] .contact-val { font-size: 15px; }
 .demo-mob .d-scroll { position: absolute; left: 0; right: 0; top: 0; padding: 18px 14px; transform: translateY(-212px); }
 .demo-mob .d-logo { font-size: 14.5px; }
 .demo-mob .d-sub { margin-top: 26px; font-size: 7.5px; }
-.demo-mob .d-h { margin-top: 8px; font-size: 40px; }
+.demo-mob .d-h { margin-top: 8px; margin-bottom: 18px; font-size: 30px; }
 .demo-mob .d-btn { margin-top: 16px; font-size: 10px; }
 .demo-mob .d-hours { margin-top: 36px; }
 .demo-mob .d-addr { margin-top: 16px; font-size: 11px; line-height: 1.45; }
@@ -585,6 +588,19 @@ html[data-mode='mobile'] .contact-val { font-size: 15px; }
 }
 .mg-time { font-size: 21px; font-weight: 600; color: var(--ink-3); font-variant-numeric: tabular-nums; text-align: right; }
 .mg-text { margin-top: 10px; font-size: 38px; font-weight: 700; line-height: 1.22; letter-spacing: -0.5px; text-wrap: balance; }
+
+/* ================================================================ v19 (C2): "Beispielprojekt" label
+   Page pixels, not scene pixels: it sits on the stage frame (desktop: .panel-sticky, the website card's .m-stage on
+   mobile) above every scene, so no cut, beat or theme switch hides it. Top right, where all scenes leave room. */
+.stage-badge {
+  position: absolute; top: 24px; right: 0; z-index: 4; margin: 0;
+  display: inline-flex; align-items: center; gap: 7px; padding: 6px 12px;
+  border: 1px solid var(--line); border-radius: 999px; background: var(--surface); box-shadow: var(--shadow);
+  color: var(--ink-2); font-size: 14px; font-weight: 600; line-height: 1.2; letter-spacing: 0.01em;
+  pointer-events: none;
+}
+.stage-badge::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+.m-stage .stage-badge { top: 0; gap: 6px; padding: 3px 9px; font-size: 11.5px; } /* stays above the laptop lid (22 px at 390) */
 
 @media (prefers-reduced-motion: reduce) {
   .stage *, .stage { transition: none !important; }

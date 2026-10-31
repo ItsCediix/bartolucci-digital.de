@@ -290,12 +290,14 @@
     playBeats(id, CUT_OUT + CUT_IN);
   }
   // hand-over at the end of the story: the stage steps back when "So läuft's" reaches 70 %
+  // v19: the "Beispielprojekt" label on the stage frame steps back with the stage
+  var stageFade = [stage].concat(Array.prototype.slice.call(d.querySelectorAll('[data-stage-badge]')));
   var handed = false;
   function handover(on, instant) {
     if (handed === on) return;
     handed = on;
-    if (RM || instant) gsap.set(stage, {opacity: on ? 0 : 1, scale: on ? 0.96 : 1});
-    else gsap.to(stage, {opacity: on ? 0 : 1, scale: on ? 0.96 : 1, duration: 0.6, ease: S.ease.soft, overwrite: true});
+    if (RM || instant) gsap.set(stageFade, {opacity: on ? 0 : 1, scale: on ? 0.96 : 1});
+    else gsap.to(stageFade, {opacity: on ? 0 : 1, scale: on ? 0.96 : 1, duration: 0.6, ease: S.ease.soft, overwrite: true});
   }
   var ablauf = d.getElementById('ablauf');
   var handMark = ablauf && ScrollTrigger.create({trigger: ablauf, start: 'top 70%'});

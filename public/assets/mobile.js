@@ -31,6 +31,16 @@
     var device = card.querySelector('.m-stage');
     if (!device) return;
     var stage = device.querySelector('.stage');
+    // v19 (C2): the demo card's visual carries the "Beispielprojekt" label (scenes.css). Only the scene stays
+    // aria-hidden, so the label is read like on desktop.
+    if (id === 'website') {
+      var badge = d.createElement('p');
+      badge.className = 'stage-badge';
+      badge.textContent = 'Beispielprojekt';
+      device.removeAttribute('aria-hidden');
+      stage.setAttribute('aria-hidden', 'true');
+      device.appendChild(badge);
+    }
     S.fit(stage);
     var scenes = S.collect(stage);
     var scene = scenes[id];
