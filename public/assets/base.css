@@ -336,6 +336,21 @@ html[data-theme='dark'] .price-note { color: var(--ink-2); }
 /* v18.1: "opens elsewhere" icon in the mail button; the footnote runs the full width of the column (one line) */
 .btn-ic { width: 18px; height: 18px; flex: none; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .price-note { max-width: none; }
+/* v19.2: FAQ links next to the price (the FAQ is a separate page, not a jump target of the header nav) */
+.price-faq { margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--line); max-width: 420px; grid-column: 1; grid-row: 2; }
+.price-wrap { row-gap: 0; grid-template-rows: auto 1fr; }
+.price-wrap > .price-col { grid-column: 2; grid-row: 1 / span 2; }
+@media (max-width: 900px) {
+  .price-wrap { row-gap: clamp(32px, 5vw, 80px); grid-template-rows: none; }
+  .price-wrap > .price-col, .price-faq { grid-column: auto; grid-row: auto; }
+  .price-faq { margin-top: 0; }
+}
+.price-faq-h { margin: 0 0 8px; font-weight: 700; color: var(--ink); }
+.price-faq ul { list-style: none; margin: 0; padding: 0; }
+.price-faq li { margin: 0; }
+.price-faq li a { display: block; padding: 7px 0; color: var(--ink-2); text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 4px; }
+.price-faq li a:hover { color: var(--ink); text-decoration-color: var(--accent); }
+.price-faq-all { display: inline-block; margin-top: 12px; font-weight: 600; color: var(--accent); text-underline-offset: 3px; }
 
 
 /* ---------- about: two person cards, photos load from fixed file names, initials tile as fallback ---------- */
@@ -372,7 +387,8 @@ html[data-theme='dark'] .card-photo-box::after { box-shadow: inset 0 0 0 1px rgb
 /* v19.1: luca.webp is re-cut from the original photo with room below the chin. At zoom 1 his face is ~15 % smaller
    than Cederic's (eyes 52 %, chin 81 %), so a zoom of 1.14 about the eye line: eyes stay at 52 %, chin at ~85 %, i.e.
    above the bottom fade that starts at 88 % (the old 1.09 about 16 % pushed the chin to ~94 %, into the fade). */
-.card-photo[src*='luca.'] { --photo-zoom: 1.14; --photo-origin: 50% 52%; }
+/* v19.2: both masters now carry their framing (assets-src/team, zoom 1, no per-person rule). luca.png: BiRefNet cut-out,
+   eyes at 52 %, chin at ~86 %, above the bottom fade from 88 %; his shirt is faded out inside the file (88-97 %). */
 .card-photo--fallback { transform: none; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); font-weight: 800; font-size: 40px; letter-spacing: -0.03em; }
 .person h3 { font-size: clamp(21px, 1.3vw, 28px); font-weight: 800; letter-spacing: -0.02em; }
 .person-role { margin-top: 2px; font-weight: 600; color: var(--accent); }
