@@ -18,11 +18,16 @@ html[data-mode='mobile'] .story, html[data-mode='mobile'] .rail { display: none;
 
 /* ---------- chapters (left) ----------
    v13: free flow. No pinned copy, no chapter heights: a chapter is as tall as its copy plus the padding. */
-.chapter { position: relative; }
+.chapter { position: relative; scroll-margin-top: calc(var(--header-h) + 8px); }
 /* v16: every story chapter is one viewport tall, the copy centred in it, the extra height is empty paper
    (2-3 wheel notches per chapter). Below 1100 px the narrow layout resets this (min-height: 0 !important). */
 @media (min-width: 1024px) {
   html[data-mode='desktop'] .chapter { min-height: 100vh; display: grid; align-content: center; }
+}
+/* v19: jump targets stop 8 px below the header, except the one-viewport chapters of the wide layout (the v16 settle
+   range): they land at 0 like the rail and the settle, the header covers only their top padding */
+@media (min-width: 1100px) {
+  html[data-mode='desktop'] .chapter { scroll-margin-top: 0; }
 }
 .chapter-inner {
   position: relative;

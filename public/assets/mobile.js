@@ -108,7 +108,15 @@
       var el = id && d.getElementById(id);
       if (!el) return;
       ev.preventDefault();
+      // v19: the menu links add a history entry, so the back button returns to the previous section
+      if (a.hasAttribute('data-nav') && location.hash !== '#' + id) history.pushState(null, '', '#' + id);
       scrollToEl(el);
     });
+  });
+  addEventListener('popstate', function () {
+    var el = location.hash && d.getElementById(location.hash.slice(1));
+    if (el) scrollToEl(el);
+    else if (lenis) lenis.scrollTo(0, {duration: 1});
+    else window.scrollTo({top: 0, behavior: RM ? 'auto' : 'smooth'});
   });
 })();

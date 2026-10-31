@@ -9,7 +9,7 @@ html[data-mode='mobile'] .m-header .theme-toggle { width: 38px; height: 38px; }
 
 /* ---------- chapters ---------- */
 .m-chapters { padding: 8px 0 24px; }
-.m-card { padding: 28px 16px 20px; scroll-margin-top: var(--header-h); }
+.m-card { padding: 28px 16px 20px; scroll-margin-top: calc(var(--header-h) + 8px); }
 .m-card + .m-card { border-top: 1px solid var(--line); }
 .m-stage { position: relative; width: 100%; max-height: 46svh; margin: 0 auto 22px; }
 .m-stage .stage { position: absolute; inset: 0; }

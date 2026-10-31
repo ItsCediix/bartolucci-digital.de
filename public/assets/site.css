@@ -241,6 +241,39 @@ html[data-mode='mobile'] .brand img { height: 28px; }
 html[data-theme='dark'] .theme-toggle .ico-sun { display: none; }
 html[data-theme='dark'] .theme-toggle .ico-moon { display: block; }
 
+/* ---------- v19 (C3): main navigation, jump links to the sections ----------
+   Wide screens: a row of text links left of the theme toggle, header height unchanged. Below 900 px and in the mobile
+   layout shared.js sets .nav-compact on the header: the links move into a panel under the header, opened by the round
+   menu button (aria-expanded, closes on link click, Escape, click outside, focus leaving). Without JS the links stay a
+   row that scrolls sideways. "Kontakt" is a link only where the header has no Kontakt button (mobile layout). */
+.main-nav { margin-left: auto; min-width: 0; }
+.main-nav ul { display: flex; align-items: center; gap: 2px; }
+.main-nav a { display: block; padding: 9px 12px; border-radius: 999px; font-size: 15px; font-weight: 600; line-height: 1.2; color: var(--ink-2); text-decoration: none; white-space: nowrap; transition: color 0.2s, background 0.2s; }
+.main-nav a:hover { color: var(--ink); background: var(--accent-soft); }
+.main-nav a:focus-visible { border-radius: 999px; }
+html:not([data-mode='mobile']) .main-nav-contact { display: none; }
+html:not(.js) .main-nav { overflow-x: auto; }
+.nav-toggle {
+  display: none; width: 42px; height: 42px; border-radius: 999px; border: 1.5px solid var(--line); background: transparent;
+  place-items: center; cursor: pointer; transition: border-color 0.2s;
+}
+.nav-toggle:hover { border-color: var(--ink); }
+.nav-toggle svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+.nav-toggle .nt-x, .nav-toggle[aria-expanded='true'] .nt-bars { display: none; }
+.nav-toggle[aria-expanded='true'] .nt-x { display: inline; }
+html[data-mode='mobile'] .nav-toggle { width: 38px; height: 38px; }
+.nav-compact .nav-toggle { display: inline-grid; }
+.nav-compact .main-nav {
+  position: absolute; left: 0; right: 0; top: 100%; margin: 0;
+  padding: 8px max(var(--gutter), (100% - var(--content-max)) / 2) 16px;
+  background: var(--bg); border-bottom: 1px solid var(--line); box-shadow: 0 18px 30px rgba(15, 23, 42, 0.08);
+}
+.nav-compact:not(.nav-open) .main-nav { display: none; }
+.nav-compact .main-nav ul { flex-direction: column; align-items: stretch; gap: 0; }
+.nav-compact .main-nav li + li { border-top: 1px solid var(--line); }
+.nav-compact .main-nav a { padding: 14px 4px; border-radius: 6px; font-size: 17px; color: var(--ink); }
+.nav-compact .main-nav a:hover { background: transparent; color: var(--accent); }
+
 /* ---------- feature lists: the only list style for features on the whole site ----------
    hairline-separated rows, lead clause (marked up as <strong>) semibold, no markers, no icons */
 .facts { list-style: none; margin: 0; padding: 0; }
@@ -251,7 +284,8 @@ html[data-theme='dark'] .theme-toggle .ico-moon { display: block; }
 /* ---------- shared sections ---------- */
 /* one fluid container for all sections, pages and the scroll area (v12) */
 .wrap { width: min(100% - 2 * var(--gutter), var(--content-max)); margin-inline: auto; }
-.section { padding: clamp(72px, 7vw, 160px) 0; scroll-margin-top: var(--header-h); }
+/* v19: jump targets stop 8 px below the sticky header (71 px) */
+.section { padding: clamp(72px, 7vw, 160px) 0; scroll-margin-top: calc(var(--header-h) + 8px); }
 .section + .section { border-top: 1px solid var(--line); }
 .section-head { max-width: clamp(760px, 50vw, 1240px); margin-bottom: clamp(32px, 3vw, 72px); }
 .section-head .lead { margin-top: 16px; }
@@ -627,11 +661,16 @@ html[data-mode='mobile'] .story, html[data-mode='mobile'] .rail { display: none;
 
 /* ---------- chapters (left) ----------
    v13: free flow. No pinned copy, no chapter heights: a chapter is as tall as its copy plus the padding. */
-.chapter { position: relative; }
+.chapter { position: relative; scroll-margin-top: calc(var(--header-h) + 8px); }
 /* v16: every story chapter is one viewport tall, the copy centred in it, the extra height is empty paper
    (2-3 wheel notches per chapter). Below 1100 px the narrow layout resets this (min-height: 0 !important). */
 @media (min-width: 1024px) {
   html[data-mode='desktop'] .chapter { min-height: 100vh; display: grid; align-content: center; }
+}
+/* v19: jump targets stop 8 px below the header, except the one-viewport chapters of the wide layout (the v16 settle
+   range): they land at 0 like the rail and the settle, the header covers only their top padding */
+@media (min-width: 1100px) {
+  html[data-mode='desktop'] .chapter { scroll-margin-top: 0; }
 }
 .chapter-inner {
   position: relative;
@@ -768,7 +807,7 @@ html[data-mode='mobile'] .m-header .theme-toggle { width: 38px; height: 38px; }
 
 /* ---------- chapters ---------- */
 .m-chapters { padding: 8px 0 24px; }
-.m-card { padding: 28px 16px 20px; scroll-margin-top: var(--header-h); }
+.m-card { padding: 28px 16px 20px; scroll-margin-top: calc(var(--header-h) + 8px); }
 .m-card + .m-card { border-top: 1px solid var(--line); }
 .m-stage { position: relative; width: 100%; max-height: 46svh; margin: 0 auto 22px; }
 .m-stage .stage { position: absolute; inset: 0; }

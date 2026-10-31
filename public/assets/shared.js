@@ -78,6 +78,43 @@ if (!location.hash) window.scrollTo(0, 0);
     onScroll();
   }
 
+  /* ---------- v19 (C3): main navigation. Below 900 px and in the mobile layout the jump links sit in a panel under
+     the header (.nav-compact, base.css), opened by the menu button. Disclosure pattern, not a modal: the panel closes
+     on a link click, on Escape (focus back to the button), on a click outside and when the focus leaves the header.
+     The scroll itself is done by desktop.js / mobile.js (Lenis) or natively. ---------- */
+  var navBtn = d.querySelector('[data-nav-toggle]');
+  var nav = d.getElementById('main-nav');
+  if (header && navBtn && nav) {
+    var setOpen = function (open, focusBtn) {
+      header.classList.toggle('nav-open', open);
+      navBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      navBtn.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen');
+      if (focusBtn) navBtn.focus();
+    };
+    var compact = function () {
+      var on = html.getAttribute('data-mode') === 'mobile' || innerWidth < 900;
+      header.classList.toggle('nav-compact', on);
+      if (!on) setOpen(false);
+    };
+    compact();
+    addEventListener('resize', compact, {passive: true});
+    navBtn.addEventListener('click', function () {
+      var open = navBtn.getAttribute('aria-expanded') !== 'true';
+      setOpen(open);
+      if (open) { var first = nav.querySelector('a'); if (first) first.focus(); }
+    });
+    nav.addEventListener('click', function (ev) { if (ev.target.closest('a')) setOpen(false); });
+    d.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Escape' && header.classList.contains('nav-open')) setOpen(false, true);
+    });
+    d.addEventListener('click', function (ev) {
+      if (header.classList.contains('nav-open') && !header.contains(ev.target)) setOpen(false);
+    });
+    header.addEventListener('focusout', function (ev) {
+      if (header.classList.contains('nav-open') && ev.relatedTarget && !header.contains(ev.relatedTarget)) setOpen(false);
+    });
+  }
+
   /* ---------- price card: static HTML since v18, rendered at build time from data/offer.json (build-static.mjs,
      renderOffer); the UWG § 5 rule for the struck regular price lives there as well ---------- */
 
