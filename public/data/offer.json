@@ -6,9 +6,9 @@
   "carePrice": 49,
   "roundPrice": 79,
   "text": {
-    "heading": "Einführungspreis für die ersten drei Kunden.",
+    "heading": "Sonderpreis für drei Websites.",
     "headingRegular": "Deine Website zum Festpreis.",
-    "regularLabel": "regulär ab dem 4. Kunden",
+    "regularLabel": "regulär ab der vierten Website",
     "availability": ["Einer der drei Plätze ist noch frei.", "Zwei der drei Plätze sind noch frei.", "Alle drei Plätze sind noch frei."],
     "included": "Zwei Korrekturrunden inklusive, ab der dritten {round}.",
     "care": "Technische Betreuung {care} im Monat, Hosting, Domain, Updates, kleine Änderungen.",

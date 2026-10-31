@@ -354,6 +354,13 @@ html[data-theme='dark'] .price-note { color: var(--ink-2); }
 }
 /* v17.1: very light inner ring so the white photo background does not read as a pasted square on the card */
 .card-photo-box::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgb(20 20 20 / 6%); pointer-events: none; }
+/* v19.1: the photos are cut out (transparent WebP/AVIF), the box paints the backdrop. Light: white as before. Dark: no
+   white square any more, a soft lift of the card colour with a faint accent glow behind the head. */
+.card-photo-box { background: #fff; }
+html[data-theme='dark'] .card-photo-box {
+  background: radial-gradient(120% 70% at 50% 34%, rgba(163, 173, 219, 0.20), rgba(163, 173, 219, 0) 70%), linear-gradient(#1b2740, #141e33);
+}
+html[data-theme='dark'] .card-photo-box::after { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07); }
 /* v18 (audit M16): the <picture> (AVIF / WebP sources, JPEG fallback) is no box of its own, the img keeps the framing */
 .card-photo-box picture { display: contents; }
 .card-photo {
@@ -364,7 +371,10 @@ html[data-theme='dark'] .price-note { color: var(--ink-2); }
    everything. cederic.jpg: hair top 5.8 %, eyes 53.5 %, chin ~90.5 % of the height, zoom 1 (default). luca.jpg: hair top
    9.5 %, eyes 50.5 %, chin ~87.5 % (smaller head), so zoom 1.09 about 50% 16%: head height equal (~85 % of the box), eyes at
    ~53.6 % in both, hair top at 8.9 %; the box stays filled at the bottom and sides (origin above 0, zoom above 1). */
-.card-photo[src*='luca.jpg'] { --photo-zoom: 1.09; --photo-origin: 50% 16%; }
+/* v19.1: luca.webp is re-cut from the original photo with room below the chin. At zoom 1 his face is ~15 % smaller
+   than Cederic's (eyes 52 %, chin 81 %), so a zoom of 1.14 about the eye line: eyes stay at 52 %, chin at ~85 %, i.e.
+   above the bottom fade that starts at 88 % (the old 1.09 about 16 % pushed the chin to ~94 %, into the fade). */
+.card-photo[src*='luca.'] { --photo-zoom: 1.14; --photo-origin: 50% 52%; }
 .card-photo--fallback { transform: none; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); font-weight: 800; font-size: 40px; letter-spacing: -0.03em; }
 .person h3 { font-size: clamp(21px, 1.3vw, 28px); font-weight: 800; letter-spacing: -0.02em; }
 .person-role { margin-top: 2px; font-weight: 600; color: var(--accent); }
@@ -521,6 +531,38 @@ html[data-mode='mobile'] .contact-val { font-size: 15px; }
 .ws-base { height: 22px; margin: 2px -26px 0; border-radius: 4px 4px 16px 16px; background: #9aa2ae; box-shadow: var(--sc-shadow); }
 .ws-phone { position: absolute; left: 892px; top: 118px; width: 266px; height: 560px; padding: 8px; border-radius: 40px; background: #121418; box-shadow: 0 0 0 2px #5b626d, var(--sc-shadow); }
 .ws-pscreen { position: relative; width: 100%; height: 100%; border-radius: 32px; overflow: hidden; background: #f1ece1; }
+/* v19.1: a phone that reads as a phone. Same outer size and screen (the demo stays 250 × 544), but: a thin metal
+   band around the black glass edge (dark inner line, brushed light band, darker outer edge), a Dynamic Island on the
+   screen, volume keys on the left and the side key on the right (outside the band, like the real thing). */
+.ws-phone {
+  border-radius: 42px; background: #07080a;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07), 0 0 0 1px #2a2e35, 0 0 0 3.5px #a9afb8, 0 0 0 4.5px #646a73, var(--sc-shadow);
+}
+.ws-pscreen { border-radius: 34px; }
+.ws-pscreen::before {
+  content: ''; position: absolute; z-index: 5; top: 10px; left: 50%; width: 78px; height: 23px; margin-left: -39px;
+  border-radius: 12px; background: #000; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+/* status bar: time left, signal and battery right; the demo page scrolls underneath it like on a real phone */
+.ws-pscreen::after {
+  content: '9:41'; position: absolute; z-index: 4; left: 0; right: 0; top: 0; height: 42px; padding: 15px 0 0 26px;
+  font: 700 12px/1 var(--font); color: #1b1c1a; letter-spacing: -0.01em;
+  background:
+    linear-gradient(#1b1c1a, #1b1c1a) no-repeat right 25px top 17px / 18px 9px,
+    linear-gradient(#1b1c1a, #1b1c1a) no-repeat right 22px top 20px / 2px 3px,
+    linear-gradient(#1b1c1a, #1b1c1a) no-repeat right 50px top 23px / 3px 3px,
+    linear-gradient(#1b1c1a, #1b1c1a) no-repeat right 54px top 21px / 3px 5px,
+    linear-gradient(#1b1c1a, #1b1c1a) no-repeat right 58px top 19px / 3px 7px,
+    linear-gradient(#1b1c1a, #1b1c1a) no-repeat right 62px top 17px / 3px 9px,
+    #f1ece1;
+}
+.ws-pscreen > .demo-mob { top: 36px; } /* the page starts below the status bar; the last line still fits */
+.ws-phone::before, .ws-phone::after {
+  content: ''; position: absolute; width: 4px; border-radius: 2px;
+  background: linear-gradient(90deg, #7e848d, #c3c8cf 55%, #8a9099);
+}
+.ws-phone::after { left: -8px; top: 132px; height: 38px; box-shadow: 0 50px 0 0 #a3a9b2; } /* volume up, volume down */
+.ws-phone::before { right: -8px; top: 158px; height: 62px; } /* side key */
 
 /* the demo site keeps its v10 layout (408 × 255 desktop, 182 × 396 mobile) and is scaled into the bigger screens */
 .demo { position: absolute; left: 0; top: 0; color: #1b1c1a; font-family: var(--font); transform-origin: 0 0; }
@@ -623,18 +665,6 @@ html[data-mode='mobile'] .contact-val { font-size: 15px; }
 .mg-time { font-size: 21px; font-weight: 600; color: var(--ink-3); font-variant-numeric: tabular-nums; text-align: right; }
 .mg-text { margin-top: 10px; font-size: 38px; font-weight: 700; line-height: 1.22; letter-spacing: -0.5px; text-wrap: balance; }
 
-/* ================================================================ v19 (C2): "Beispielprojekt" label
-   Page pixels, not scene pixels: it sits on the stage frame (desktop: .panel-sticky, the website card's .m-stage on
-   mobile) above every scene, so no cut, beat or theme switch hides it. Top right, where all scenes leave room. */
-.stage-badge {
-  position: absolute; top: 24px; right: 0; z-index: 4; margin: 0;
-  display: inline-flex; align-items: center; gap: 7px; padding: 6px 12px;
-  border: 1px solid var(--line); border-radius: 999px; background: var(--surface); box-shadow: var(--shadow);
-  color: var(--ink-2); font-size: 14px; font-weight: 600; line-height: 1.2; letter-spacing: 0.01em;
-  pointer-events: none;
-}
-.stage-badge::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
-.m-stage .stage-badge { top: 0; gap: 6px; padding: 3px 9px; font-size: 11.5px; } /* stays above the laptop lid (22 px at 390) */
 
 @media (prefers-reduced-motion: reduce) {
   .stage *, .stage { transition: none !important; }

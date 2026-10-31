@@ -290,8 +290,8 @@
     playBeats(id, CUT_OUT + CUT_IN);
   }
   // hand-over at the end of the story: the stage steps back when "So läuft's" reaches 70 %
-  // v19: the "Beispielprojekt" label on the stage frame steps back with the stage
-  var stageFade = [stage].concat(Array.prototype.slice.call(d.querySelectorAll('[data-stage-badge]')));
+  // v19.1: the "Beispielprojekt" label is gone again (the scene keeps its own "Demo-Projekt" tag)
+  var stageFade = [stage];
   var handed = false;
   function handover(on, instant) {
     if (handed === on) return;

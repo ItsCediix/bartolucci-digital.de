@@ -52,6 +52,38 @@
 .ws-base { height: 22px; margin: 2px -26px 0; border-radius: 4px 4px 16px 16px; background: #9aa2ae; box-shadow: var(--sc-shadow); }
 .ws-phone { position: absolute; left: 892px; top: 118px; width: 266px; height: 560px; padding: 8px; border-radius: 40px; background: #121418; box-shadow: 0 0 0 2px #5b626d, var(--sc-shadow); }
 .ws-pscreen { position: relative; width: 100%; height: 100%; border-radius: 32px; overflow: hidden; background: #f1ece1; }
+/* v19.1: a phone that reads as a phone. Same outer size and screen (the demo stays 250 × 544), but: a thin metal
+   band around the black glass edge (dark inner line, brushed light band, darker outer edge), a Dynamic Island on the
+   screen, volume keys on the left and the side key on the right (outside the band, like the real thing). */
+.ws-phone {
+  border-radius: 42px; background: #07080a;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07), 0 0 0 1px #2a2e35, 0 0 0 3.5px #a9afb8, 0 0 0 4.5px #646a73, var(--sc-shadow);
+}
+.ws-pscreen { border-radius: 34px; }
+.ws-pscreen::before {
+  content: ''; position: absolute; z-index: 5; top: 10px; left: 50%; width: 78px; height: 23px; margin-left: -39px;
+  border-radius: 12px; background: #000; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+/* status bar: time left, signal and battery right; the demo page scrolls underneath it like on a real phone */
+.ws-pscreen::after {
+  content: '9:41'; position: absolute; z-index: 4; left: 0; right: 0; top: 0; height: 42px; padding: 15px 0 0 26px;
+  font: 700 12px/1 var(--font); color: #1b1c1a; letter-spacing: -0.01em;
+  background:
+    linear-gradient(#1b1c1a, #1b1c1a) no-repeat right 25px top 17px / 18px 9px,
+    linear-gradient(#1b1c1a, #1b1c1a) no-repeat right 22px top 20px / 2px 3px,
+    linear-gradient(#1b1c1a, #1b1c1a) no-repeat right 50px top 23px / 3px 3px,
+    linear-gradient(#1b1c1a, #1b1c1a) no-repeat right 54px top 21px / 3px 5px,
+    linear-gradient(#1b1c1a, #1b1c1a) no-repeat right 58px top 19px / 3px 7px,
+    linear-gradient(#1b1c1a, #1b1c1a) no-repeat right 62px top 17px / 3px 9px,
+    #f1ece1;
+}
+.ws-pscreen > .demo-mob { top: 36px; } /* the page starts below the status bar; the last line still fits */
+.ws-phone::before, .ws-phone::after {
+  content: ''; position: absolute; width: 4px; border-radius: 2px;
+  background: linear-gradient(90deg, #7e848d, #c3c8cf 55%, #8a9099);
+}
+.ws-phone::after { left: -8px; top: 132px; height: 38px; box-shadow: 0 50px 0 0 #a3a9b2; } /* volume up, volume down */
+.ws-phone::before { right: -8px; top: 158px; height: 62px; } /* side key */
 
 /* the demo site keeps its v10 layout (408 × 255 desktop, 182 × 396 mobile) and is scaled into the bigger screens */
 .demo { position: absolute; left: 0; top: 0; color: #1b1c1a; font-family: var(--font); transform-origin: 0 0; }
@@ -154,18 +186,6 @@
 .mg-time { font-size: 21px; font-weight: 600; color: var(--ink-3); font-variant-numeric: tabular-nums; text-align: right; }
 .mg-text { margin-top: 10px; font-size: 38px; font-weight: 700; line-height: 1.22; letter-spacing: -0.5px; text-wrap: balance; }
 
-/* ================================================================ v19 (C2): "Beispielprojekt" label
-   Page pixels, not scene pixels: it sits on the stage frame (desktop: .panel-sticky, the website card's .m-stage on
-   mobile) above every scene, so no cut, beat or theme switch hides it. Top right, where all scenes leave room. */
-.stage-badge {
-  position: absolute; top: 24px; right: 0; z-index: 4; margin: 0;
-  display: inline-flex; align-items: center; gap: 7px; padding: 6px 12px;
-  border: 1px solid var(--line); border-radius: 999px; background: var(--surface); box-shadow: var(--shadow);
-  color: var(--ink-2); font-size: 14px; font-weight: 600; line-height: 1.2; letter-spacing: 0.01em;
-  pointer-events: none;
-}
-.stage-badge::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
-.m-stage .stage-badge { top: 0; gap: 6px; padding: 3px 9px; font-size: 11.5px; } /* stays above the laptop lid (22 px at 390) */
 
 @media (prefers-reduced-motion: reduce) {
   .stage *, .stage { transition: none !important; }

@@ -1,45 +1,32 @@
 #!/usr/bin/env node
-// Prepares the team photos in public/assets/team/ (part of `npm run build`): every *.jpg found there is
-// re-encoded in place with sharp – all metadata stripped (EXIF, GPS, ICC comments), cover-cropped to
-// 960 × 960, JPEG quality 82. Missing photos are fine: the page then shows an initials tile (shared.js).
-// Already processed files (960 × 960, no EXIF) are left alone, so the build stays repeatable.
-// v18 (audit M16): next to every JPEG a WebP (quality 82) and an AVIF (quality 55) of the same 960 × 960 file,
-// written only when missing or older than the JPEG; index.html lists them in a <picture>, the JPEG stays the
-// fallback. The crop, the CSS zoom and the object-position are untouched (same pixels, other encodings).
+// Prepares the team photos (part of `npm run build`).
+// v19.1: the photos are cut out (transparent background) so the dark theme no longer shows a white square. The masters
+// are square PNGs with alpha in assets-src/team/<name>.png (not deployed). For each one this writes
+// public/assets/team/<name>.webp (quality 82, alpha) and <name>.avif (quality 55, alpha), 800 x 800, all metadata
+// stripped, only when missing or older than the master. index.html lists AVIF with WebP as the <img> fallback; the
+// backdrop behind the cut-out (white in light, dark gradient in dark) comes from .card-photo-box in base.css.
+// Missing photos are fine: the page then shows an initials tile (shared.js).
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import sharp from 'sharp';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const DIR = process.argv[2] ? path.resolve(process.argv[2]) : path.join(ROOT, 'public', 'assets', 'team'); // optional folder for tests
-const SIZE = 960;
+const SRC = path.join(ROOT, 'assets-src', 'team');
+const OUT = path.join(ROOT, 'public', 'assets', 'team');
+const SIZE = 800;
 
-const files = fs.existsSync(DIR) ? fs.readdirSync(DIR).filter((f) => /\.jpe?g$/i.test(f)) : [];
-if (!files.length) console.log('team-images: no photos in public/assets/team/ – initials tiles will be shown');
+const files = fs.existsSync(SRC) ? fs.readdirSync(SRC).filter((f) => /\.png$/i.test(f)) : [];
+if (!files.length) console.log('team-images: no masters in assets-src/team/ - initials tiles will be shown');
+fs.mkdirSync(OUT, {recursive: true});
 for (const f of files) {
-  const p = path.join(DIR, f);
-  const input = fs.readFileSync(p);
-  const meta = await sharp(input).metadata();
-  if (meta.width === SIZE && meta.height === SIZE && !meta.exif && !meta.xmp && !meta.iptc) {
-    console.log(`team-images: ${f} already ${SIZE} × ${SIZE} without metadata, unchanged`);
-  } else {
-    // sharp drops all metadata unless withMetadata() is called; rotate() applies the EXIF orientation first
-    const out = await sharp(input).rotate().resize(SIZE, SIZE, {fit: 'cover', position: 'attention'}).jpeg({quality: 82, mozjpeg: true}).toBuffer();
-    fs.writeFileSync(p, out);
-    console.log(`team-images: ${f} ${meta.width} × ${meta.height} -> ${SIZE} × ${SIZE}, metadata stripped, ${Math.round(out.length / 1024)} KB`);
-  }
-  // v18: modern encodings of the final JPEG (same pixels); regenerated when the JPEG is newer
-  const jpgTime = fs.statSync(p).mtimeMs;
-  for (const [ext, make] of [['webp', (s) => s.webp({quality: 82})], ['avif', (s) => s.avif({quality: 55})]]) {
-    const target = p.replace(/\.jpe?g$/i, '.' + ext);
-    if (fs.existsSync(target) && fs.statSync(target).mtimeMs >= jpgTime) { console.log(`team-images: ${path.basename(target)} up to date`); continue; }
-    try {
-      const buf = await make(sharp(fs.readFileSync(p))).toBuffer();
-      fs.writeFileSync(target, buf);
-      console.log(`team-images: ${path.basename(target)} written, ${Math.round(buf.length / 1024)} KB`);
-    } catch (e) {
-      console.log(`team-images: ${ext} not written (${e.message.split('\n')[0]})`);
-    }
+  const src = path.join(SRC, f);
+  const srcTime = fs.statSync(src).mtimeMs;
+  for (const [ext, make] of [['webp', (s) => s.webp({quality: 82, alphaQuality: 90})], ['avif', (s) => s.avif({quality: 55})]]) {
+    const target = path.join(OUT, f.replace(/\.png$/i, '.' + ext));
+    if (fs.existsSync(target) && fs.statSync(target).mtimeMs >= srcTime) { console.log(`team-images: ${path.basename(target)} up to date`); continue; }
+    const buf = await make(sharp(src).ensureAlpha().resize(SIZE, SIZE, {fit: 'cover'})).toBuffer();
+    fs.writeFileSync(target, buf);
+    console.log(`team-images: ${path.basename(target)} written, ${Math.round(buf.length / 1024)} KB`);
   }
 }

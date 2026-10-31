@@ -117,7 +117,7 @@ export function renderJsonLd(company, offer) {
       {
         '@type': 'Offer',
         name: 'Website zum Festpreis',
-        description: `Gestaltung, Aufbau und Livegang einer eigenen Website. Einführungspreis für die ersten ${offer.slotsTotal} Kunden, danach ${offer.regularPrice.toLocaleString('de-DE')} €. Endpreis, keine Umsatzsteuer (§ 19 UStG).`,
+        description: `Gestaltung, Aufbau und Livegang einer eigenen Website. Sonderpreis für ${offer.slotsTotal} Websites, danach ${offer.regularPrice.toLocaleString('de-DE')} €. Endpreis, keine Umsatzsteuer (§ 19 UStG).`,
         price: String(offer.launchPrice),
         priceCurrency: 'EUR',
         priceSpecification: eur(offer.launchPrice),

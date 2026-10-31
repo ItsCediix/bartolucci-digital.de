@@ -352,6 +352,13 @@ html[data-theme='dark'] .price-note { color: var(--ink-2); }
 }
 /* v17.1: very light inner ring so the white photo background does not read as a pasted square on the card */
 .card-photo-box::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgb(20 20 20 / 6%); pointer-events: none; }
+/* v19.1: the photos are cut out (transparent WebP/AVIF), the box paints the backdrop. Light: white as before. Dark: no
+   white square any more, a soft lift of the card colour with a faint accent glow behind the head. */
+.card-photo-box { background: #fff; }
+html[data-theme='dark'] .card-photo-box {
+  background: radial-gradient(120% 70% at 50% 34%, rgba(163, 173, 219, 0.20), rgba(163, 173, 219, 0) 70%), linear-gradient(#1b2740, #141e33);
+}
+html[data-theme='dark'] .card-photo-box::after { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07); }
 /* v18 (audit M16): the <picture> (AVIF / WebP sources, JPEG fallback) is no box of its own, the img keeps the framing */
 .card-photo-box picture { display: contents; }
 .card-photo {
@@ -362,7 +369,10 @@ html[data-theme='dark'] .price-note { color: var(--ink-2); }
    everything. cederic.jpg: hair top 5.8 %, eyes 53.5 %, chin ~90.5 % of the height, zoom 1 (default). luca.jpg: hair top
    9.5 %, eyes 50.5 %, chin ~87.5 % (smaller head), so zoom 1.09 about 50% 16%: head height equal (~85 % of the box), eyes at
    ~53.6 % in both, hair top at 8.9 %; the box stays filled at the bottom and sides (origin above 0, zoom above 1). */
-.card-photo[src*='luca.jpg'] { --photo-zoom: 1.09; --photo-origin: 50% 16%; }
+/* v19.1: luca.webp is re-cut from the original photo with room below the chin. At zoom 1 his face is ~15 % smaller
+   than Cederic's (eyes 52 %, chin 81 %), so a zoom of 1.14 about the eye line: eyes stay at 52 %, chin at ~85 %, i.e.
+   above the bottom fade that starts at 88 % (the old 1.09 about 16 % pushed the chin to ~94 %, into the fade). */
+.card-photo[src*='luca.'] { --photo-zoom: 1.14; --photo-origin: 50% 52%; }
 .card-photo--fallback { transform: none; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); font-weight: 800; font-size: 40px; letter-spacing: -0.03em; }
 .person h3 { font-size: clamp(21px, 1.3vw, 28px); font-weight: 800; letter-spacing: -0.02em; }
 .person-role { margin-top: 2px; font-weight: 600; color: var(--accent); }
