@@ -11,11 +11,16 @@ import {fileURLToPath} from 'node:url';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PUB = path.join(ROOT, 'public');
 
+// v19: text files are hashed with LF line endings, whatever the checkout has. The deploy serves the LF files from git;
+// a CRLF working copy (Windows, core.autocrlf) used to give unchanged files a new ?v= on every machine switch.
+const TEXT = /\.(css|js|mjs|svg|json|html|txt|xml)$/i;
 const hashOf = new Map();
 const hash = (rel) => {
   if (!hashOf.has(rel)) {
     const file = path.join(PUB, rel);
-    hashOf.set(rel, fs.existsSync(file) ? crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex').slice(0, 10) : null);
+    let bytes = fs.existsSync(file) ? fs.readFileSync(file) : null;
+    if (bytes && TEXT.test(rel)) bytes = Buffer.from(bytes.toString('latin1').replace(/\r\n/g, '\n'), 'latin1');
+    hashOf.set(rel, bytes ? crypto.createHash('sha256').update(bytes).digest('hex').slice(0, 10) : null);
   }
   return hashOf.get(rel);
 };

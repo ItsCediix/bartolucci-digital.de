@@ -15,7 +15,9 @@ const PUB = path.join(ROOT, 'public');
 
 const hashes = new Set();
 for (const file of ['index.html', 'impressum.html', 'datenschutz.html']) {
-  const html = fs.readFileSync(path.join(PUB, file), 'utf8');
+  // v19: hash the LF form, which is what the deploy serves (v18.1 hashed a CRLF working copy, the scripts were refused);
+  // scripts/qa-csp.mjs checks the result against the built pages
+  const html = fs.readFileSync(path.join(PUB, file), 'utf8').replace(/\r\n/g, '\n');
   const re = /<script(?![^>]*\bsrc=)([^>]*)>([\s\S]*?)<\/script>/gi;
   let m;
   while ((m = re.exec(html))) {

@@ -7,12 +7,13 @@
   "scripts": {
     "vendor": "node scripts/vendor.mjs",
     "brand": "node scripts/brand.mjs",
-    "build": "node scripts/team-images.mjs && node scripts/build-static.mjs && node scripts/build-css.mjs && node scripts/build-version.mjs && node scripts/build-headers.mjs",
+    "build": "node scripts/team-images.mjs && node scripts/build-static.mjs && node scripts/build-css.mjs && node scripts/build-version.mjs && node scripts/build-headers.mjs && node scripts/qa-csp.mjs",
     "serve": "serve public -l 4173",
     "check:sizes": "node scripts/check-sizes.mjs",
     "qa:shots": "node scripts/qa-shots.mjs",
     "qa:scenes": "node scripts/qa-scenes.mjs",
     "qa:legal": "node scripts/qa-legal.mjs",
+    "qa:csp": "node scripts/qa-csp.mjs",
     "qa:lighthouse": "node scripts/qa-lighthouse.mjs",
     "og": "node scripts/og.mjs"
   },
