@@ -34,7 +34,10 @@ const gates = {
   // the laptop + phone *inside* the website scene (.ws-phone) are content devices and allowed
   phoneFrame: hits(/class="(?:[^"]*\s)?(device|phone|phone-gloss|device-screen)(?=["\s])|(?<![\w-])\.(device|phone|phone-gloss|device-screen)(?![\w-])|getElementById\(['"]phone['"]\)/, (f) => /\.(html|css|js)$/.test(f)),
   factsMarkers: hits(/\.facts[^{]*::?(before|after)|\.facts[^{]*\{[^}]*list-style:\s*(?!none)[a-z]/, css),
-  forbiddenWords: hits(/ganzheitlich|maßgeschneidert|innovativ|Lösungen|Synergien|digital transformieren|state of the art|KI-gestützt|revolutionär/i),
+  // v19: the website heading "Deine Webseite, maßgeschneidert." is Luca's wording of 31.10. (replaces "Von Hand gebaut",
+  // C1) and is exempt as this exact heading; the word stays forbidden everywhere else
+  forbiddenWords: hits(/ganzheitlich|maßgeschneidert|innovativ|Lösungen|Synergien|digital transformieren|state of the art|KI-gestützt|revolutionär/i)
+    .filter((h) => !/>Deine Webseite, maßgeschneidert\.<\/h2>/.test(h)),
 };
 const failed = Object.entries(gates).filter(([k, v]) => k !== 'borderLeft' && v.length);
 fs.mkdirSync(path.join(ROOT, 'review'), {recursive: true});

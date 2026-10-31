@@ -28,6 +28,7 @@ await browser.close();
 console.log(out);
 fs.mkdirSync(path.join(ROOT, 'review'), {recursive: true});
 fs.writeFileSync(path.join(ROOT, 'review', 'keyboard.json'), JSON.stringify(out, null, 2));
-// chapters land at 0 (their copy is sticky below the header), sections right below the 71 px header; the
-// last section may sit lower when the page cannot scroll further (v12: shorter page), then atEnd must be true
-if (out.some((o) => o.focused !== o.current || o.targetTop < -4 || (o.targetTop > 75 && !o.atEnd))) process.exitCode = 1;
+// chapters land at 0 (their copy is sticky below the header), sections right below the 71 px header (v19: + 8 px,
+// scroll-margin-top); the last section may sit lower when the page cannot scroll further (v12: shorter page), then
+// atEnd must be true
+if (out.some((o) => o.focused !== o.current || o.targetTop < -4 || (o.targetTop > 83 && !o.atEnd))) process.exitCode = 1;
