@@ -1,0 +1,22 @@
+# Bartolucci Digital
+
+> Webdesign aus Hamburg: eigene Websites für Läden und Betriebe zum Festpreis, danach technische Betreuung für einen festen Monatsbetrag. Zwei Gründer, ein fester Ansprechpartner, keine Cookies, kein Tracking.
+
+- Anbieter: Bartolucci Digital GbR, Gardinger Weg 16, 22609 Hamburg
+- Kontakt: info@bartolucci-digital.de, 0170 7240 195
+- Gesellschafter: Luca-Kay Bartolucci (Konzept, Texte, Ansprechpartner), Cederic Langpaap (Technik, Hosting, Updates)
+
+## Leistungen und Preise
+
+- Website zum Festpreis: 995 € (Sonderpreis für drei Websites, regulär 1.990 €), inklusive Gestaltung, Aufbau, Livegang, Impressum, Datenschutzerklärung und zwei Korrekturrunden
+- Technische Betreuung: 49 € im Monat für Hosting, Domain (Domainkosten bis 20 €), Updates und kleine Änderungen; monatlich kündbar
+- Weitere Korrekturrunde oder größere Änderung: 79 €
+- Alle Preise sind Endpreise, keine Umsatzsteuer (Kleinunternehmer nach § 19 UStG)
+- Dauer: in der Regel etwa zehn Tage nach Erhalt der Inhalte
+
+## Seiten
+
+- [Startseite](https://bartolucci-digital.de/): Leistungen, Ablauf, Preise, Team
+- [Häufige Fragen](https://bartolucci-digital.de/faq): Kosten, Zahlung, Kündigung, Ablauf, Technik, Datenschutz, KI-Einsatz
+- [Impressum](https://bartolucci-digital.de/impressum)
+- [Datenschutz](https://bartolucci-digital.de/datenschutz)

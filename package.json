@@ -7,7 +7,7 @@
   "scripts": {
     "vendor": "node scripts/vendor.mjs",
     "brand": "node scripts/brand.mjs",
-    "build": "node scripts/team-images.mjs && node scripts/build-static.mjs && node scripts/build-css.mjs && node scripts/build-version.mjs && node scripts/build-headers.mjs && node scripts/qa-csp.mjs",
+    "build": "node scripts/team-images.mjs && node scripts/build-static.mjs && node scripts/build-faq.mjs && node scripts/build-css.mjs && node scripts/build-version.mjs && node scripts/build-headers.mjs && node scripts/qa-csp.mjs",
     "serve": "serve public -l 4173",
     "check:sizes": "node scripts/check-sizes.mjs",
     "qa:shots": "node scripts/qa-shots.mjs",

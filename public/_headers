@@ -28,5 +28,8 @@
 /datenschutz
   Cache-Control: no-cache
 
+/faq
+  Cache-Control: no-cache
+
 /*.html
   Cache-Control: no-cache

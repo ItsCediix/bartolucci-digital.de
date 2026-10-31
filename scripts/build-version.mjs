@@ -27,7 +27,7 @@ const hash = (rel) => {
 
 let total = 0;
 // v18: 404.html joins the pages; srcset lists (team photos as AVIF/WebP, M16) get the same ?v= per candidate
-for (const page of ['index.html', 'impressum.html', 'datenschutz.html', '404.html']) {
+for (const page of ['index.html', 'impressum.html', 'datenschutz.html', 'faq.html', '404.html']) {
   const file = path.join(PUB, page);
   if (!fs.existsSync(file)) continue;
   const html = fs.readFileSync(file, 'utf8');

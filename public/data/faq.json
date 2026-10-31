@@ -1,0 +1,148 @@
+{
+  "note": "FAQ-Inhalte für /faq. scripts/build-faq.mjs schreibt daraus die Fragen in public/faq.html und das FAQPage-JSON-LD, damit Text und Markup nie auseinanderlaufen. Fragen so formulieren, wie Leute sie googeln; der erste Satz der Antwort beantwortet die Frage direkt. Hier ändern, dann `npm run build`.",
+  "groups": [
+    {
+      "id": "kosten",
+      "title": "Kosten und Zahlung",
+      "items": [
+        {
+          "q": "Was kostet eine Website bei Bartolucci Digital?",
+          "a": [
+            "Eine Website kostet bei uns 995 € zum Festpreis – das ist unser Sonderpreis für drei Websites, regulär sind es 1.990 €.",
+            "Drin sind Gestaltung, Aufbau und Livegang inklusive Impressum und Datenschutzerklärung sowie zwei Korrekturrunden. Der Preis ist ein Endpreis: Als Kleinunternehmer nach § 19 UStG berechnen wir keine Umsatzsteuer."
+          ]
+        },
+        {
+          "q": "Warum ist der Preis gerade so niedrig?",
+          "a": [
+            "Weil wir neu am Markt sind und uns in Hamburg einen Namen machen wollen.",
+            "Für drei Websites verzichten wir deshalb auf die Hälfte des regulären Preises. An der Leistung ändert das nichts: gleiche Gestaltung, gleicher Aufbau, gleiche Betreuung wie zum regulären Preis."
+          ]
+        },
+        {
+          "q": "Welche laufenden Kosten hat eine Website?",
+          "a": [
+            "Nach dem Start kostet die technische Betreuung 49 € im Monat – weitere Gebühren gibt es nicht.",
+            "Darin sind Hosting, Domain (Domainkosten bis 20 €), regelmäßige Updates und kleine Änderungen enthalten. Plattformgebühren oder ein Baukasten-Abo fallen nicht an."
+          ]
+        },
+        {
+          "q": "Wie bezahle ich die Website?",
+          "a": [
+            "Die Hälfte zahlst du bei Auftrag, die andere Hälfte, wenn deine Website live ist.",
+            "Die Betreuung rechnen wir monatlich ab. Alles Weitere steht vorab in deinem schriftlichen Angebot, Überraschungen auf der Rechnung gibt es nicht."
+          ]
+        },
+        {
+          "q": "Kann ich die Betreuung kündigen?",
+          "a": [
+            "Ja, die Betreuung ist monatlich kündbar, ohne Mindestlaufzeit.",
+            "Deine Website gehört dir: Wenn du kündigst, bekommst du alle Dateien und Zugänge und wir helfen dir, Domain und Seite zu einem anderen Anbieter umzuziehen."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ablauf",
+      "title": "Ablauf",
+      "items": [
+        {
+          "q": "Wie lange dauert es, bis meine Website online ist?",
+          "a": [
+            "In der Regel ist deine Website etwa zehn Tage, nachdem wir deine Inhalte haben, online.",
+            "Nach einem 30-minütigen Gespräch bekommst du ein kurzes schriftliches Angebot. Ein paar Tage später schicken wir dir den Entwurf deiner Startseite als Link, danach richten wir Domain und Hosting ein und schalten die Seite frei."
+          ]
+        },
+        {
+          "q": "Was muss ich für meine Website liefern?",
+          "a": [
+            "Du schickst uns Texte, Bilder und deine Öffnungszeiten – den Rest machen wir.",
+            "Du hast noch keine fertigen Texte? Kein Problem: Luca hilft dir im Gespräch, die wichtigsten Punkte zu sammeln, und formuliert daraus die Texte für deine Seite."
+          ]
+        },
+        {
+          "q": "Was ist eine Korrekturrunde?",
+          "a": [
+            "Eine Korrekturrunde ist eine gesammelte Liste mit Änderungswünschen zu deinem Entwurf, die wir in einem Rutsch umsetzen.",
+            "Zwei Korrekturrunden sind im Preis enthalten. Jede weitere kostet 79 €. Am besten schickst du uns deine Wünsche gesammelt, statt einzeln."
+          ]
+        },
+        {
+          "q": "Arbeitet ihr nur mit Betrieben aus Hamburg?",
+          "a": [
+            "Wir sind in Hamburg zu Hause und kommen gern bei dir vorbei, das Gespräch geht aber genauso gut am Telefon.",
+            "Unsere Kunden sind vor allem Läden und Betriebe aus Hamburg. Sprich uns an, wenn dein Betrieb woanders ist – meistens finden wir einen Weg."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "technik",
+      "title": "Technik und Betreuung",
+      "items": [
+        {
+          "q": "Gehört mir die Website am Ende?",
+          "a": [
+            "Ja, die Website gehört am Ende dir.",
+            "Nach dem Livegang bekommst du alle Zugänge. Es gibt keine Plattform, an die du gebunden bist, und kein Baukasten-Abo."
+          ]
+        },
+        {
+          "q": "Kann ich die Texte auf meiner Website selbst ändern?",
+          "a": [
+            "Du musst nicht – eine Nachricht an uns reicht, und kleine Änderungen sind in der Betreuung ohne Rechnung enthalten.",
+            "Neue Öffnungszeiten, eine andere Adresse oder geänderte Preise sind meistens am selben Tag drin. Größere Änderungen, etwa eine neue Unterseite, setzen wir als Korrekturrunde für 79 € um."
+          ]
+        },
+        {
+          "q": "Funktioniert die Website auch auf dem Handy?",
+          "a": [
+            "Ja, jede Website funktioniert auf Handy, Tablet und Computer gleich gut.",
+            "Wir bauen die Seite von Anfang an für kleine Bildschirme mit und achten darauf, dass sie schnell lädt – auch unterwegs mit mobilem Internet."
+          ]
+        },
+        {
+          "q": "Wird meine Website bei Google gefunden?",
+          "a": [
+            "Wir legen die technische Grundlage, damit Google deine Seite gut findet und versteht – einen bestimmten Platz in den Suchergebnissen kann aber niemand seriös versprechen.",
+            "Dazu gehören kurze Ladezeiten, saubere Seitentitel und Beschreibungen sowie strukturierte Daten zu deinem Betrieb. Wenn du willst, helfen wir dir außerdem beim Einrichten deines Google-Unternehmensprofils, das für lokale Suchen besonders wichtig ist."
+          ]
+        },
+        {
+          "q": "Wie schnell reagiert ihr, wenn etwas ist?",
+          "a": [
+            "Meistens antworten wir am selben Tag, spätestens am nächsten Werktag.",
+            "Du erreichst uns per E-Mail an info@bartolucci-digital.de oder telefonisch unter 0170 7240 195. Du hast einen festen Ansprechpartner statt einer Hotline."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "recht",
+      "title": "Datenschutz und Arbeitsweise",
+      "items": [
+        {
+          "q": "Brauche ich auf meiner Website einen Cookie-Banner?",
+          "a": [
+            "In der Regel nicht, denn unsere Websites kommen ohne Cookies und ohne Tracking aus.",
+            "Impressum und Datenschutzerklärung richten wir beim Livegang mit ein. Wir sind allerdings keine Anwälte: Wenn du etwa einen Onlineshop oder besondere Funktionen planst, empfehlen wir dir, die Rechtstexte zusätzlich prüfen zu lassen."
+          ]
+        },
+        {
+          "q": "Nutzt ihr KI für eure Websites?",
+          "a": [
+            "Ja, wir setzen KI-Werkzeuge ein, zum Beispiel beim Programmieren – jede Seite planen, prüfen und betreuen aber wir selbst.",
+            "Gestaltung, Struktur und Inhalte legen wir gemeinsam mit dir fest, passend zu deinem Betrieb. So bekommst du eine maßgeschneiderte Website zu einem fairen Preis."
+          ]
+        },
+        {
+          "q": "Was ist die Morgen-Mail und was kostet sie?",
+          "a": [
+            "Die Morgen-Mail ist eine kurze Nachricht, die jeden Morgen in dein Postfach kommt: Termine des Tages, neue Anfragen und das Wetter.",
+            "Was sie kostet, hängt davon ab, was alles drinstehen soll. Sag uns im Gespräch einfach, ob du sie willst – dann bekommst du einen festen Preis im Angebot."
+          ]
+        }
+      ]
+    }
+  ]
+}

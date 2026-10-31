@@ -476,6 +476,29 @@ html[data-mode='mobile'] .contact-val { font-size: 15px; }
   .person { grid-template-columns: 1fr; }
 }
 
+/* FAQ page (/faq): built on the .legal layout; questions are <details> so they open without JavaScript */
+.faq .faq-lead { font-size: clamp(18px, 1.2vw, 22px); color: var(--ink-2); max-width: var(--measure); margin-top: 0; }
+.faq-toc ul { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 28px 0 8px; max-width: none; }
+.faq-toc li { margin: 0; }
+.faq-toc a { display: inline-block; padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); font-size: 15px; font-weight: 600; text-decoration: none; color: var(--ink-2); }
+.faq-toc a:hover { color: var(--ink); border-color: var(--accent); }
+.faq-group { margin-top: 44px; max-width: 860px; scroll-margin-top: 96px; }
+.faq-group h2 { margin: 0 0 12px; font-size: clamp(22px, 1.6vw, 28px); }
+.faq-item { border: 1px solid var(--line); border-radius: 14px; background: var(--surface); margin-top: 10px; scroll-margin-top: 96px; }
+.faq-item summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 20px; cursor: pointer; list-style: none; border-radius: 14px; }
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after { content: ''; flex: none; width: 10px; height: 10px; border-right: 2px solid var(--ink-3); border-bottom: 2px solid var(--ink-3); transform: translateY(-3px) rotate(45deg); transition: transform 0.2s; }
+.faq-item[open] summary::after { transform: translateY(2px) rotate(225deg); }
+.faq-item summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.faq-item summary h3 { margin: 0; font-size: 17px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.35; color: var(--ink); }
+.faq-a { padding: 0 20px 18px; }
+.faq-a p { margin-top: 0; }
+.faq-a p + p { margin-top: 10px; }
+.faq-a p:first-child { color: var(--ink); font-weight: 600; }
+.faq-cta { margin-top: 48px; padding: 24px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); max-width: 860px; }
+.faq-cta h2 { margin-top: 0; }
+@media (prefers-reduced-motion: reduce) { .faq-item summary::after { transition: none; } }
+
 /* ======== scenes.css (source: public/assets/scenes.css, bundled by scripts/build-css.mjs) ======== */
 /* The three DOM scenes (v11). No device frame, no panel: every scene has its own canvas (data-w × data-h in
    the markup: hook 640 × 760, website 1180 × 760, betreuung 1040 × 760) and is scaled into the stage by

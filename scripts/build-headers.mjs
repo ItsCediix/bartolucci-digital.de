@@ -14,7 +14,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PUB = path.join(ROOT, 'public');
 
 const hashes = new Set();
-for (const file of ['index.html', 'impressum.html', 'datenschutz.html']) {
+for (const file of ['index.html', 'impressum.html', 'datenschutz.html', 'faq.html']) {
   // v19: hash the LF form, which is what the deploy serves (v18.1 hashed a CRLF working copy, the scripts were refused);
   // scripts/qa-csp.mjs checks the result against the built pages
   const html = fs.readFileSync(path.join(PUB, file), 'utf8').replace(/\r\n/g, '\n');
@@ -68,6 +68,9 @@ const headers = `/*
   Cache-Control: no-cache
 
 /datenschutz
+  Cache-Control: no-cache
+
+/faq
   Cache-Control: no-cache
 
 /*.html
