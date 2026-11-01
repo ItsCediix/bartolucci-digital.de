@@ -658,7 +658,7 @@ html[data-mode='mobile'] .contact-val { font-size: 15px; }
 
 /* ================================================================ betreuung: a change request, the hours update, quiet status */
 .bt-ask { position: absolute; left: 0; top: 96px; width: 372px; font-size: 29px; padding: 22px 26px; }
-.bt-done { position: absolute; right: 668px; top: 330px; font-size: 29px; padding: 18px 26px; }
+.bt-done { position: absolute; right: 668px; top: 272px; font-size: 29px; padding: 18px 26px; }
 .bt-card { position: absolute; left: 404px; top: 16px; width: 636px; height: 556px; padding: 30px 32px; border-radius: 26px; background: #f1ece1; box-shadow: var(--sc-shadow), inset 0 0 0 1px var(--sc-edge); }
 .bt-demo { position: relative; width: 286px; transform: scale(2); }
 .bt-mon > span:first-child { display: flex; align-items: center; gap: 6px; }
@@ -679,16 +679,28 @@ html[data-mode='mobile'] .contact-val { font-size: 15px; }
 .bt-item em { font-style: normal; font-weight: 400; color: var(--ink-3); }
 .bt-dot { position: relative; display: block; width: 18px; height: 18px; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--accent); }
 .bt-dot b { position: absolute; inset: 0; border-radius: 50%; background: var(--accent); }
-/* v19.3: "updated on the website and on Google Maps": own outline pin (accent colour, not Google's red pin), two ticks */
-.bt-sync {
-  position: absolute; right: 668px; top: 428px; display: flex; align-items: center; gap: 18px;
-  padding: 18px 26px 18px 20px; border-radius: 22px; background: var(--sc-bubble);
-  box-shadow: var(--sc-shadow), inset 0 0 0 1px var(--sc-edge); color: var(--sc-ink);
+/* v19.3 (Variante C): map listing card. Stylised neutral map (no Google styling), own pin in the demo-shop look */
+.bt-map {
+  position: absolute; left: 14px; top: 372px; width: 358px; border-radius: 20px; overflow: hidden;
+  background: #fff; color: #1b1c1a; box-shadow: var(--sc-shadow), inset 0 0 0 1px var(--sc-edge);
 }
-.bt-pin { width: 46px; height: 46px; flex: none; fill: none; stroke: var(--accent); stroke-width: 1.8; stroke-linejoin: round; }
-.bt-sync ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
-.bt-sync li { display: flex; align-items: center; gap: 10px; font-size: 24px; font-weight: 600; line-height: 1.2; white-space: nowrap; }
-.bt-chk { width: 24px; height: 24px; flex: none; fill: none; stroke: var(--accent); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.bt-map-tile { position: relative; height: 104px; overflow: hidden; background: #e4dfd2; }
+.bt-road { position: absolute; display: block; background: #fff; }
+.bt-road-a { left: -20px; right: -20px; top: 42px; height: 13px; transform: rotate(-7deg); }
+.bt-road-b { left: 168px; top: -30px; width: 13px; height: 170px; transform: rotate(14deg); }
+.bt-block { position: absolute; display: block; border-radius: 6px; }
+.bt-block-a { left: 32px; top: 70px; width: 118px; height: 26px; background: #cfd8c4; }
+.bt-block-b { left: 214px; top: 14px; width: 86px; height: 22px; background: #d6cfbf; }
+.bt-map-pin {
+  position: absolute; left: 150px; top: 22px; width: 50px; height: 50px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; background: #5a6592; box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+.bt-map-pin svg { width: 28px; height: 28px; fill: none; stroke: #fff; stroke-width: 2; stroke-linejoin: round; }
+.bt-map-body { padding: 14px 20px 16px; }
+.bt-map-name { margin: 0; font-size: 21px; font-weight: 700; letter-spacing: -0.01em; }
+.bt-map-hours { margin: 4px 0 0; font-size: 17px; color: #3d3e3a; }
+.bt-map-ok { margin: 10px 0 0; display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; color: #4a5584; }
+.bt-map-ok svg { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
 
 /* ================================================================ morgens (v13): three small cards slide together into one
    morning message. Same bubble styling as the chat scenes. END state = the message alone (the cards have merged
