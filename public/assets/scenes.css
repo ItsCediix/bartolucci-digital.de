@@ -161,6 +161,16 @@
 .bt-item em { font-style: normal; font-weight: 400; color: var(--ink-3); }
 .bt-dot { position: relative; display: block; width: 18px; height: 18px; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--accent); }
 .bt-dot b { position: absolute; inset: 0; border-radius: 50%; background: var(--accent); }
+/* v19.3: "updated on the website and on Google Maps": own outline pin (accent colour, not Google's red pin), two ticks */
+.bt-sync {
+  position: absolute; right: 668px; top: 428px; display: flex; align-items: center; gap: 18px;
+  padding: 18px 26px 18px 20px; border-radius: 22px; background: var(--sc-bubble);
+  box-shadow: var(--sc-shadow), inset 0 0 0 1px var(--sc-edge); color: var(--sc-ink);
+}
+.bt-pin { width: 46px; height: 46px; flex: none; fill: none; stroke: var(--accent); stroke-width: 1.8; stroke-linejoin: round; }
+.bt-sync ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.bt-sync li { display: flex; align-items: center; gap: 10px; font-size: 24px; font-weight: 600; line-height: 1.2; white-space: nowrap; }
+.bt-chk { width: 24px; height: 24px; flex: none; fill: none; stroke: var(--accent); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
 
 /* ================================================================ morgens (v13): three small cards slide together into one
    morning message. Same bubble styling as the chat scenes. END state = the message alone (the cards have merged

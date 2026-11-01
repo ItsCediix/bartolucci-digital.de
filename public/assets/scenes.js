@@ -182,6 +182,10 @@
       .from(q(sc, '.bt-new'), {opacity: 0, y: -16, duration: 0.6, ease: ease.pop}, b2 + 0.3)
       .fromTo(q(sc, '.bt-done'), {x: 120, scale: 0.86, opacity: 0},
         {x: 0, scale: 1, opacity: 1, duration: SPRING_D, ease: spring, immediateRender: true}, b2 + 0.55);
+    // v19.3: right after "Erledigt." the pin card shows where it changed: Website, then Google Maps
+    tl.fromTo(q(sc, '.bt-sync'), {y: 24, opacity: 0}, {y: 0, opacity: 1, duration: 0.5, ease: ease.soft, immediateRender: true}, b2 + 1.0)
+      .fromTo(qa(sc, '.bt-sync li'), {opacity: 0, x: -10}, {opacity: 1, x: 0, duration: 0.35, stagger: 0.3, ease: ease.soft, immediateRender: true}, b2 + 1.2)
+      .fromTo(qa(sc, '.bt-chk'), {scale: 0, transformOrigin: '50% 50%'}, {scale: 1, duration: 0.3, stagger: 0.3, ease: ease.pop, immediateRender: true}, b2 + 1.3);
     // 3: the status strip slides up, the three dots fill one after another
     tl.from(q(sc, '.bt-status'), {y: 70, opacity: 0, duration: 0.7, ease: ease.soft}, b3)
       .from(qa(sc, '.bt-dot b'), {scale: 0, duration: 0.3, stagger: 0.15, ease: ease.pop}, b3 + 0.55);
