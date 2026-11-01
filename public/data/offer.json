@@ -12,6 +12,7 @@
     "availability": ["Einer der drei Plätze ist noch frei.", "Zwei der drei Plätze sind noch frei.", "Alle drei Plätze sind noch frei."],
     "included": "Zwei Korrekturrunden inklusive, ab der dritten {round}.",
     "care": "Technische Betreuung {care} im Monat, Hosting, Domain, Updates, kleine Änderungen.",
+    "excluded": "Nicht enthalten: weitere Unterseiten ({round} je Korrekturrunde) · Texte und Fotos (lieferst du, wir helfen beim Formulieren) · Domainkosten über 20 €",
     "button": "Platz anfragen",
     "footnote": "* Endpreis. Es kommt keine Umsatzsteuer dazu – wir sind Kleinunternehmer nach § 19 UStG."
   }

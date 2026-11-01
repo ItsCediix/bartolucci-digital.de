@@ -68,6 +68,8 @@ export function renderOffer(o, company) {
   h += '</div>';
   if (launch && t.availability[o.slotsLeft - 1]) h += `<p class="price-avail">${esc(t.availability[o.slotsLeft - 1])}</p>`;
   h += `<ul class="facts">${fact(fill(t.included))}${fact(fill(t.care))}</ul>`;
+  // v20 (audit M5): one "Nicht enthalten" line inside the card, in the footnote style (.price-note), label semibold
+  if (t.excluded) { const i = t.excluded.indexOf(":"); h += `<p class="price-note"><strong>${esc(t.excluded.slice(0, i + 1))}</strong>${esc(fill(t.excluded.slice(i + 1)))}</p>`; }
   // v18 (audit M4): the button opens the mail client with subject and a short German template (company.json), and the
   // address stands next to it as plain text with a copy button (shared.js); no form, no booking tool, no third party
   // v18.1: "opens elsewhere" icon on the button (it starts the mail program); no address line below, it stands in the
