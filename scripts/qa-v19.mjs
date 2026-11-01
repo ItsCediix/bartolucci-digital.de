@@ -77,7 +77,7 @@ for (const [name, extra] of VIEWPORTS) {
     const hdr = await page.evaluate(() => Math.round(document.querySelector('[data-header]').getBoundingClientRect().height));
     check(`header height ${name} ${sfx}`, hdr === HEADER, {hdr});
     const h2 = await page.evaluate(() => document.querySelector('#k-website h2').textContent.trim());
-    check(`C1 wording ${name}`, h2 === 'Deine Webseite, maßgeschneidert.', {h2});
+    check(`C1 wording ${name}`, h2 === 'Deine Website, maßgeschneidert.', {h2});
     if (!mobile) {
       await shot(page, `hero_${name}_${sfx}`);
       // the label over each of the three scenes, after the cut has settled
@@ -178,7 +178,7 @@ for (const [name, vp] of [['1440', {width: 1440, height: 900}], ['390', {width: 
     return {h2, navVisible: nav.width > 0, overlap: nav.left < brand.right - 1 || nav.right > right.left + 1, toggleHidden: getComputedStyle(document.querySelector('[data-nav-toggle]')).display === 'none',
       note: document.querySelector('#k-website .demo-note').textContent.trim()};
   });
-  check(`no-JS ${name} wording + nav`, r.h2 === 'Deine Webseite, maßgeschneidert.' && r.navVisible && !r.overlap && r.toggleHidden, r);
+  check(`no-JS ${name} wording + nav`, r.h2 === 'Deine Website, maßgeschneidert.' && r.navVisible && !r.overlap && r.toggleHidden, r);
   await shot(page, `nojs_${name}_hero`);
   await page.click('#main-nav a[href="#preise"]');
   await page.waitForTimeout(1500);
