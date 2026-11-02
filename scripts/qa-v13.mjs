@@ -188,7 +188,8 @@ gate.background.pass = gate.background.pass && uri.length > 0 && uri.length <= 8
 async function priceFacts(page) {
   return page.evaluate(() => {
     const card = document.querySelector('.price');
-    const note = document.querySelector('.price-note');
+    // v20.1: the card has its own .price-note ("Nicht enthalten"), the footnote is the one after the card
+    const note = Array.from(document.querySelectorAll('.price-note')).find((n) => !card.contains(n));
     const cr = card.getBoundingClientRect();
     const nr = note && note.getBoundingClientRect();
     const cs = note && getComputedStyle(note);
@@ -219,7 +220,7 @@ async function priceFacts(page) {
   const company = JSON.parse(fs.readFileSync(path.join(PUB, 'data', 'company.json'), 'utf8'));
   const route = (page) => page.route((u) => u.pathname === '/', async (r) => {
     const res = await r.fetch();
-    const body = (await res.text()).replace(/<div class="price" data-offer>[\s\S]*?<p class="price-note">[\s\S]*?<\/p>/, () => renderOffer(offer0, company));
+    const body = (await res.text()).replace(/<div class="price" data-offer>[\s\S]*?(?=\s*<!-- offer:end -->)/,() => renderOffer(offer0, company));
     if (!body.includes('price-h')) throw new Error('qa-v13: offer block not found in index.html');
     await r.fulfill({response: res, body});
   });
@@ -253,7 +254,7 @@ gate.jargon = {source: indexSrc.split('\n').filter(jargonLine).map((l) => l.trim
     roles: Array.from(document.querySelectorAll('.person-role')).map((e) => e.textContent),
     bios: Array.from(document.querySelectorAll('.person-text p:last-child')).map((e) => e.textContent),
   }));
-  gate.teamTexts = {...team, pass: team.lead.startsWith('Zu zweit, kurze Wege: Du redest mit einem von uns, und der kümmert sich. Wir bauen') && !/Ladenfläche/.test(team.lead) && team.roles.join('|') === 'Konzept, Texte, dein Ansprechpartner|Technik, Hosting, Updates, Compliance'};
+  gate.teamTexts = {...team, pass: team.lead.startsWith('Wir machen Webdesign für Läden und Betriebe in Hamburg: eine Website zum Festpreis, danach betreuen wir die Technik. Zu zweit, kurze Wege: Du redest mit einem von uns, und der kümmert sich. Wir bauen') && !/Ladenfläche/.test(team.lead) && team.roles.join('|') === 'Konzept, Texte, dein Ansprechpartner|Technik, Hosting, Updates, Compliance'};
   const m = await page.evaluate(() => {
     const s = document.getElementById('morgens');
     const order = Array.from(document.querySelectorAll('main section[id]')).map((e) => e.id);
