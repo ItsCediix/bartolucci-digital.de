@@ -40,6 +40,8 @@ export function validate(offer, chapters, company) {
   for (const k of ['display', 'e164', 'international']) if (!company.phone?.[k]) throw new Error(`company.json: "phone.${k}" missing`);
   for (const k of ['streetAddress', 'postalCode', 'addressLocality', 'addressCountry']) if (!company.address?.[k]) throw new Error(`company.json: "address.${k}" missing`);
   if (!Array.isArray(company.founders) || !company.founders.length) throw new Error('company.json: founders missing');
+  for (const f of company.founders) for (const k of ['id', 'name', 'givenName', 'familyName', 'image', 'description']) if (!f[k]) throw new Error(`company.json: founders[].${k} missing`);
+  if (!Array.isArray(company.knowsAbout) || !company.knowsAbout.length) throw new Error('company.json: knowsAbout missing');
   if (!/^[^@\s]+@[^@\s]+\.[a-z]+$/i.test(company.email)) throw new Error('company.json: e-mail address malformed');
   if (!/^\+\d{8,15}$/.test(company.phone.e164)) throw new Error('company.json: phone.e164 must be +<digits>');
 }
@@ -97,12 +99,18 @@ export function renderContact(company) {
 /* ---------- JSON-LD (ProfessionalService; audit M11): telephone, e-mail, postal address from the Impressum, the
    three offers (website at the launch price, care per month as a UnitPriceSpecification with billingDuration P1M,
    revision round), founders as Person entries, priceRange. No sameAs: the repo and the Impressum name no profile URLs.
-   Prices are end prices under § 19 UStG (no VAT added), as the page says. ---------- */
+   Prices are end prices under § 19 UStG (no VAT added), as the page says.
+   SEO/KEO (11/2026): an @graph with stable @ids that the subpages point at: the organisation (#organization), both
+   founders as Person nodes with their roles from the team cards, and the WebSite (#website). No ratings or reviews. ---------- */
+export const ORG_ID = 'https://bartolucci-digital.de/#organization';
+export const SITE_ID = 'https://bartolucci-digital.de/#website';
 export function renderJsonLd(company, offer) {
   const eur = (price) => ({'@type': 'PriceSpecification', price: String(price), priceCurrency: 'EUR'});
+  const city = {'@type': 'City', name: company.areaServed};
+  const personId = (f) => company.url + '#' + f.id;
   const data = {
-    '@context': 'https://schema.org',
     '@type': 'ProfessionalService',
+    '@id': ORG_ID,
     name: company.name,
     legalName: company.legalName,
     url: company.url,
@@ -112,8 +120,9 @@ export function renderJsonLd(company, offer) {
     email: company.email,
     telephone: company.phone.international,
     address: {'@type': 'PostalAddress', streetAddress: company.address.streetAddress, postalCode: company.address.postalCode, addressLocality: company.address.addressLocality, addressCountry: company.address.addressCountry},
-    areaServed: company.areaServed,
-    founder: company.founders.map((name) => ({'@type': 'Person', name})),
+    areaServed: city,
+    knowsAbout: company.knowsAbout,
+    founder: company.founders.map((f) => ({'@id': personId(f)})),
     priceRange: `${offer.launchPrice} € - ${offer.regularPrice} €`,
     makesOffer: [
       {
@@ -123,7 +132,7 @@ export function renderJsonLd(company, offer) {
         price: String(offer.launchPrice),
         priceCurrency: 'EUR',
         priceSpecification: eur(offer.launchPrice),
-        itemOffered: {'@type': 'Service', name: 'Webdesign und Website-Erstellung', areaServed: company.areaServed},
+        itemOffered: {'@type': 'Service', name: 'Webdesign und Website-Erstellung', serviceType: 'Webdesign', provider: {'@id': ORG_ID}, areaServed: city},
         availability: 'https://schema.org/InStock',
         url: company.url + '#preise',
       },
@@ -134,7 +143,7 @@ export function renderJsonLd(company, offer) {
         price: String(offer.carePrice),
         priceCurrency: 'EUR',
         priceSpecification: {'@type': 'UnitPriceSpecification', price: String(offer.carePrice), priceCurrency: 'EUR', billingDuration: 'P1M', unitCode: 'MON'},
-        itemOffered: {'@type': 'Service', name: 'Technische Betreuung: Hosting, Domain, Updates, kleine Änderungen', areaServed: company.areaServed},
+        itemOffered: {'@type': 'Service', name: 'Technische Betreuung: Hosting, Domain, Updates, kleine Änderungen', serviceType: 'Website-Betreuung und Hosting', provider: {'@id': ORG_ID}, areaServed: city},
         url: company.url + '#k-betreuung',
       },
       {
@@ -144,12 +153,25 @@ export function renderJsonLd(company, offer) {
         price: String(offer.roundPrice),
         priceCurrency: 'EUR',
         priceSpecification: eur(offer.roundPrice),
-        itemOffered: {'@type': 'Service', name: 'Korrekturrunde an einer bestehenden Website', areaServed: company.areaServed},
+        itemOffered: {'@type': 'Service', name: 'Korrekturrunde an einer bestehenden Website', serviceType: 'Website-Änderung', provider: {'@id': ORG_ID}, areaServed: city},
         url: company.url + '#preise',
       },
     ],
   };
-  return JSON.stringify(data);
+  const people = company.founders.map((f) => ({
+    '@type': 'Person',
+    '@id': personId(f),
+    name: f.name,
+    givenName: f.givenName,
+    familyName: f.familyName,
+    jobTitle: 'Geschäftsführer',
+    description: f.description,
+    knowsAbout: f.roles,
+    image: f.image,
+    worksFor: {'@id': ORG_ID},
+  }));
+  const site = {'@type': 'WebSite', '@id': SITE_ID, name: company.name, url: company.url, inLanguage: 'de-DE', publisher: {'@id': ORG_ID}};
+  return JSON.stringify({'@context': 'https://schema.org', '@graph': [data, ...people, site]});
 }
 
 /* ---------- assemble ---------- */

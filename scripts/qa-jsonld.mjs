@@ -23,11 +23,23 @@ const check = (ok, msg) => { if (!ok) fails.push(msg); };
 
 const blocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => m[1]);
 check(blocks.length === 1, `expected exactly one JSON-LD block, found ${blocks.length}`);
-let ld = null;
-try { ld = JSON.parse(blocks[0] || ''); } catch (e) { fails.push('JSON-LD is not valid JSON: ' + e.message); }
+let ld = null, doc = null;
+try { doc = JSON.parse(blocks[0] || ''); } catch (e) { fails.push('JSON-LD is not valid JSON: ' + e.message); }
+// SEO/KEO: the block is an @graph; the ProfessionalService node carries the checks below, the others are resolved by @id
+const graph = (doc && doc['@graph']) || [];
+const byId = (r) => graph.find((n) => n['@id'] === (r && r['@id']));
+if (doc) {
+  check(doc['@context'] === 'https://schema.org', '@context must be https://schema.org');
+  ld = graph.find((n) => n['@type'] === 'ProfessionalService') || null;
+  check(ld, 'no ProfessionalService node in @graph');
+  check(ld && ld['@id'] === 'https://bartolucci-digital.de/#organization', 'ProfessionalService needs @id #organization');
+  const site = graph.find((n) => n['@type'] === 'WebSite');
+  check(site && site.inLanguage === 'de-DE' && site.publisher && ld && site.publisher['@id'] === ld['@id'], 'WebSite node with inLanguage de-DE and publisher -> organization missing');
+  check(!/aggregateRating|"review"/.test(blocks[0]), 'no ratings or reviews in the JSON-LD');
+  graph.forEach((n) => check(n['@id'], `graph node without @id: ${n['@type']}`));
+}
 
 if (ld) {
-  check(ld['@context'] === 'https://schema.org', '@context must be https://schema.org');
   check(ld['@type'] === 'ProfessionalService', '@type must be ProfessionalService');
   for (const k of ['name', 'url', 'telephone', 'email', 'address', 'description', 'logo', 'priceRange']) check(ld[k] != null && ld[k] !== '', `missing: ${k}`);
   // no empty strings, no em dashes, anywhere
@@ -36,7 +48,7 @@ if (ld) {
     else if (Array.isArray(v)) v.forEach((x, i) => walk(x, `${p}[${i}]`));
     else if (v && typeof v === 'object') for (const [k, x] of Object.entries(v)) walk(x, `${p}.${k}`);
   };
-  walk(ld, '$');
+  walk(doc, '$');
   // address = Impressum (via company.json, which the build uses)
   const a = ld.address || {};
   check(a['@type'] === 'PostalAddress', 'address.@type must be PostalAddress');
@@ -47,9 +59,11 @@ if (ld) {
   check(/^\+49 \d{3} \d{7}$/.test(ld.telephone || ''), 'telephone must be in the form +49 170 1234567');
   check(ld.email === company.email, 'email must equal company.json');
   // founders exactly as in the Impressum
-  const founders = [].concat(ld.founder || []);
-  check(founders.length === company.founders.length && founders.every((f, i) => f['@type'] === 'Person' && f.name === company.founders[i]), 'founder must list the Impressum names as Person entries');
-  founders.forEach((f) => check(impressum.includes(f.name), `impressum.html does not name ${f.name}`));
+  const founders = [].concat(ld.founder || []).map(byId);
+  check(founders.length === company.founders.length && founders.every((f, i) => f && f['@type'] === 'Person' && f.name === company.founders[i].name), 'founder must list the Impressum names as Person entries');
+  founders.forEach((f) => check(f && f.jobTitle === 'Geschäftsführer' && f.worksFor && f.worksFor['@id'] === ld['@id'], `${f && f.name}: jobTitle Geschäftsführer and worksFor -> organization`));
+  company.founders.forEach((f) => check(ld.description.includes(f.name), `organisation description must name ${f.name}`));
+  founders.forEach((f) => f && check(impressum.includes(f.name), `impressum.html does not name ${f.name}`));
   // offers: website (launch price), care per month, revision round
   const offers = [].concat(ld.makesOffer || []);
   check(offers.length === 3, `makesOffer must hold 3 offers, found ${offers.length}`);
@@ -63,6 +77,6 @@ if (ld) {
   for (const u of [].concat(ld.sameAs || [])) check(impressum.includes(u) || html.includes(u), `sameAs URL not in the repo: ${u}`);
   check(ld.url === company.url && ld.logo === company.logo, 'url / logo must equal company.json');
 }
-fs.writeFileSync(path.join(OUT, 'jsonld-qa.json'), JSON.stringify({pass: !fails.length, fails, jsonld: ld}, null, 2));
-console.log(fails.length ? 'FAIL qa-jsonld:\n  ' + fails.join('\n  ') : `PASS qa-jsonld (${Object.keys(ld).length} top-level keys, ${[].concat(ld.makesOffer || []).length} offers)`);
+fs.writeFileSync(path.join(OUT, 'jsonld-qa.json'), JSON.stringify({pass: !fails.length, fails, jsonld: doc}, null, 2));
+console.log(fails.length ? 'FAIL qa-jsonld:\n  ' + fails.join('\n  ') : `PASS qa-jsonld (${graph.length} graph nodes, ${Object.keys(ld || {}).length} organisation keys, ${[].concat(ld.makesOffer || []).length} offers)`);
 if (fails.length) process.exitCode = 1;

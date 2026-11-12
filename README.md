@@ -27,6 +27,8 @@ scripts/
   brand.mjs             Logo-Varianten + Favicons aus dem verbindlichen Logo-SVG (sharp)
   og.mjs                og.png (1200 × 630) per Playwright
   build-static.mjs      offer.json + company.json → Preiskarte, Kontaktzeilen, JSON-LD in index.html (Marker)
+  build-seo.mjs         BreadcrumbList-JSON-LD der Unterseiten, sitemap.xml (alle Seiten ohne noindex, lastmod = Git-Datum),
+                        Gates: JSON-LD parsebar, Canonical, IndexNow-Schlüsseldatei, llms.txt-Preise
   build-css.mjs         base + scenes + desktop + mobile.css → public/assets/site.css (nur die Startseite lädt die Datei)
   team-images.mjs       Teamfotos 960 × 960 ohne Metadaten, dazu .webp und .avif für das <picture> auf der Startseite
   build-version.mjs     ?v=<hash> an jede /assets-, /vendor- und /data-Referenz
@@ -65,3 +67,9 @@ npm run check:sizes
 - **Reduzierte Bewegung:** keine Timelines; die Szenen zeigen ihr Endbild (das CSS beschreibt den Endzustand), auf dem Desktop wechselt das Bild ohne Animation mit dem aktiven Kapitel.
 - **Theme:** hell ist immer der Start, `prefers-color-scheme` wird ignoriert; dunkel per Schalter, gespeichert in `localStorage` (`bd-theme`).
 - **Null Fremdanfragen:** erzwungen durch die CSP in `_headers` (`connect-src 'none'`, `default-src 'self'`). Die JSON-Daten werden beim Build in das HTML gerendert, zur Laufzeit wird nichts geladen.
+
+## SEO / KEO
+
+- JSON-LD der Startseite ist ein `@graph` (Organisation `#organization`, beide Gründer als Person, WebSite `#website`), Daten aus `data/company.json`; FAQ und Unterseiten verweisen per `@id` darauf.
+- `public/llms.txt` und `public/robots.txt` sind von Hand gepflegt; `build-seo.mjs` prüft, dass llms.txt die Preise aus `offer.json` nennt.
+- IndexNow: `.github/workflows/indexnow.yml` meldet nach jedem Push auf `main` alle URLs aus `sitemap.xml` an api.indexnow.org (Schlüssel = Name der Datei `public/<32 hex>.txt`). Schlägt nie fehl.

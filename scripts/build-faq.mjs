@@ -38,6 +38,9 @@ const ld = {
   '@type': 'FAQPage',
   url: 'https://bartolucci-digital.de/faq',
   inLanguage: 'de-DE',
+  // SEO/KEO: the same nodes as the JSON-LD on the start page (build-static.mjs)
+  isPartOf: {'@id': 'https://bartolucci-digital.de/#website'},
+  publisher: {'@id': 'https://bartolucci-digital.de/#organization'},
   mainEntity: data.groups.flatMap((g) => g.items.map((it) => ({
     '@type': 'Question',
     name: it.q,

@@ -1,11 +1,11 @@
 {
-  "note": "v18: company facts for the contact lines, the mailto link and the JSON-LD (scripts/build-static.mjs). Name, address and founders exactly as in impressum.html; the e-mail address is info@ as in the Impressum (Cederic, 29.10.). Edit here, then `npm run build`.",
+  "note": "v18: company facts for the contact lines, the mailto link and the JSON-LD (scripts/build-static.mjs). Name, address and founder names exactly as in impressum.html; the e-mail address is info@ as in the Impressum (Cederic, 29.10.). Edit here, then `npm run build`. founders[].roles/description feed the Person nodes in the JSON-LD (roles as on the team cards).",
   "name": "Bartolucci Digital",
   "legalName": "Bartolucci Digital GbR",
   "url": "https://bartolucci-digital.de/",
   "logo": "https://bartolucci-digital.de/assets/logo.svg",
   "image": "https://bartolucci-digital.de/assets/og.png",
-  "description": "Websites für Läden und Betriebe, mit technischer Betreuung nach dem Start.",
+  "description": "Webdesign aus Hamburg: eigene Websites zum Festpreis für Läden und Betriebe, danach technische Betreuung. Gegründet und geführt von Luca-Kay Bartolucci und Cederic Langpaap.",
   "email": "info@bartolucci-digital.de",
   "phone": {
     "display": "0170 7240 195",
@@ -18,7 +18,35 @@
     "addressLocality": "Hamburg",
     "addressCountry": "DE"
   },
-  "founders": ["Luca-Kay Bartolucci", "Cederic Langpaap"],
+  "founders": [
+    {
+      "id": "luca-kay-bartolucci",
+      "name": "Luca-Kay Bartolucci",
+      "givenName": "Luca-Kay",
+      "familyName": "Bartolucci",
+      "image": "https://bartolucci-digital.de/assets/team/luca.webp",
+      "roles": [
+        "Konzept",
+        "Texte",
+        "Kundenkontakt"
+      ],
+      "description": "Mitgründer und Geschäftsführer von Bartolucci Digital. Zuständig für Konzept, Texte und Kundenkontakt: Gespräch, Angebot, Texte und Struktur der Website."
+    },
+    {
+      "id": "cederic-langpaap",
+      "name": "Cederic Langpaap",
+      "givenName": "Cederic",
+      "familyName": "Langpaap",
+      "image": "https://bartolucci-digital.de/assets/team/cederic.webp",
+      "roles": [
+        "Technik",
+        "Hosting",
+        "Updates",
+        "Compliance"
+      ],
+      "description": "Mitgründer und Geschäftsführer von Bartolucci Digital. Zuständig für Technik, Hosting, Updates und Compliance: schnelle Ladezeiten, Funktion auf jedem Gerät, Betrieb der Website."
+    }
+  ],
   "areaServed": "Hamburg",
   "mailto": {
     "subject": "Platz anfragen",
@@ -34,5 +62,16 @@
       "",
       "Viele Grüße"
     ]
-  }
+  },
+  "knowsAbout": [
+    "Webdesign",
+    "Website-Erstellung",
+    "Responsive Webdesign",
+    "Webhosting",
+    "Domain-Verwaltung",
+    "Website-Wartung und Updates",
+    "Datenschutzkonforme Websites ohne Cookies und Tracking",
+    "Technische Suchmaschinenoptimierung",
+    "Strukturierte Daten"
+  ]
 }

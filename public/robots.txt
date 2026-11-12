@@ -1,4 +1,26 @@
 User-agent: *
 Allow: /
 
+# Search and AI assistants, explicitly welcome (same rule as above)
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: bingbot
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
 Sitemap: https://bartolucci-digital.de/sitemap.xml

@@ -1,0 +1,48 @@
+# IndexNow: after every push to main, tell Bing & co. (api.indexnow.org) about all URLs in public/sitemap.xml.
+# Cloudflare deploys the push on its own; this job only waits until the site answers and then pings.
+# It never fails: an IndexNow outage must not turn the commit red (every step ends with exit 0).
+name: IndexNow
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ping IndexNow
+        shell: bash
+        run: |
+          set -u
+          HOST=bartolucci-digital.de
+          KEYFILE=$(ls public | grep -E '^[0-9a-f]{32}\.txt$' | head -n1)
+          if [ -z "$KEYFILE" ]; then echo "::warning::no IndexNow key file in public/"; exit 0; fi
+          KEY=${KEYFILE%.txt}
+          KEYURL="https://$HOST/$KEYFILE"
+          # give the Cloudflare deploy of this push a head start, then wait (max ~5 min) for the key file
+          sleep 45
+          ok=0
+          for i in $(seq 1 26); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 10 "$KEYURL" || true)
+            if [ "$code" = "200" ]; then ok=1; break; fi
+            echo "key file: HTTP $code, retry $i"; sleep 10
+          done
+          if [ "$ok" != 1 ]; then echo "::warning::$KEYURL not reachable, skipping IndexNow"; exit 0; fi
+          URLS=$(grep -o '<loc>[^<]*</loc>' public/sitemap.xml | sed -e 's/<loc>//' -e 's/<\/loc>//')
+          if [ -z "$URLS" ]; then echo "::warning::no URLs in sitemap.xml"; exit 0; fi
+          BODY=$(printf '%s\n' "$URLS" | jq -R . | jq -s --arg host "$HOST" --arg key "$KEY" --arg loc "$KEYURL" \
+            '{host: $host, key: $key, keyLocation: $loc, urlList: .}')
+          echo "$BODY"
+          code=$(curl -s -o /tmp/indexnow.txt -w '%{http_code}' --max-time 30 -X POST \
+            -H 'Content-Type: application/json; charset=utf-8' --data "$BODY" https://api.indexnow.org/indexnow || true)
+          echo "IndexNow: HTTP $code"; cat /tmp/indexnow.txt 2>/dev/null || true
+          case "$code" in
+            200|202) echo "IndexNow accepted the URL list" ;;
+            *) echo "::warning::IndexNow answered HTTP $code (not fatal)" ;;
+          esac
+          exit 0
