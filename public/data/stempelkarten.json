@@ -1,0 +1,54 @@
+{
+  "note": "Questions on /stempelkarten (scripts/build-stempelkarten.mjs builds the visible <details> and the FAQPage JSON-LD from here). Only claim what the prototype really does (vault: Digitale Stempelkarte Prototyp V1). No prices, no Apple Wallet. Edit here, then `npm run build`.",
+  "faq": [
+    {
+      "q": "Brauchen meine Kunden eine App?",
+      "a": [
+        "Nein. Die Karte öffnet sich im Browser, auf jedem Handy, auch auf dem iPhone.",
+        "Wer will, legt sie mit zwei Tipps auf den Startbildschirm. Zusätzlich ist Google Wallet vorbereitet: Auf Android-Handys kann die Karte dann auch dort liegen. Die Karte im Browser funktioniert immer."
+      ]
+    },
+    {
+      "q": "Brauche ich ein Lesegerät an der Kasse?",
+      "a": [
+        "Nein. Ein normales Handy oder Tablet mit Kamera reicht.",
+        "Dein Team öffnet den Scanner im Browser und scannt den Code auf der Karte des Kunden. Klappt die Kamera mal nicht, lässt sich der kurze Code auf der Karte auch eintippen."
+      ]
+    },
+    {
+      "q": "Kann sich ein Kunde selbst Stempel geben?",
+      "a": [
+        "Nein. Stempel setzt nur dein Team, mit eigenem Zugang.",
+        "Dazu gibt es eine Sperrzeit zwischen zwei Stempeln auf derselben Karte, zum Beispiel zwei Stunden. Ein versehentlicher Stempel lässt sich kurz danach wieder zurücknehmen."
+      ]
+    },
+    {
+      "q": "Wie viele Stempel braucht man für die Prämie?",
+      "a": [
+        "Wir starten mit 10 Stempeln, die Prämie legst du fest.",
+        "Ob Kaffee aufs Haus, Rabatt auf den nächsten Haarschnitt oder ein Brötchen extra: Du sagst uns, was zu deinem Laden passt. Eingelöst wird die Prämie mit demselben Scan an der Kasse."
+      ]
+    },
+    {
+      "q": "Was kostet die digitale Stempelkarte?",
+      "a": [
+        "Den Preis nennen wir dir auf Anfrage.",
+        "Schreib uns kurz, was für einen Laden du hast. Dann sprechen wir über das, was du brauchst, und du bekommst ein schriftliches Angebot."
+      ]
+    },
+    {
+      "q": "Was heißt Pilotphase?",
+      "a": [
+        "Die Stempelkarte ist fertig gebaut und läuft bei uns im Testbetrieb. Jetzt führen wir sie mit den ersten Geschäften in Hamburg ein.",
+        "Du bekommst den vollen Service: Einrichtung, Karte, Aufsteller und Einweisung. Was dir im Alltag auffällt, fließt direkt in die nächsten Versionen ein."
+      ]
+    },
+    {
+      "q": "Kann ich die Stempelkarte mit meiner Website kombinieren?",
+      "a": [
+        "Ja. Die Stempelkarte gibt es einzeln oder zusammen mit deiner Website und der Pflege deines Google-Profils.",
+        "Dann hast du für alles einen Ansprechpartner in Hamburg. Mehr zur Website findest du auf unserer Startseite."
+      ]
+    }
+  ]
+}

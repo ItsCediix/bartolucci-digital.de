@@ -31,5 +31,8 @@
 /faq
   Cache-Control: no-cache
 
+/stempelkarten
+  Cache-Control: no-cache
+
 /*.html
   Cache-Control: no-cache

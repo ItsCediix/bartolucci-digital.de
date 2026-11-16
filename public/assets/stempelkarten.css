@@ -1,0 +1,117 @@
+/* /stempelkarten (product page "Digitale Stempelkarte"). Loaded after base.css, only on this page.
+   Reuses the tokens and components of base.css (.section, .wrap, .h-section, .lead, .timeline, .facts, .price,
+   .faq-item, .contact-line, .site-footer); this file only adds the hero, the phone mock-up and the benefit grid.
+   Performance (audit 13.11.2026): no backdrop-filter, no mix-blend-mode, no permanent will-change, no endless
+   animations; the overrides below switch those off for this page without touching the other pages. */
+
+/* ---------- audit overrides, this page only ---------- */
+.site-header { backdrop-filter: none; -webkit-backdrop-filter: none; background: color-mix(in srgb, var(--bg) 96%, transparent); }
+#bg .grain, html[data-theme='dark'] #bg .grain { mix-blend-mode: normal; opacity: 0.1; }
+html[data-theme='dark'] #bg .grain { opacity: 0.05; }
+.btn, .sky-layer { will-change: auto; }
+
+/* ---------- hero ---------- */
+.sk-hero { padding-top: clamp(40px, 5vw, 112px); }
+.sk-hero-wrap { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: clamp(32px, 5vw, 112px); align-items: center; }
+.sk-pill { display: inline-block; margin-bottom: 22px; padding: 7px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); font-size: 14px; font-weight: 600; color: var(--ink-2); }
+.sk-h1 { font-size: clamp(40px, 4.6vw, 88px); hyphens: manual; }
+.sk-h1 span { display: block; color: var(--accent); }
+.sk-hero-copy .lead { margin-top: 22px; }
+.sk-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+.sk-pilot { margin-top: 26px; padding-top: 16px; border-top: 1px solid var(--line); max-width: var(--measure); font-size: 15px; color: var(--ink-2); }
+.sk-pilot strong { color: var(--ink); font-weight: 600; }
+
+/* ---------- phone mock-up (HTML/CSS; colours as the real web card of prototype V1, card navy in both themes) ---------- */
+.sk-mock { position: relative; margin: 0; justify-self: center; width: min(100%, 460px); padding: 34px 0 0 0; }
+.sk-tag { position: absolute; top: 0; right: 0; width: min(100%, 320px); text-align: center; white-space: nowrap; font-size: 13px; font-weight: 600; color: var(--ink-3); letter-spacing: 0.02em; }
+.sk-phone { margin-left: auto; width: min(100%, 320px); padding: 12px; border-radius: 44px; background: #0b1220; box-shadow: var(--sc-shadow), 0 0 0 1px var(--sc-edge); }
+.sk-screen { display: grid; gap: 12px; padding: 18px 14px 22px; border-radius: 34px; background: #faf8f3; color: #0f172a; }
+.sk-card { padding: 16px 16px 14px; border-radius: 18px; color: #fff; background: linear-gradient(135deg, #1b2440 0%, #2a3557 60%, #46507a 100%); }
+.sk-card-head { display: flex; align-items: center; gap: 12px; }
+.sk-card-head b { display: block; font-size: 17px; line-height: 1.15; }
+.sk-card-head small { display: block; font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #96caeb; }
+.sk-card-logo { position: relative; width: 30px; height: 30px; flex: none; }
+.sk-card-logo i { position: absolute; width: 19px; height: 19px; border-radius: 5px; background: #fff; }
+.sk-card-logo i + i { right: 0; bottom: 0; background: #96caeb; }
+.sk-stamps { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin: 16px 0 12px; }
+.sk-stamps li { aspect-ratio: 1; border-radius: 50%; border: 2px dashed rgba(255, 255, 255, 0.45); }
+.sk-stamps li.on { border: 0; background: #96caeb url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230f172a' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4L18 8'/%3E%3C/svg%3E") center / 58% no-repeat; }
+.sk-card-foot b { white-space: nowrap; }
+.sk-card-foot { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 12px; }
+.sk-card-foot span { color: rgba(255, 255, 255, 0.82); text-align: right; }
+.sk-code { display: grid; justify-items: center; gap: 2px; padding: 14px; border-radius: 18px; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06); }
+.sk-qr { width: 84px; height: 84px; fill: #0f172a; fill-rule: evenodd; margin-bottom: 6px; }
+.sk-code p { font-size: 14px; }
+.sk-code b { letter-spacing: 0.08em; }
+.sk-code small, .sk-msg small { font-size: 12px; color: #566274; }
+.sk-msg { padding: 12px 14px; border-radius: 18px; background: #fff; border-left: 4px solid #5a6592; font-size: 13.5px; line-height: 1.4; }
+.sk-msg b { display: block; font-size: 15px; }
+.sk-msg p { margin: 2px 0 4px; color: #334155; }
+/* staff scanner confirmation, overlapping the phone at the lower left */
+.sk-scan { position: absolute; left: 0; top: 46%; display: flex; align-items: center; gap: 12px; padding: 12px 16px 12px 12px; border-radius: 18px; background: var(--sc-bubble); color: var(--sc-ink); box-shadow: var(--sc-shadow), 0 0 0 1px var(--sc-edge); max-width: 290px; }
+.sk-scan b { display: block; font-size: 16px; line-height: 1.2; }
+.sk-scan small { display: block; font-size: 13px; color: var(--ink-3); line-height: 1.3; }
+.sk-check { display: grid; place-items: center; flex: none; width: 40px; height: 40px; border-radius: 50%; background: #1d6b46; }
+.sk-check svg { width: 22px; height: 22px; fill: none; stroke: #fff; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+/* one-off entrance (no loop): the newest stamp and the scanner bubble; nothing moves with reduced motion */
+@media (prefers-reduced-motion: no-preference) {
+  .sk-stamps li.sk-new { animation: sk-pop 0.5s 0.6s cubic-bezier(0.2, 0.8, 0.2, 1.4) both; }
+  .sk-scan { animation: sk-rise 0.6s 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+}
+@keyframes sk-pop { from { transform: scale(0.3); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes sk-rise { from { transform: translateY(16px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* ---------- benefits ---------- */
+.sk-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(16px, 1.6vw, 32px); }
+.sk-benefit { padding: clamp(22px, 2vw, 36px); border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.sk-benefit .tl-draw { margin-bottom: 14px; }
+.sk-benefit h3 { font-size: clamp(20px, 1.3vw, 26px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; text-wrap: balance; }
+.sk-benefit p { margin-top: 10px; color: var(--ink-2); }
+
+/* ---------- offer card: the .price card of the start page without a number ---------- */
+.sk-offer .price-h { margin-bottom: 4px; }
+.sk-price { margin-top: clamp(20px, 1.8vw, 32px); font-weight: 800; font-size: clamp(24px, 1.8vw, 36px); letter-spacing: -0.02em; color: var(--price-accent); }
+.sk-offer .price .btn { margin-top: 16px; }
+
+/* ---------- privacy + FAQ ---------- */
+.sk-split { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: clamp(32px, 5vw, 80px); align-items: start; }
+.sk-split .lead { margin-top: 16px; }
+.sk-split .facts { max-width: 820px; }
+.sk-faq { max-width: 860px; }
+.sk-faq .faq-item:first-child { margin-top: 0; }
+.faq-a p { color: var(--ink-2); max-width: var(--measure); }
+
+/* ---------- contact with the static harbour skyline (desktop.css is not loaded here; no ship drift, no cars) ---------- */
+.section-contact { position: relative; overflow: hidden; padding-top: clamp(80px, 9vw, 160px); padding-bottom: clamp(170px, 22vw, 320px); }
+.section-contact::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--bg-2) 75%, transparent) 100%); z-index: 0; }
+.section-contact .wrap { position: relative; z-index: 2; }
+
+/* ---------- narrow screens ---------- */
+@media (max-width: 1100px) {
+  .sk-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 900px) {
+  /* the scanner bubble sits under the phone instead of over it */
+  .sk-scan { position: relative; left: auto; top: auto; margin: -28px auto 0; width: max-content; max-width: 100%; }
+  .sk-hero-wrap, .sk-split { grid-template-columns: 1fr; }
+  .sk-mock { margin-top: 8px; width: min(100%, 320px); }
+  .sk-tag { position: static; display: block; width: auto; margin: -34px 0 10px; }
+  .sk-phone { margin-inline: auto; }
+  .contact { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 640px) {
+  .section:not(.section-contact) { padding: 56px 0; }
+  .section-contact { padding-top: 64px; padding-bottom: 170px; }
+  .skyline { height: 130px; }
+  .sk-hero { padding-top: 28px; }
+  .sk-grid { grid-template-columns: 1fr; }
+  .sk-cta .btn { flex: 1 1 100%; }
+
+  .contact-val { font-size: 15px; }
+  /* as the mobile layout of the start page (mobile.css) */
+  .contact-lines { grid-template-columns: minmax(0, 1fr); }
+  .contact-line { font-size: 15.5px; padding: 15px 16px; gap: 12px; }
+  .contact-line .small { display: none; }
+  .site-footer .wrap { flex-direction: column; align-items: flex-start; }
+  .site-footer nav { flex-wrap: wrap; gap: 10px 22px; }
+}
