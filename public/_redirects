@@ -1,0 +1,5 @@
+# NFC-Visitenkarten: Diese Pfade stehen fest auf den NFC-Tags der Karten und duerfen sich nie aendern.
+# Das Ziel ist frei aenderbar. Immer 302 (temporaer) lassen: ein 301 wird von Browsern dauerhaft gecacht,
+# dann greift eine spaetere Zielaenderung auf bereits benutzten Handys nicht mehr.
+/visitenkarte-v1/cederic / 302
+/visitenkarte-v1/cederic/ / 302
