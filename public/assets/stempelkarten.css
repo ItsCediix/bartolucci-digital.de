@@ -2,7 +2,7 @@
    Reuses the tokens and components of base.css (.section, .wrap, .h-section, .lead, .timeline, .facts, .price,
    .faq-item, .contact-line, .site-footer); this file only adds the hero, the phone mock-up and the benefit grid.
    Performance (audit 13.11.2026): no backdrop-filter, no mix-blend-mode, no permanent will-change, no endless
-   animations; the overrides below switch those off for this page without touching the other pages. */
+   animations outside the viewport; the overrides below switch those off for this page without touching the other pages. */
 
 /* ---------- audit overrides, this page only ---------- */
 .site-header { backdrop-filter: none; -webkit-backdrop-filter: none; background: color-mix(in srgb, var(--bg) 96%, transparent); }
@@ -21,30 +21,30 @@ html[data-theme='dark'] #bg .grain { opacity: 0.05; }
 .sk-pilot { margin-top: 26px; padding-top: 16px; border-top: 1px solid var(--line); max-width: var(--measure); font-size: 15px; color: var(--ink-2); }
 .sk-pilot strong { color: var(--ink); font-weight: 600; }
 
-/* ---------- phone mock-up (HTML/CSS; colours as the real web card of prototype V1, card navy in both themes) ---------- */
+/* ---------- phone mock-up (HTML/CSS, layout as the real web card of prototype V1; light card in both themes) ---------- */
 .sk-mock { position: relative; margin: 0; justify-self: center; width: min(100%, 460px); padding: 34px 0 0 0; }
 .sk-tag { position: absolute; top: 0; right: 0; width: min(100%, 320px); text-align: center; white-space: nowrap; font-size: 13px; font-weight: 600; color: var(--ink-3); letter-spacing: 0.02em; }
 .sk-phone { margin-left: auto; width: min(100%, 320px); padding: 12px; border-radius: 44px; background: #0b1220; box-shadow: var(--sc-shadow), 0 0 0 1px var(--sc-edge); }
 .sk-screen { display: grid; gap: 12px; padding: 18px 14px 22px; border-radius: 34px; background: #faf8f3; color: #0f172a; }
-.sk-card { padding: 16px 16px 14px; border-radius: 18px; color: #fff; background: linear-gradient(135deg, #1b2440 0%, #2a3557 60%, #46507a 100%); }
-.sk-card-head { display: flex; align-items: center; gap: 12px; }
-.sk-card-head b { display: block; font-size: 17px; line-height: 1.15; }
-.sk-card-head small { display: block; font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #96caeb; }
-.sk-card-logo { position: relative; width: 30px; height: 30px; flex: none; }
-.sk-card-logo i { position: absolute; width: 19px; height: 19px; border-radius: 5px; background: #fff; }
-.sk-card-logo i + i { right: 0; bottom: 0; background: #96caeb; }
-.sk-stamps { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin: 16px 0 12px; }
-.sk-stamps li { aspect-ratio: 1; border-radius: 50%; border: 2px dashed rgba(255, 255, 255, 0.45); }
-.sk-stamps li.on { border: 0; background: #96caeb url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230f172a' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4L18 8'/%3E%3C/svg%3E") center / 58% no-repeat; }
-.sk-card-foot b { white-space: nowrap; }
+/* example card: the invented bike workshop of the start page demo (scenes.css .demo: cream #f1ece1, green #24503e,
+   orange #e0561c, condensed two-tone wordmark), so both pages tell the same story */
+.sk-card { padding: 16px 16px 14px; border-radius: 18px; color: #1b1c1a; background: #f1ece1; box-shadow: inset 0 0 0 1.5px #24503e; }
+.sk-card-name { display: block; font-size: 19px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; white-space: nowrap; transform: scaleX(0.82); transform-origin: 0 50%; }
+.sk-card-name i { font-style: normal; color: #24503e; }
+.sk-card-head small { display: block; margin-top: 3px; font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #24503e; }
+.sk-stamps { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin: 16px 0 12px; }
+.sk-stamps li { aspect-ratio: 1; border-radius: 50%; border: 2px dashed rgba(36, 80, 62, 0.5); }
+.sk-stamps li.on { border: 0; background: #24503e url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f1ece1' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4L18 8'/%3E%3C/svg%3E") center / 58% no-repeat; }
+.sk-card-foot b { white-space: nowrap; color: #e0561c; font-weight: 800; }
 .sk-card-foot { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 12px; }
-.sk-card-foot span { color: rgba(255, 255, 255, 0.82); text-align: right; }
+.sk-card-foot span { color: #3d3e3a; text-align: right; font-weight: 600; }
+.sk-card-rule { margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(36, 80, 62, 0.25); font-size: 11.5px; color: #5b5a54; }
 .sk-code { display: grid; justify-items: center; gap: 2px; padding: 14px; border-radius: 18px; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06); }
 .sk-qr { width: 84px; height: 84px; fill: #0f172a; fill-rule: evenodd; margin-bottom: 6px; }
 .sk-code p { font-size: 14px; }
 .sk-code b { letter-spacing: 0.08em; }
 .sk-code small, .sk-msg small { font-size: 12px; color: #566274; }
-.sk-msg { padding: 12px 14px; border-radius: 18px; background: #fff; border-left: 4px solid #5a6592; font-size: 13.5px; line-height: 1.4; }
+.sk-msg { padding: 12px 14px; border-radius: 18px; background: #fff; border-left: 4px solid #24503e; font-size: 13.5px; line-height: 1.4; }
 .sk-msg b { display: block; font-size: 15px; }
 .sk-msg p { margin: 2px 0 4px; color: #334155; }
 /* staff scanner confirmation, overlapping the phone at the lower left */
@@ -81,7 +81,8 @@ html[data-theme='dark'] #bg .grain { opacity: 0.05; }
 .sk-faq .faq-item:first-child { margin-top: 0; }
 .faq-a p { color: var(--ink-2); max-width: var(--measure); }
 
-/* ---------- contact with the static harbour skyline (desktop.css is not loaded here; no ship drift, no cars) ---------- */
+/* ---------- contact with the animated harbour skyline (partials/skyline.html, animations in base.css; desktop.css and
+   its GSAP scroll parallax are not loaded here, the layers sit at their end position as on the start page) ---------- */
 .section-contact { position: relative; overflow: hidden; padding-top: clamp(80px, 9vw, 160px); padding-bottom: clamp(170px, 22vw, 320px); }
 .section-contact::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--bg-2) 75%, transparent) 100%); z-index: 0; }
 .section-contact .wrap { position: relative; z-index: 2; }

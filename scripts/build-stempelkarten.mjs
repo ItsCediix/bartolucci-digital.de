@@ -37,7 +37,7 @@ const ld = {
       url: URL_,
       provider: {'@id': ORG_ID},
       areaServed: {'@type': 'City', name: company.areaServed},
-      audience: {'@type': 'BusinessAudience', name: 'Friseure, Barbershops, Cafés, Restaurants und Bäckereien'},
+      audience: {'@type': 'BusinessAudience', name: 'Friseure, Barbershops, Cafés, Restaurants, Bäckereien und Werkstätten'},
     },
     {
       '@type': 'FAQPage',

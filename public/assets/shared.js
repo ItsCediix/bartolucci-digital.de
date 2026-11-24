@@ -197,6 +197,13 @@ if (!location.hash) window.scrollTo(0, 0);
     });
   });
 
+  /* ---------- skyline: ship, cars and gulls only move while the skyline is on screen (audit 13.11.) ---------- */
+  var sky = d.querySelector('.skyline');
+  if (sky && 'IntersectionObserver' in window) {
+    sky.classList.add('is-off');
+    new IntersectionObserver(function (en) { sky.classList.toggle('is-off', !en[0].isIntersecting); }).observe(sky);
+  }
+
   /* ---------- year ---------- */
   var y = d.querySelector('[data-year]');
   if (y) y.textContent = String(new Date().getFullYear());
